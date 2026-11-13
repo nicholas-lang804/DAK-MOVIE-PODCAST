@@ -25,6 +25,7 @@ require_once __DIR__ . '/app/Models/SiteSetting.php';
 require_once __DIR__ . '/app/Services/RenditionBuilder.php';
 
 if (!isLoggedIn() || !isAdmin()) { http_response_code(403); echo json_encode(['error' => 'Admin access required']); exit; }
+@set_time_limit(600); // completion hashes + moves multi-GB files
 
 $MAX_SIZE = 5368709120; // 5 GB — matches media library
 $VIDEO_MIME_EXT = [
@@ -126,48 +127,65 @@ if ($action === 'complete') {
     if (!is_file($part) || filesize($part) !== (int)$sess['size_bytes']) out(['error' => 'Upload buffer missing or size mismatch'], 409);
 
     // Server-side verification: real MIME + decodable video + sha256.
-    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($part);
-    if (strpos($mime, 'video/') !== 0) { @unlink($part); $sessions->setStatus($sess['id'], 'aborted'); out(['error' => 'File is not a valid video (detected: ' . $mime . ')'], 415); }
-
-    $ffprobe = null;
-    foreach ([__DIR__ . '/bin/ffprobe.exe', 'ffprobe'] as $c) { if (is_file($c) || $c === 'ffprobe') { $ffprobe = $c; break; } }
-    if ($ffprobe) {
-        $o = [];
-        @exec(escapeshellarg($ffprobe) . ' -v error -show_entries format=duration -of csv=p=0 ' . escapeshellarg($part) . ' 2>&1', $o, $code);
-        if ($code !== 0 || empty($o[0]) || !is_numeric($o[0])) {
+    try {
+        $mime = class_exists('finfo')
+            ? (new finfo(FILEINFO_MIME_TYPE))->file($part)
+            : (mime_content_type($part) ?: '');
+    } catch (Throwable $e) { $mime = ''; }
+    if ($mime === '' || strpos($mime, 'video/') !== 0) {
+        // finfo can mislabel some valid videos — fall back to extension check
+        $extGuess = strtolower(pathinfo($sess['filename'], PATHINFO_EXTENSION));
+        if (!in_array($extGuess, $VIDEO_EXTS, true)) {
             @unlink($part); $sessions->setStatus($sess['id'], 'aborted');
-            out(['error' => 'File is not a decodable video'], 415);
+            out(['error' => 'File is not a valid video (detected: ' . ($mime ?: 'unknown') . ')'], 415);
         }
-        $duration = (float)$o[0];
+        $mime = 'video/' . ($extGuess === 'mov' ? 'quicktime' : ($extGuess === 'mp4' ? 'mp4' : $extGuess));
     }
 
-    $sha = hash_file('sha256', $part);
-    $ext = $VIDEO_MIME_EXT[$mime] ?? strtolower(pathinfo($sess['filename'], PATHINFO_EXTENSION)) ?: 'mp4';
-    if (!in_array($ext, $VIDEO_EXTS, true)) $ext = 'mp4';
-    $stored = 'uploads/' . bin2hex(random_bytes(8)) . '_' . time() . '.' . $ext;
-    $dest = __DIR__ . '/storage/' . $stored;
-    if (!@rename($part, $dest)) {
-        if (!@copy($part, $dest)) { @unlink($part); out(['error' => 'Could not finalize upload'], 500); }
-        @unlink($part);
+    try {
+        $ffprobe = null;
+        foreach ([__DIR__ . '/bin/ffprobe.exe', 'ffprobe'] as $c) { if (is_file($c) || $c === 'ffprobe') { $ffprobe = $c; break; } }
+        if ($ffprobe) {
+            $o = [];
+            @exec(escapeshellarg($ffprobe) . ' -v error -show_entries format=duration -of csv=p=0 ' . escapeshellarg($part) . ' 2>&1', $o, $code);
+            if ($code !== 0 || empty($o[0]) || !is_numeric($o[0])) {
+                @unlink($part); $sessions->setStatus($sess['id'], 'aborted');
+                out(['error' => 'File is not a decodable video'], 415);
+            }
+            $duration = (float)$o[0];
+        }
+
+        $sha = hash_file('sha256', $part);
+        $ext = $VIDEO_MIME_EXT[$mime] ?? strtolower(pathinfo($sess['filename'], PATHINFO_EXTENSION)) ?: 'mp4';
+        if (!in_array($ext, $VIDEO_EXTS, true)) $ext = 'mp4';
+        $stored = 'uploads/' . bin2hex(random_bytes(8)) . '_' . time() . '.' . $ext;
+        $dest = __DIR__ . '/storage/' . $stored;
+        if (!@rename($part, $dest)) {
+            if (!@copy($part, $dest)) { @unlink($part); out(['error' => 'Could not finalize upload'], 500); }
+            @unlink($part);
+        }
+
+        $mediaId = (new MediaAsset())->create([
+            'uploaded_by' => (int)($_SESSION['user_id'] ?? $_SESSION['admin_id']),
+            'original_filename' => $sess['filename'],
+            'stored_filename' => basename($dest),
+            'storage_path' => 'storage/' . $stored,
+            'media_type' => 'video',
+            'mime_type' => $mime,
+            'file_size' => (int)$sess['size_bytes'],
+            'duration_seconds' => isset($duration) ? (int)round($duration) : null,
+            'alt_text' => pathinfo($sess['filename'], PATHINFO_FILENAME),
+        ]);
+        if (!$mediaId) { @unlink($dest); out(['error' => 'Upload verified but media registration failed'], 500); }
+
+        $sessions->setStatus($sess['id'], 'complete', ['sha256' => $sha, 'media_id' => $mediaId]);
+        // Non-destructive 720p rendition (original preserved).
+        RenditionBuilder::enqueue((int)$mediaId, $dest);
+        out(['media_id' => (int)$mediaId, 'sha256' => $sha, 'size' => (int)$sess['size_bytes'], 'mime' => $mime]);
+    } catch (Throwable $e) {
+        error_log('media-upload complete: ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+        out(['error' => 'Finalization failed: ' . $e->getMessage()], 500);
     }
-
-    $mediaId = (new MediaAsset())->create([
-        'uploaded_by' => (int)($_SESSION['user_id'] ?? $_SESSION['admin_id']),
-        'original_filename' => $sess['filename'],
-        'stored_filename' => basename($dest),
-        'storage_path' => 'storage/' . $stored,
-        'media_type' => 'video',
-        'mime_type' => $mime,
-        'file_size' => (int)$sess['size_bytes'],
-        'duration_seconds' => isset($duration) ? (int)round($duration) : null,
-        'alt_text' => pathinfo($sess['filename'], PATHINFO_FILENAME),
-    ]);
-    if (!$mediaId) { @unlink($dest); out(['error' => 'Upload verified but media registration failed'], 500); }
-
-    $sessions->setStatus($sess['id'], 'complete', ['sha256' => $sha, 'media_id' => $mediaId]);
-    // Non-destructive 720p rendition (original preserved).
-    RenditionBuilder::enqueue((int)$mediaId, $dest);
-    out(['media_id' => (int)$mediaId, 'sha256' => $sha, 'size' => (int)$sess['size_bytes'], 'mime' => $mime]);
 }
 
 /* ------------------------------------------------ abort */
