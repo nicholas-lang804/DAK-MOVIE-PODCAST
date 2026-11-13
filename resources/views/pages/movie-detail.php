@@ -108,7 +108,12 @@
             })();
             </script>
             <?php endif; ?>
-            <p class="movie-stream-only-note">Streaming only — this title cannot be downloaded.</p>
+            <?php $movieDownloadable = !empty($downloadsEnabled) && !empty($movie['allow_download']) && $canWatch; ?>
+            <?php if ($movieDownloadable): ?>
+                <p class="movie-stream-only-note"><a class="btn btn-outline" href="/movie-download.php?movie_id=<?php echo (int)$movie['id']; ?>">⬇ Download this movie</a></p>
+            <?php else: ?>
+                <p class="movie-stream-only-note">Streaming only — this title cannot be downloaded.</p>
+            <?php endif; ?>
         </section>
     <?php elseif (!empty($movie['video_path']) && $movie['access_type'] === 'paid'): ?>
         <section class="movie-access-required" aria-labelledby="access-heading">

@@ -122,7 +122,8 @@
                         <small>Paid movies are hidden from free users in public video feeds regardless of placement.</small>
                     </div>
                     <div class="form-group">
-                        <small>Movies are stream-only — downloads are available for music tracks only (see Music → per-track download access).</small>
+                        <label style="font-weight:normal"><input type="checkbox" id="allow_download" name="allow_download" value="1" <?php echo !empty($movie['allow_download']) ? 'checked' : ''; ?>> Allow downloads for this movie</label>
+                        <small>Off by default — movies are stream-only unless you tick this AND "Allow downloads" is enabled in Admin → Settings. Paid movies still require payment before downloading.</small>
                     </div>
                     <div id="paid_movie_options" class="paid-movie-options" <?php echo ($movie['access_type'] ?? 'free') === 'paid' ? '' : 'hidden'; ?>>
                         <div class="form-group">
@@ -137,7 +138,7 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <p class="form-help">Paid movies require completed Pesapal payment before watching. Movies are stream-only and cannot be downloaded.</p>
+                        <p class="form-help">Paid movies require completed Pesapal payment before watching or downloading.</p>
                         <p class="form-help movie-access-note"><strong>Important:</strong> this price belongs to the movie product only. The movie poster stays attached to the movie, while the shared media library remains for standalone uploads and public media.</p>
                     </div>
                 </div>
