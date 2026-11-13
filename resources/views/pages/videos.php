@@ -18,8 +18,7 @@
                     <video controls preload="metadata" playsinline src="/video-stream.php?media_id=<?php echo (int)$video['id']; ?>"></video>
                     <div class="video-card-body">
                         <span class="video-kicker">STANDALONE VIDEO</span>
-                        <h2><?php echo htmlspecialchars($video['alt_text'] ?: pathinfo($video['original_filename'], PATHINFO_FILENAME)); ?></h2>
-                        <p><?php echo htmlspecialchars($video['original_filename']); ?></p>
+                        <h2><?php echo htmlspecialchars($video['alt_text'] ?: 'Video'); ?></h2>
                         <span class="movie-stream-only-note">Stream only — downloads are currently disabled.</span>
                     </div>
                 </article>

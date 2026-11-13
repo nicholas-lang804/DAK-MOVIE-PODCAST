@@ -69,7 +69,7 @@
                     <span class="eyebrow">WATCH NOW</span>
                     <h2 id="watch-movie-heading">Watch <?php echo htmlspecialchars($movie['title']); ?></h2>
                 </div>
-                <span class="movie-video-file"><?php echo htmlspecialchars($movie['video_filename'] ?? 'Full movie video'); ?></span>
+                <span class="movie-video-file"><?php echo htmlspecialchars($movie['title']); ?> — Full movie</span>
             </div>
             <?php
             // HLS when a packaged stream exists for this movie's video asset; signed, expiring URL.

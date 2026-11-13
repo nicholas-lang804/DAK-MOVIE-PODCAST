@@ -177,7 +177,9 @@ if ($action === 'complete') {
             'mime_type' => $mime,
             'file_size' => (int)$sess['size_bytes'],
             'duration_seconds' => isset($duration) ? (int)round($duration) : null,
-            'alt_text' => pathinfo($sess['filename'], PATHINFO_FILENAME),
+            // Public-safe label: strip upload prefixes like "1778346943308-" so raw
+            // filenames never surface to viewers.
+            'alt_text' => trim((string)preg_replace('/^\d+[-_\s]+/', '', pathinfo($sess['filename'], PATHINFO_FILENAME))) ?: 'Video',
         ]);
         if (!$mediaId) { @unlink($dest); out(['error' => 'Upload verified but media registration failed'], 500); }
 

@@ -192,7 +192,7 @@
                 <?php foreach (($recentVideos ?? []) as $video): ?>
                     <article class="member-video-card">
                         <video controls preload="metadata" src="<?php echo htmlspecialchars('/' . ltrim($video['storage_path'], '/')); ?>"></video>
-                        <div><h3><?php echo htmlspecialchars($video['alt_text'] ?: $video['original_filename']); ?></h3><p>New video release</p></div>
+                        <div><h3><?php echo htmlspecialchars($video['alt_text'] ?: 'Latest video'); ?></h3><p>New video release</p></div>
                     </article>
                 <?php endforeach; ?>
                 <?php if (empty($recentVideos)): ?><div class="member-empty-state">New videos will appear here as soon as they are published.</div><?php endif; ?>

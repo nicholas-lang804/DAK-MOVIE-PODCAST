@@ -322,7 +322,7 @@
                 <video controls preload="metadata" playsinline src="/video-stream.php?media_id=<?php echo (int)$video['id']; ?>"></video>
                 <div class="video-card-body">
                     <span class="video-kicker">VIDEO</span>
-                    <h3><?php echo htmlspecialchars($video['alt_text'] ?: pathinfo($video['original_filename'], PATHINFO_FILENAME)); ?></h3>
+                    <h3><?php echo htmlspecialchars($video['alt_text'] ?: 'Latest video'); ?></h3>
                 </div>
             </article>
         <?php endforeach; ?>
