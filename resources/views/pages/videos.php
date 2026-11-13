@@ -15,7 +15,7 @@
         <div class="video-grid">
             <?php foreach ($videos as $video): ?>
                 <article class="video-card">
-                    <video controls preload="metadata" playsinline src="/video-stream.php?media_id=<?php echo (int)$video['id']; ?>"></video>
+                    <video controls preload="metadata" playsinline controlsList="nodownload" oncontextmenu="return false" src="/video-stream.php?media_id=<?php echo (int)$video['id']; ?>"></video>
                     <div class="video-card-body">
                         <span class="video-kicker">STANDALONE VIDEO</span>
                         <h2><?php echo htmlspecialchars($video['alt_text'] ?: 'Video'); ?></h2>

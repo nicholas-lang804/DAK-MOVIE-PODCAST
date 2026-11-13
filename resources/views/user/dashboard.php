@@ -191,7 +191,7 @@
             <div class="member-video-grid">
                 <?php foreach (($recentVideos ?? []) as $video): ?>
                     <article class="member-video-card">
-                        <video controls preload="metadata" src="<?php echo htmlspecialchars('/' . ltrim($video['storage_path'], '/')); ?>"></video>
+                        <video controls preload="metadata" controlsList="nodownload" oncontextmenu="return false" src="/media-play.php?media_id=<?php echo (int)$video['id']; ?>"></video>
                         <div><h3><?php echo htmlspecialchars($video['alt_text'] ?: 'Latest video'); ?></h3><p>New video release</p></div>
                     </article>
                 <?php endforeach; ?>

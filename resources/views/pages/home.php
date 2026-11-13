@@ -319,7 +319,7 @@
     <div class="video-grid">
         <?php foreach ($featuredVideos as $video): ?>
             <article class="video-card">
-                <video controls preload="metadata" playsinline src="/video-stream.php?media_id=<?php echo (int)$video['id']; ?>"></video>
+                <video controls preload="metadata" playsinline controlsList="nodownload" oncontextmenu="return false" src="/video-stream.php?media_id=<?php echo (int)$video['id']; ?>"></video>
                 <div class="video-card-body">
                     <span class="video-kicker">VIDEO</span>
                     <h3><?php echo htmlspecialchars($video['alt_text'] ?: 'Latest video'); ?></h3>

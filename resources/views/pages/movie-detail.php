@@ -88,7 +88,7 @@
                 }
             }
             ?>
-            <video id="moviePlayer" controls preload="metadata" playsinline>
+            <video id="moviePlayer" controls preload="metadata" playsinline controlsList="nodownload" oncontextmenu="return false">
                 <source src="/media-play.php?movie_id=<?php echo (int)$movie['id']; ?>" type="<?php echo htmlspecialchars($movie['video_mime_type'] ?? 'video/mp4'); ?>">
                 Your browser does not support this video format.
             </video>
