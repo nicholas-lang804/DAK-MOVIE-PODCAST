@@ -24,6 +24,7 @@ class VideoCompressor {
             if (is_file($candidate)) return $candidate;
         }
         // Fall back to PATH lookup (exec('where'/'which') is cheap enough per upload).
+        if (!function_exists('exec')) return 'ffmpeg'; // shell disabled — treat as unavailable
         $cmd = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'where ffmpeg 2>NUL' : 'which ffmpeg 2>/dev/null';
         $out = [];
         @exec($cmd, $out);
@@ -32,6 +33,7 @@ class VideoCompressor {
 
     public static function available() {
         if (self::$ready !== null) return self::$ready;
+        if (!function_exists('exec')) { self::$ready = false; return false; } // shared hosts disable exec
         $enabled = (new SiteSetting())->get('video_compression_enabled');
         if ($enabled === '0') { self::$ready = false; return false; }
         $ffmpeg = self::ffmpegPath();

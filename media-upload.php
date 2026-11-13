@@ -143,8 +143,11 @@ if ($action === 'complete') {
     }
 
     try {
-        $ffprobe = null;
-        foreach ([__DIR__ . '/bin/ffprobe.exe', 'ffprobe'] as $c) { if (is_file($c) || $c === 'ffprobe') { $ffprobe = $c; break; } }
+        // ffprobe duration probe only when shell exec is available (shared hosts disable it).
+        $ffprobe = function_exists('exec') ? null : false;
+        if ($ffprobe !== false) {
+            foreach ([__DIR__ . '/bin/ffprobe.exe', 'ffprobe'] as $c) { if (is_file($c) || $c === 'ffprobe') { $ffprobe = $c; break; } }
+        }
         if ($ffprobe) {
             $o = [];
             @exec(escapeshellarg($ffprobe) . ' -v error -show_entries format=duration -of csv=p=0 ' . escapeshellarg($part) . ' 2>&1', $o, $code);
