@@ -222,7 +222,7 @@
         const item = document.createElement('article');
         item.className = 'tmz-chat-message tmz-chat-message-row' + (message.sender_role === root.dataset.role ? ' is-own' : '');
         const author = document.createElement('strong');
-        author.textContent = message.sender_role === 'admin' ? 'THE MOVIE ZONE PODCAST 256 team' : (data.thread.username || 'Member');
+        author.textContent = message.sender_role === 'admin' ? 'THE DAK FILM PODCAST MEDIA team' : (data.thread.username || 'Member');
         const body = document.createElement('p');
         body.textContent = message.body;
         const time = document.createElement('time');
@@ -283,7 +283,7 @@
       const item = document.createElement('article');
       item.className = 'tmz-chat-message tmz-chat-message-row' + (message.sender_role === root.dataset.role ? ' is-own' : '');
       const author = document.createElement('strong');
-      author.textContent = message.sender_role === 'admin' ? 'THE MOVIE ZONE PODCAST 256 team' : (data.thread.username || 'Member');
+      author.textContent = message.sender_role === 'admin' ? 'THE DAK FILM PODCAST MEDIA team' : (data.thread.username || 'Member');
       const body = document.createElement('p');
       body.textContent = message.body;
       const time = document.createElement('time');

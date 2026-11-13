@@ -6,6 +6,7 @@ require_once __DIR__ . '/app/Models/Movie.php';
 require_once __DIR__ . '/app/Models/MediaAsset.php';
 require_once __DIR__ . '/app/Models/Payment.php';
 require_once __DIR__ . '/app/Helpers/MediaStream.php';
+require_once __DIR__ . '/app/Helpers/StreamToken.php';
 
 $movieId = filter_var($_GET['movie_id'] ?? null, FILTER_VALIDATE_INT);
 $mediaId = filter_var($_GET['media_id'] ?? null, FILTER_VALIDATE_INT);
@@ -22,6 +23,13 @@ if ($movieId) {
         (empty($_SESSION['user_id']) || !(new Payment())->hasMovieAccess((int)$_SESSION['user_id'], $movieId))) {
         http_response_code(403);
         exit('Payment is required to watch this movie.');
+    }
+    // Non-admin movie streams must use a signed expiring URL (issued by the
+    // movie page) — closes the unsigned-endpoint bypass.
+    if (!$isAdmin && !tmz_movie_stream_valid($movieId, (int)($_SESSION['user_id'] ?? 0),
+            (string)($_GET['tok'] ?? ''), (int)($_GET['exp'] ?? 0))) {
+        http_response_code(403);
+        exit('Playback link expired — reload the movie page.');
     }
     $relativePath = (string)$movie['video_path'];
     $mime = (string)($movie['video_mime_type'] ?? '');

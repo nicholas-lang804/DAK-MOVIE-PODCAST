@@ -3,6 +3,8 @@
  * Movie Detail Page View
  * Single movie view with reviews
  */
+require_once __DIR__ . '/../../../app/Helpers/StreamToken.php';
+$tmzStreamUserId = (int)($_SESSION['user_id'] ?? 0);
 ?>
 
 <article class="movie-detail">
@@ -89,7 +91,7 @@
             }
             ?>
             <video id="moviePlayer" controls preload="metadata" playsinline controlsList="nodownload" oncontextmenu="return false">
-                <source src="/media-play.php?movie_id=<?php echo (int)$movie['id']; ?>" type="<?php echo htmlspecialchars($movie['video_mime_type'] ?? 'video/mp4'); ?>">
+                <source src="<?php echo htmlspecialchars(tmz_movie_stream_url((int)$movie['id'], $tmzStreamUserId)); ?>" type="<?php echo htmlspecialchars($movie['video_mime_type'] ?? 'video/mp4'); ?>">
                 Your browser does not support this video format.
             </video>
             <?php if ($hlsSrc): ?>

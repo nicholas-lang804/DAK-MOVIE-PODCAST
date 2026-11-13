@@ -3,7 +3,7 @@
   if (!panel) return;
 
   const url = panel.dataset.shareUrl || '';
-  const title = panel.dataset.shareTitle || 'THE MOVIE ZONE PODCAST 256 Live';
+  const title = panel.dataset.shareTitle || 'THE DAK FILM PODCAST MEDIA Live';
   const description = panel.querySelector('.live-share-preview p')?.textContent.trim() || '';
   const message = [title, description, url].filter(Boolean).join('\n');
   const status = document.getElementById('liveShareStatus');

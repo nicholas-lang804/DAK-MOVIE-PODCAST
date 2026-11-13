@@ -22,6 +22,7 @@ require_once __DIR__ . '/app/Helpers/MediaStream.php';
 require_once __DIR__ . '/app/Services/MediaStorage.php';
 require_once __DIR__ . '/app/Services/RemoteMediaClient.php';
 require_once __DIR__ . '/app/Models/SiteSetting.php';
+require_once __DIR__ . '/app/Helpers/StreamToken.php';
 
 $isAdmin = isAdmin();
 $pdo = getDB();
@@ -92,6 +93,11 @@ if (!empty($_GET['movie_id'])) {
     if (!$isAdmin && $movie['access_type'] === 'paid' &&
         (empty($_SESSION['user_id']) || !(new Payment())->hasMovieAccess((int)$_SESSION['user_id'], $movieId))) {
         http_response_code(403); exit('Payment is required to watch this movie.');
+    }
+    // Signed, expiring URL — stream links can't be shared, bookmarked or reused.
+    $tokUser = (int)($_SESSION['user_id'] ?? 0);
+    if (!tmz_movie_stream_valid($movieId, $tokUser, (string)($_GET['tok'] ?? ''), (int)($_GET['exp'] ?? 0))) {
+        http_response_code(403); exit('Playback link expired — reload the movie page.');
     }
     // Movie video: prefer video_media_id rendition, else movie video_path.
     $mediaIdForRendition = (int)($movie['video_media_id'] ?? 0) ?: $movieId;

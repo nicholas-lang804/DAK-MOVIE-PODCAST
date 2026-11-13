@@ -1,4 +1,4 @@
-/* THE MOVIE ZONE PODCAST 256 - JavaScript Utilities */
+/* THE DAK FILM PODCAST MEDIA - JavaScript Utilities */
 
 // CSRF Token Management
 function getCSRFToken() {
