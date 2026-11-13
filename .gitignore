@@ -52,3 +52,6 @@ pesapal_payment.php
 payment-callback.php
 payment-ipn.php
 analytics.php
+
+# FFmpeg binaries — too large for git, not needed on shared hosting
+bin/
