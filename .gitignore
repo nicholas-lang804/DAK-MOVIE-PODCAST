@@ -1,0 +1,54 @@
+# Dependencies & build
+node_modules/
+bin/             # ffmpeg binaries (167MB) — not needed on shared hosting
+
+# Environment / secrets
+.env
+config/database.local.php
+
+# Uploaded & generated media — upload these separately via FTP/File Manager
+# (Git is for code only; media is too large for git repos).
+# Keep the .htaccess protection files inside each storage dir.
+storage/uploads/*
+!storage/uploads/.htaccess
+storage/music/*
+!storage/music/.htaccess
+storage/renditions/*
+!storage/renditions/.htaccess
+storage/hls/*
+!storage/hls/.htaccess
+storage/backups/*
+storage/logs/*
+
+# Backups & duplicates
+_backups/
+deploy-package/
+"TMZ PODCAST/"
+logo_extracted/
+
+# Dev / OS junk
+nul
+.DS_Store
+Thumbs.db
+*.log
+.devin/
+
+# Dev/diagnostic scripts — never deploy publicly
+test.php
+install.php
+setup.php
+seed.php
+migrate.php
+reset_admin.php
+api-docs.php
+optimize.php
+status.php
+health.php
+cli.php
+backup.php
+security.php
+webhooks.php
+pesapal_payment.php
+payment-callback.php
+payment-ipn.php
+analytics.php

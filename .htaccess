@@ -1,0 +1,81 @@
+# THE MOVIE ZONE PODCAST 256 - Apache routing and security configuration
+
+# Enable rewrite engine
+RewriteEngine On
+
+# Large movie uploads. These per-directory values apply without waiting for a full Apache restart.
+php_value upload_max_filesize 5G
+php_value post_max_size 6G
+php_value max_input_time 3600
+php_value max_execution_time 3600
+
+# Redirect to public router
+RewriteRule ^$ public/index.php [L]
+
+# Handle public routes
+RewriteRule ^episodes\.php$ public/index.php [L]
+RewriteRule ^videos\.php$ public/index.php [L]
+RewriteRule ^live\.php$ public/index.php [L]
+RewriteRule ^news\.php$ public/index.php [L]
+RewriteRule ^movies\.php$ public/index.php [L]
+RewriteRule ^events\.php$ public/index.php [L]
+RewriteRule ^hosts\.php$ public/index.php [L]
+RewriteRule ^stars\.php$ public/index.php [L]
+RewriteRule ^search\.php$ public/index.php [L]
+RewriteRule ^music\.php$ public/index.php [L]
+RewriteRule ^my-list\.php$ public/index.php [L]
+RewriteRule ^privacy\.php$ public/index.php [L]
+RewriteRule ^terms\.php$ public/index.php [L]
+RewriteRule ^cookies\.php$ public/index.php [L]
+RewriteRule ^about\.php$ public/index.php [L]
+RewriteRule ^contact\.php$ public/index.php [L]
+RewriteRule ^subscribe\.php$ public/index.php [L]
+
+# Handle admin routes
+RewriteRule ^admin/$ admin/index.php [L]
+RewriteRule ^admin/login\.php$ admin/login.php [L]
+RewriteRule ^admin/logout\.php$ admin/logout.php [L]
+RewriteRule ^admin/dashboard\.php$ admin/index.php [L]
+
+# Handle user routes
+RewriteRule ^user/$ user/index.php [L]
+RewriteRule ^user/dashboard\.php$ user/index.php [L]
+RewriteRule ^user/profile\.php$ user/index.php [L]
+RewriteRule ^user/settings\.php$ user/index.php [L]
+RewriteRule ^user/logout\.php$ user/index.php [L]
+
+# Handle authentication routes
+RewriteRule ^login\.php$ login.php [L]
+RewriteRule ^register\.php$ register.php [L]
+RewriteRule ^logout\.php$ logout.php [L]
+
+# Handle installation routes
+RewriteRule ^install\.php$ install.php [L]
+RewriteRule ^migrate\.php$ migrate.php [L]
+RewriteRule ^test\.php$ test.php [L]
+
+# PWA manifest MIME type
+AddType application/manifest+json .webmanifest
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Disable directory listing
+Options -Indexes
+
+# Protect sensitive files
+<FilesMatch "^(config|database|app|includes|storage)/">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Allow access to specific files
+<FilesMatch "^(index|login|register|logout|install|migrate|test)\.php$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>

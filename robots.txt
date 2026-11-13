@@ -1,0 +1,37 @@
+<?php
+/**
+ * THE MOVIE ZONE PODCAST 256 - Robots.txt
+ * SEO configuration for search engines
+ */
+
+// Set text/plain header
+header('Content-Type: text/plain');
+
+// Base URL
+$baseUrl = 'http://localhost/TMZ%20PODCAST';
+
+// Output robots.txt content
+echo "User-agent: *\n";
+echo "Allow: /\n";
+echo "Disallow: /admin/\n";
+echo "Disallow: /user/\n";
+echo "Disallow: /api/\n";
+echo "Disallow: /storage/\n";
+echo "Disallow: /config/\n";
+echo "Disallow: /app/\n";
+echo "Disallow: /includes/\n";
+echo "Disallow: /database/\n";
+echo "Disallow: /resources/\n";
+echo "Disallow: /assets/\n";
+echo "Disallow: /install.php\n";
+echo "Disallow: /setup.php\n";
+echo "Disallow: /migrate.php\n";
+echo "Disallow: /seed.php\n";
+echo "Disallow: /test.php\n";
+echo "Disallow: /cron.php\n";
+echo "Disallow: /error.php\n";
+echo "Disallow: /maintenance.php\n";
+echo "Disallow: /sitemap.php\n";
+echo "\n";
+echo "# Sitemap\n";
+echo "Sitemap: $baseUrl/sitemap.php\n";
