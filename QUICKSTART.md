@@ -9,9 +9,9 @@ A comprehensive entertainment platform featuring podcasts, movies, articles, and
    - Start Apache and MySQL services
 
 2. **Access the Application**
-   - Homepage: http://localhost/TMZ%20PODCAST/
-   - Admin Login: http://localhost/TMZ%20PODCAST/admin/login.php
-   - User Login: http://localhost/TMZ%20PODCAST/login.php
+   - Homepage: http://localhost/
+   - Admin Login: http://localhost/admin/login.php
+   - User Login: http://localhost/login.php
 
 3. **Default Credentials**
    - Admin: `admin` / `admin123`
@@ -34,7 +34,7 @@ A comprehensive entertainment platform featuring podcasts, movies, articles, and
 3. **Run Installation**
    ```bash
    # Visit in browser
-   http://localhost/TMZ%20PODCAST/install.php
+   http://localhost/install.php
    ```
 
 ### Configuration

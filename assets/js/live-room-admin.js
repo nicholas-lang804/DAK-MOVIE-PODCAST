@@ -50,7 +50,7 @@
     input.addEventListener('change', async function () {
       input.disabled = true;
       try {
-        await request('/TMZ%20PODCAST/api/live-room-permissions.php', {
+        await request('/api/live-room-permissions.php', {
           action: 'permission',
           identity: participant.identity,
           permission: name,
@@ -126,7 +126,7 @@
     roleSelect.addEventListener('change', async function () {
       roleSelect.disabled = true;
       try {
-        await request('/TMZ%20PODCAST/api/live-room-permissions.php', {
+        await request('/api/live-room-permissions.php', {
           action: 'promote',
           identity: participant.identity,
           role: roleSelect.value
@@ -224,7 +224,7 @@
   async function handleSpeakerRequest(requestId, action, button) {
     button.disabled = true;
     try {
-      const data = await request('/TMZ%20PODCAST/api/live-room-invitation.php', {
+      const data = await request('/api/live-room-invitation.php', {
         live_id: liveId,
         request_id: String(requestId),
         action
@@ -239,7 +239,7 @@
 
   async function changeParticipant(participant, action, extra, successMessage) {
     try {
-      const result = await request('/TMZ%20PODCAST/api/live-room-permissions.php', Object.assign({
+      const result = await request('/api/live-room-permissions.php', Object.assign({
         action,
         identity: participant.identity
       }, extra));
@@ -260,7 +260,7 @@
     }
     busy = true;
     try {
-      const data = await request('/TMZ%20PODCAST/api/live-room-permissions.php?live_id=' + encodeURIComponent(liveId));
+      const data = await request('/api/live-room-permissions.php?live_id=' + encodeURIComponent(liveId));
       roomControls = data.controls || {};
       panel.querySelectorAll('[data-room-control]').forEach(function (button) {
         controlLabel(button, Boolean(roomControls[button.dataset.roomControl]));
@@ -291,7 +291,7 @@
       const value = !Boolean(roomControls[control]);
       button.disabled = true;
       try {
-        const data = await request('/TMZ%20PODCAST/api/live-room-permissions.php', {
+        const data = await request('/api/live-room-permissions.php', {
           action: 'room_control',
           control,
           value: String(value)
@@ -311,7 +311,7 @@
     if (!window.confirm('End this broadcast for everyone?')) return;
     event.currentTarget.disabled = true;
     try {
-      await request('/TMZ%20PODCAST/api/live-room-permissions.php', { action: 'end_for_all' });
+      await request('/api/live-room-permissions.php', { action: 'end_for_all' });
       window.tmzLiveRoom?.disconnect();
       setStatus('Broadcast ended for everyone.', false);
       window.location.reload();
@@ -335,7 +335,7 @@
       }
       if (submitter) submitter.disabled = true;
       try {
-        await request('/TMZ%20PODCAST/api/live-room-invitation.php', {
+        await request('/api/live-room-invitation.php', {
           live_id: liveId,
           request_id: requestId,
           action
@@ -369,7 +369,7 @@
         parent_id: '',
         csrf_token: csrf
       });
-      const response = await fetch('/TMZ%20PODCAST/admin/dashboard.php?tab=live', {
+      const response = await fetch('/admin/dashboard.php?tab=live', {
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

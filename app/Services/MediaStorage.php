@@ -82,7 +82,7 @@ class MediaStorage {
             return (new RemoteMediaClient($this->settings))->signedUrl($key);
         }
         // Local: web path relative to app base (same convention as mediaUrl()).
-        return '/TMZ%20PODCAST/storage/' . str_replace('%2F', '/', rawurlencode($key));
+        return '/storage/' . str_replace('%2F', '/', rawurlencode($key));
     }
 
     /** Resolve a key to a local filesystem path (local driver only). */

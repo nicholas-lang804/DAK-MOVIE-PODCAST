@@ -19,7 +19,7 @@ $dtLocal = function ($v) { return !empty($v) ? date('Y-m-d\TH:i', strtotime($v))
 <section class="admin-section">
     <div class="section-header">
         <h1>Manage Events &amp; Tickets</h1>
-        <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=events&amp;action=create" class="btn btn-primary">Add Event</a>
+        <a href="/admin/dashboard.php?tab=events&amp;action=create" class="btn btn-primary">Add Event</a>
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -34,7 +34,7 @@ $dtLocal = function ($v) { return !empty($v) ? date('Y-m-d\TH:i', strtotime($v))
 <?php if ($isForm): ?>
     <div class="form-container">
         <h2><?php echo $action === 'create' ? 'Create Event' : 'Edit Event'; ?></h2>
-        <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=events" class="admin-form">
+        <form method="POST" action="/admin/dashboard.php?tab=events" class="admin-form">
             <?php echo CSRF::getField(); ?>
             <input type="hidden" name="form_action" value="save_event">
             <input type="hidden" name="id" value="<?php echo $eventId ?: ''; ?>">
@@ -86,18 +86,18 @@ $dtLocal = function ($v) { return !empty($v) ? date('Y-m-d\TH:i', strtotime($v))
                 <?php if ($ef && $ef['paid_at']): ?> · Paid <?php echo $h($ef['paid_at']); ?><?php endif; ?></p>
                 <div class="admin-actions">
                     <?php if (in_array($efStatus, ['none','failed','cancelled'], true)): ?>
-                    <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=events" class="inline-form"><?php echo CSRF::getField(); ?>
+                    <form method="POST" action="/admin/dashboard.php?tab=events" class="inline-form"><?php echo CSRF::getField(); ?>
                         <input type="hidden" name="form_action" value="pay_event_fee"><input type="hidden" name="id" value="<?php echo (int)$eventId; ?>">
                         <button class="btn btn-primary btn-small" type="submit">Pay publishing fee (Pesapal)</button></form>
                     <?php endif; ?>
                     <?php if ($efStatus !== 'exempt' && $efStatus !== 'paid'): ?>
-                    <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=events" class="inline-form" onsubmit="return confirm('Grant a free-publish exemption for this event?')"><?php echo CSRF::getField(); ?>
+                    <form method="POST" action="/admin/dashboard.php?tab=events" class="inline-form" onsubmit="return confirm('Grant a free-publish exemption for this event?')"><?php echo CSRF::getField(); ?>
                         <input type="hidden" name="form_action" value="grant_exemption"><input type="hidden" name="id" value="<?php echo (int)$eventId; ?>">
                         <input type="text" name="fee_note" placeholder="Reason (optional)" style="max-width:180px">
                         <button class="btn btn-outline btn-small" type="submit">Grant exemption</button></form>
                     <?php endif; ?>
                     <?php if ($efStatus === 'exempt'): ?>
-                    <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=events" class="inline-form"><?php echo CSRF::getField(); ?>
+                    <form method="POST" action="/admin/dashboard.php?tab=events" class="inline-form"><?php echo CSRF::getField(); ?>
                         <input type="hidden" name="form_action" value="revoke_exemption"><input type="hidden" name="id" value="<?php echo (int)$eventId; ?>">
                         <button class="btn btn-small" type="submit">Revoke exemption</button></form>
                     <?php endif; ?>
@@ -153,7 +153,7 @@ $dtLocal = function ($v) { return !empty($v) ? date('Y-m-d\TH:i', strtotime($v))
 
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Save Event</button>
-                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=events" class="btn btn-outline">Cancel</a>
+                <a href="/admin/dashboard.php?tab=events" class="btn btn-outline">Cancel</a>
             </div>
         </form>
     </div>
@@ -188,7 +188,7 @@ $dtLocal = function ($v) { return !empty($v) ? date('Y-m-d\TH:i', strtotime($v))
             <?php if (empty($ticketRows)): ?>
                 <p class="form-help">Save at least one ticket level first.</p>
             <?php else: ?>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=events" class="admin-form">
+            <form method="POST" action="/admin/dashboard.php?tab=events" class="admin-form">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="form_action" value="physical_sale">
                 <input type="hidden" name="id" value="<?php echo $eventId; ?>">
@@ -210,7 +210,7 @@ $dtLocal = function ($v) { return !empty($v) ? date('Y-m-d\TH:i', strtotime($v))
         <div class="form-container admin-ticket-panel">
             <h2>Gate check-in</h2>
             <p class="form-help">Type or scan the code printed on the ticket (e.g. TMZ-AB12CD34EF).</p>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=events" class="admin-form">
+            <form method="POST" action="/admin/dashboard.php?tab=events" class="admin-form">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="form_action" value="check_in">
                 <input type="hidden" name="id" value="<?php echo $eventId; ?>">
@@ -274,7 +274,7 @@ $dtLocal = function ($v) { return !empty($v) ? date('Y-m-d\TH:i', strtotime($v))
     <div class="form-container" style="border-left:4px solid #c9a227">
         <h3>Organiser pricing — event publishing fee</h3>
         <?php $fs = $feeSettings ?? ['enabled'=>false,'amount'=>0,'currency'=>'UGX']; $fst = $feeStats ?? []; ?>
-        <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=events" class="admin-form" style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
+        <form method="POST" action="/admin/dashboard.php?tab=events" class="admin-form" style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
             <?php echo CSRF::getField(); ?>
             <input type="hidden" name="form_action" value="save_fee_settings">
             <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" name="fee_enabled" value="1" <?php echo !empty($fs['enabled']) ? 'checked' : ''; ?>> Fee enabled</label>
@@ -338,8 +338,8 @@ $dtLocal = function ($v) { return !empty($v) ? date('Y-m-d\TH:i', strtotime($v))
                         <td><?php echo isset($row['min_price']) && $row['min_price'] !== null ? $h(Event::money($row['price_currency'], $row['min_price'])) : '—'; ?></td>
                         <td><span class="status-badge status-<?php echo $h($row['status']); ?>"><?php echo $h(ucfirst($row['status'])); ?></span></td>
                         <td class="admin-actions">
-                            <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=events&amp;action=edit&amp;id=<?php echo (int)$row['id']; ?>" class="btn btn-small">Edit / Sales</a>
-                            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=events" class="inline-form" onsubmit="return confirm('Delete this event? Events with paid tickets cannot be deleted.');">
+                            <a href="/admin/dashboard.php?tab=events&amp;action=edit&amp;id=<?php echo (int)$row['id']; ?>" class="btn btn-small">Edit / Sales</a>
+                            <form method="POST" action="/admin/dashboard.php?tab=events" class="inline-form" onsubmit="return confirm('Delete this event? Events with paid tickets cannot be deleted.');">
                                 <?php echo CSRF::getField(); ?>
                                 <input type="hidden" name="form_action" value="delete_event">
                                 <input type="hidden" name="id" value="<?php echo (int)$row['id']; ?>">

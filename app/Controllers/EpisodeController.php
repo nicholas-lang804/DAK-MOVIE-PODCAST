@@ -98,7 +98,7 @@ class EpisodeController extends Controller {
      */
     public function addComment() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/TMZ%20PODCAST/episodes.php');
+            $this->redirect('/episodes.php');
         }
 
         $episodeId = intval($_POST['episode_id'] ?? 0);
@@ -108,7 +108,7 @@ class EpisodeController extends Controller {
 
         if (empty($userName) || empty($comment)) {
             $_SESSION['comment_error'] = 'Please fill in all required fields';
-            $this->redirect('/TMZ%20PODCAST/episodes.php');
+            $this->redirect('/episodes.php');
         }
 
         $result = $this->commentModel->create([
@@ -125,7 +125,7 @@ class EpisodeController extends Controller {
             $_SESSION['comment_error'] = 'Failed to submit comment. Please try again.';
         }
 
-        $this->redirect('/TMZ%20PODCAST/episodes.php');
+        $this->redirect('/episodes.php');
     }
 }
 ?>

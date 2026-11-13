@@ -9,17 +9,17 @@ session_start();
 
 // Check if user is admin
 if (isset($_SESSION['admin_id'])) {
-    header('Location: /TMZ%20PODCAST/admin/index.php');
+    header('Location: /admin/index.php');
     exit;
 }
 
 // Check if user is logged in
 if (isset($_SESSION['user_id'])) {
-    header('Location: /TMZ%20PODCAST/user/index.php');
+    header('Location: /user/index.php');
     exit;
 }
 
 // Redirect to public website
-header('Location: /TMZ%20PODCAST/public/index.php');
+header('Location: /public/index.php');
 exit;
 

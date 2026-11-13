@@ -93,21 +93,21 @@ class HomeController extends Controller {
      */
     public function subscribe() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/TMZ%20PODCAST/');
+            $this->redirect('/');
         }
 
         $email = trim($_POST['email'] ?? '');
         
         if (!Validation::validateEmail($email)) {
             $_SESSION['newsletter_error'] = 'Please enter a valid email address';
-            $this->redirect('/TMZ%20PODCAST/#newsletter');
+            $this->redirect('/#newsletter');
         }
 
         // Check if already subscribed
         $existing = $this->newsletterModel->findByEmail($email);
         if ($existing) {
             $_SESSION['newsletter_error'] = 'This email is already subscribed';
-            $this->redirect('/TMZ%20PODCAST/#newsletter');
+            $this->redirect('/#newsletter');
         }
 
         // Create subscription
@@ -119,7 +119,7 @@ class HomeController extends Controller {
             $_SESSION['newsletter_error'] = 'Subscription failed. Please try again.';
         }
 
-        $this->redirect('/TMZ%20PODCAST/#newsletter');
+        $this->redirect('/#newsletter');
     }
 
     /**
@@ -143,12 +143,12 @@ class HomeController extends Controller {
         // Validate
         if (empty($name) || empty($email) || empty($message)) {
             $_SESSION['contact_error'] = 'Please fill in all required fields';
-            $this->redirect('/TMZ%20PODCAST/contact.php');
+            $this->redirect('/contact.php');
         }
 
         if (!Validation::validateEmail($email)) {
             $_SESSION['contact_error'] = 'Please enter a valid email address';
-            $this->redirect('/TMZ%20PODCAST/contact.php');
+            $this->redirect('/contact.php');
         }
 
         // Save to database
@@ -169,7 +169,7 @@ class HomeController extends Controller {
                     'contact_message',
                     'New website contact message',
                     $name . ' · ' . ($subject !== '' ? $subject : 'General inquiry') . ': ' . substr($message, 0, 600),
-                    '/TMZ%20PODCAST/admin/dashboard.php?tab=contacts'
+                    '/admin/dashboard.php?tab=contacts'
                 );
             } catch (Throwable $error) {
                 error_log('Contact-message notification could not be saved: ' . $error->getMessage());
@@ -179,7 +179,7 @@ class HomeController extends Controller {
             $_SESSION['contact_error'] = 'Failed to send message. Please try again.';
         }
 
-        $this->redirect('/TMZ%20PODCAST/contact.php');
+        $this->redirect('/contact.php');
     }
 
     /**

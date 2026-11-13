@@ -8,7 +8,7 @@
 header('Content-Type: text/plain');
 
 // Base URL
-$baseUrl = 'http://localhost/TMZ%20PODCAST';
+$baseUrl = 'http://localhost/';
 
 // Output robots.txt content
 echo "User-agent: *\n";

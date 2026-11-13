@@ -9,15 +9,15 @@ $mzGenreColors = ['tone-1', 'tone-2', 'tone-3', 'tone-4'];
 <div id="musicApp" class="mz-app" data-music-view="<?php echo tmz_mz_h($musicView); ?>">
     <header class="mz-subnav">
         <nav class="mz-tabs" aria-label="Music sections">
-            <a href="/TMZ%20PODCAST/music.php" class="<?php echo $musicView === 'home' ? 'is-active' : ''; ?>">Home</a>
-            <a href="/TMZ%20PODCAST/music.php?view=videos" class="<?php echo $musicView === 'videos' ? 'is-active' : ''; ?>">Videos</a>
+            <a href="/music.php" class="<?php echo $musicView === 'home' ? 'is-active' : ''; ?>">Home</a>
+            <a href="/music.php?view=videos" class="<?php echo $musicView === 'videos' ? 'is-active' : ''; ?>">Videos</a>
             <?php if (!empty($canLibrary)): ?>
-                <a href="/TMZ%20PODCAST/music.php?view=library" class="<?php echo in_array($musicView, ['library', 'playlist'], true) ? 'is-active' : ''; ?>">Your Library</a>
+                <a href="/music.php?view=library" class="<?php echo in_array($musicView, ['library', 'playlist'], true) ? 'is-active' : ''; ?>">Your Library</a>
             <?php else: ?>
-                <a href="/TMZ%20PODCAST/login.php">Sign in for Library</a>
+                <a href="/login.php">Sign in for Library</a>
             <?php endif; ?>
         </nav>
-        <form class="mz-search" method="GET" action="/TMZ%20PODCAST/music.php" role="search">
+        <form class="mz-search" method="GET" action="/music.php" role="search">
             <input type="search" name="q" value="<?php echo tmz_mz_h($search ?? ''); ?>" placeholder="Search songs, artists, albums…" aria-label="Search music" autocomplete="off">
             <button type="submit" aria-label="Search">⌕</button>
         </form>
@@ -30,7 +30,7 @@ $mzGenreColors = ['tone-1', 'tone-2', 'tone-3', 'tone-4'];
         <div class="mz-hero-copy">
             <span class="cine-eyebrow">Featured track</span>
             <h1><?php echo tmz_mz_h($f['title']); ?></h1>
-            <p><a href="/TMZ%20PODCAST/music.php?artist=<?php echo rawurlencode($f['artist_slug']); ?>"><?php echo tmz_mz_h($f['artist']); ?></a><?php echo $f['album'] ? ' · ' . tmz_mz_h($f['album']) : ''; ?> · <?php echo number_format($f['plays']); ?> plays</p>
+            <p><a href="/music.php?artist=<?php echo rawurlencode($f['artist_slug']); ?>"><?php echo tmz_mz_h($f['artist']); ?></a><?php echo $f['album'] ? ' · ' . tmz_mz_h($f['album']) : ''; ?> · <?php echo number_format($f['plays']); ?> plays</p>
             <div class="mz-actions">
                 <button type="button" class="btn btn-primary mz-big-play" data-act="play">▶ Listen now</button>
                 <?php if ($f['video']): ?><button type="button" class="btn btn-outline" data-act="play-video">▶ Watch video</button><?php endif; ?>
@@ -50,7 +50,7 @@ $mzGenreColors = ['tone-1', 'tone-2', 'tone-3', 'tone-4'];
     <section class="mz-section" aria-label="Genres">
         <div class="mz-chips">
             <?php foreach ($genreList as $gi => $g): ?>
-                <a class="mz-chip <?php echo $mzGenreColors[$gi % 4]; ?>" href="/TMZ%20PODCAST/music.php?genre=<?php echo rawurlencode($g['genre']); ?>"><?php echo tmz_mz_h($g['genre']); ?> <small><?php echo (int)$g['total']; ?></small></a>
+                <a class="mz-chip <?php echo $mzGenreColors[$gi % 4]; ?>" href="/music.php?genre=<?php echo rawurlencode($g['genre']); ?>"><?php echo tmz_mz_h($g['genre']); ?> <small><?php echo (int)$g['total']; ?></small></a>
             <?php endforeach; ?>
         </div>
     </section>
@@ -62,7 +62,7 @@ $mzGenreColors = ['tone-1', 'tone-2', 'tone-3', 'tone-4'];
     <?php endif; ?>
 
     <?php if (!empty($trending)): ?>
-    <section class="mz-section"><div class="cine-heading"><div><span class="cine-eyebrow">This fortnight</span><h2>Trending now <img class="tmz-chart-logo-inline" src="/TMZ%20PODCAST/assets/img/dak-mark.png" alt="THE DAK FILM PODCAST MEDIA"></h2></div><?php tmz_mz_actions('#mzTrending'); ?></div>
+    <section class="mz-section"><div class="cine-heading"><div><span class="cine-eyebrow">This fortnight</span><h2>Trending now <img class="tmz-chart-logo-inline" src="/assets/img/dak-mark.png" alt="THE DAK FILM PODCAST MEDIA"></h2></div><?php tmz_mz_actions('#mzTrending'); ?></div>
         <ol class="mz-list" id="mzTrending" data-track-list><?php foreach ($trending as $i => $t) { tmz_mz_row($t, $i + 1); } ?></ol></section>
     <?php endif; ?>
 
@@ -72,7 +72,7 @@ $mzGenreColors = ['tone-1', 'tone-2', 'tone-3', 'tone-4'];
     <?php endif; ?>
 
     <?php if (!empty($videoTracks)): ?>
-    <section class="mz-section"><div class="cine-heading"><div><span class="cine-eyebrow">Watch</span><h2>Music videos</h2></div><a class="btn btn-outline" href="/TMZ%20PODCAST/music.php?view=videos">All videos</a></div>
+    <section class="mz-section"><div class="cine-heading"><div><span class="cine-eyebrow">Watch</span><h2>Music videos</h2></div><a class="btn btn-outline" href="/music.php?view=videos">All videos</a></div>
         <div class="mz-vgrid" data-track-list><?php foreach ($videoTracks as $t) { tmz_mz_vtile($t); } ?></div></section>
     <?php endif; ?>
 
@@ -92,9 +92,9 @@ $mzGenreColors = ['tone-1', 'tone-2', 'tone-3', 'tone-4'];
         <div class="mz-detail-copy">
             <span class="cine-eyebrow">Song</span>
             <h1><?php echo tmz_mz_h($track['title']); ?><?php if ($track['explicit']): ?> <span class="mz-badge">E</span><?php endif; ?></h1>
-            <p><a href="/TMZ%20PODCAST/music.php?artist=<?php echo rawurlencode($track['artist_slug']); ?>"><?php echo tmz_mz_h($track['artist']); ?></a>
-               <?php if ($track['album']): ?> · <a href="/TMZ%20PODCAST/music.php?album=<?php echo rawurlencode($track['album_slug']); ?>"><?php echo tmz_mz_h($track['album']); ?></a><?php endif; ?>
-               <?php if (!empty($trackRow['genre'])): ?> · <a href="/TMZ%20PODCAST/music.php?genre=<?php echo rawurlencode($trackRow['genre']); ?>"><?php echo tmz_mz_h($trackRow['genre']); ?></a><?php endif; ?>
+            <p><a href="/music.php?artist=<?php echo rawurlencode($track['artist_slug']); ?>"><?php echo tmz_mz_h($track['artist']); ?></a>
+               <?php if ($track['album']): ?> · <a href="/music.php?album=<?php echo rawurlencode($track['album_slug']); ?>"><?php echo tmz_mz_h($track['album']); ?></a><?php endif; ?>
+               <?php if (!empty($trackRow['genre'])): ?> · <a href="/music.php?genre=<?php echo rawurlencode($trackRow['genre']); ?>"><?php echo tmz_mz_h($trackRow['genre']); ?></a><?php endif; ?>
                · <?php echo tmz_mz_fmt($track['duration']); ?> · <?php echo number_format($track['plays']); ?> plays</p>
             <div class="mz-actions">
                 <button type="button" class="btn btn-primary mz-big-play" data-act="play">▶ Play</button>
@@ -104,7 +104,7 @@ $mzGenreColors = ['tone-1', 'tone-2', 'tone-3', 'tone-4'];
                 <?php if (!empty($track['downloads_enabled']) && !empty($track['download_video'])): ?><button type="button" class="btn btn-outline" data-act="download-video">⬇ Download video</button><?php endif; ?>
                 <button type="button" class="btn btn-outline" data-act="share">Share</button>
             </div>
-            <?php if ($track['locked']): ?><p class="mz-note"><?php echo tmz_mz_h($track['lock_hint']); ?> <a href="/TMZ%20PODCAST/<?php echo strpos($track['lock_hint'], 'All Access') !== false ? 'membership.php' : 'login.php'; ?>">Continue</a></p><?php endif; ?>
+            <?php if ($track['locked']): ?><p class="mz-note"><?php echo tmz_mz_h($track['lock_hint']); ?> <a href="/<?php echo strpos($track['lock_hint'], 'All Access') !== false ? 'membership.php' : 'login.php'; ?>">Continue</a></p><?php endif; ?>
         </div>
     </section>
     <?php if (!empty($trackRow['lyrics']) && !$track['locked']): ?>
@@ -133,7 +133,7 @@ $mzGenreColors = ['tone-1', 'tone-2', 'tone-3', 'tone-4'];
     <section class="mz-detail">
         <?php echo tmz_mz_cover(Music::url($album['cover_path'] ?? ''), $album['title'], 'mz-detail-art'); ?>
         <div class="mz-detail-copy"><span class="cine-eyebrow">Album</span><h1><?php echo tmz_mz_h($album['title']); ?></h1>
-            <p><a href="/TMZ%20PODCAST/music.php?artist=<?php echo rawurlencode($album['artist_slug']); ?>"><?php echo tmz_mz_h($album['artist_name']); ?></a><?php echo !empty($album['release_year']) ? ' · ' . (int)$album['release_year'] : ''; ?> · <?php echo count($tracks); ?> songs</p>
+            <p><a href="/music.php?artist=<?php echo rawurlencode($album['artist_slug']); ?>"><?php echo tmz_mz_h($album['artist_name']); ?></a><?php echo !empty($album['release_year']) ? ' · ' . (int)$album['release_year'] : ''; ?> · <?php echo count($tracks); ?> songs</p>
             <?php if (!empty($tracks)) { tmz_mz_actions('#mzAlbumTracks'); } ?></div>
     </section>
     <section class="mz-section"><?php if (empty($tracks)): ?><p class="cine-empty">No songs yet.</p><?php else: ?>
@@ -161,7 +161,7 @@ $mzGenreColors = ['tone-1', 'tone-2', 'tone-3', 'tone-4'];
         <?php if (empty($playlists)): ?><p class="cine-empty">No playlists yet. Create one, then add songs from the ⋯ menu.</p><?php else: ?>
         <div class="mz-rail">
             <?php foreach ($playlists as $pl): ?>
-                <a class="mz-album" href="/TMZ%20PODCAST/music.php?playlist=<?php echo (int)$pl['id']; ?>">
+                <a class="mz-album" href="/music.php?playlist=<?php echo (int)$pl['id']; ?>">
                     <?php echo tmz_mz_cover('', $pl['name'], 'mz-album-art'); ?><strong><?php echo tmz_mz_h($pl['name']); ?></strong><small><?php echo (int)$pl['tracks']; ?> songs</small>
                 </a>
             <?php endforeach; ?>

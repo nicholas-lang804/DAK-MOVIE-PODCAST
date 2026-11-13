@@ -11,7 +11,7 @@
             <h1>Welcome back, <?php echo htmlspecialchars($user['username']); ?></h1>
             <p>Your private cinema desk for the latest films, episodes, videos and stories.</p>
         </div>
-        <a href="/TMZ%20PODCAST/movies.php" class="btn btn-primary member-hero-action">Explore the catalogue</a>
+        <a href="/movies.php" class="btn btn-primary member-hero-action">Explore the catalogue</a>
     </div>
 
     <?php if (isset($_SESSION['profile_success'])): ?>
@@ -34,14 +34,14 @@
     <?php $dashboardShowcaseMovies = array_values($recentMovies ?? []); ?>
     <?php $dashboardFeaturedMovie = $dashboardShowcaseMovies[0] ?? null; ?>
     <?php if ($dashboardFeaturedMovie): ?>
-        <?php $dashboardFeaturedLink = (($dashboardFeaturedMovie['access_type'] ?? 'free') === 'paid') ? '/TMZ%20PODCAST/payment.php?movie_id=' . (int)$dashboardFeaturedMovie['id'] : '/TMZ%20PODCAST/movies.php?slug=' . urlencode($dashboardFeaturedMovie['slug']) . '#watch-movie'; ?>
+        <?php $dashboardFeaturedLink = (($dashboardFeaturedMovie['access_type'] ?? 'free') === 'paid') ? '/payment.php?movie_id=' . (int)$dashboardFeaturedMovie['id'] : '/movies.php?slug=' . urlencode($dashboardFeaturedMovie['slug']) . '#watch-movie'; ?>
         <?php $dashboardFeaturedLabel = (($dashboardFeaturedMovie['access_type'] ?? 'free') === 'paid') ? 'Pay to Watch' : 'Watch now'; ?>
         <section class="movie-showcase">
             <div class="movie-showcase-shell">
                 <div class="movie-showcase-feature">
                     <div class="movie-showcase-poster">
                         <?php if (!empty($dashboardFeaturedMovie['poster_path'])): ?>
-                            <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($dashboardFeaturedMovie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($dashboardFeaturedMovie['title']); ?>">
+                            <img src="<?php echo htmlspecialchars('/' . ltrim($dashboardFeaturedMovie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($dashboardFeaturedMovie['title']); ?>">
                         <?php else: ?>
                             <div class="movie-showcase-fallback"><span>DAK</span><strong><?php echo htmlspecialchars($dashboardFeaturedMovie['title']); ?></strong></div>
                         <?php endif; ?>
@@ -60,7 +60,7 @@
                         <p><?php echo htmlspecialchars(substr($dashboardFeaturedMovie['synopsis'] ?? '', 0, 160)); ?><?php echo !empty($dashboardFeaturedMovie['synopsis']) && strlen($dashboardFeaturedMovie['synopsis']) > 160 ? '...' : ''; ?></p>
                         <div class="movie-showcase-actions">
                             <a href="<?php echo htmlspecialchars($dashboardFeaturedLink); ?>" class="btn btn-primary"><?php echo htmlspecialchars($dashboardFeaturedLabel); ?></a>
-                            <a href="/TMZ%20PODCAST/membership.php" class="btn btn-outline">Plans from UGX 500</a>
+                            <a href="/membership.php" class="btn btn-outline">Plans from UGX 500</a>
                         </div>
                     </div>
                 </div>
@@ -74,11 +74,11 @@
                     <div class="movie-showcase-track">
                         <?php foreach (array_merge($dashboardShowcaseMovies, $dashboardShowcaseMovies) as $movie): ?>
                             <?php $movieIsPaid = (($movie['access_type'] ?? 'free') === 'paid'); ?>
-                            <?php $movieLink = $movieIsPaid ? '/TMZ%20PODCAST/payment.php?movie_id=' . (int)$movie['id'] : '/TMZ%20PODCAST/movies.php?slug=' . urlencode($movie['slug']) . '#watch-movie'; ?>
+                            <?php $movieLink = $movieIsPaid ? '/payment.php?movie_id=' . (int)$movie['id'] : '/movies.php?slug=' . urlencode($movie['slug']) . '#watch-movie'; ?>
                             <?php $movieAction = $movieIsPaid ? 'Pay to Watch' : 'Watch now'; ?>
                             <article class="movie-showcase-item"
                                 data-title="<?php echo htmlspecialchars(addslashes($movie['title'])); ?>"
-                                data-image="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim((string)($movie['poster_path'] ?? ''), '/')); ?>"
+                                data-image="<?php echo htmlspecialchars('/' . ltrim((string)($movie['poster_path'] ?? ''), '/')); ?>"
                                 data-link="<?php echo htmlspecialchars($movieLink); ?>"
                                 data-button-label="<?php echo htmlspecialchars($movieAction); ?>"
                                 data-synopsis="<?php echo htmlspecialchars(addslashes(substr($movie['synopsis'] ?? '', 0, 160))); ?>"
@@ -88,7 +88,7 @@
                                 data-paid="<?php echo $movieIsPaid ? '1' : '0'; ?>">
                                 <div class="movie-showcase-item-poster">
                                     <?php if (!empty($movie['poster_path'])): ?>
-                                        <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
+                                        <img src="<?php echo htmlspecialchars('/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
                                     <?php else: ?>
                                         <div class="movie-showcase-item-fallback"><?php echo htmlspecialchars($movie['title']); ?></div>
                                     <?php endif; ?>
@@ -108,24 +108,24 @@
 
     <!-- Navigation Tabs -->
     <div class="dashboard-tabs">
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=dashboard" class="tab <?php echo $activeTab === 'dashboard' ? 'active' : ''; ?>">Dashboard</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=episodes" class="tab <?php echo $activeTab === 'episodes' ? 'active' : ''; ?>">Episodes</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=articles" class="tab <?php echo $activeTab === 'articles' ? 'active' : ''; ?>">Articles</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=movies" class="tab <?php echo $activeTab === 'movies' ? 'active' : ''; ?>">Movies</a>
-        <a href="/TMZ%20PODCAST/stars.php" class="tab">Stars</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=events" class="tab <?php echo $activeTab === 'events' ? 'active' : ''; ?>">Events</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=tickets" class="tab <?php echo $activeTab === 'tickets' ? 'active' : ''; ?>">My Tickets</a>
+        <a href="/user/dashboard.php?tab=dashboard" class="tab <?php echo $activeTab === 'dashboard' ? 'active' : ''; ?>">Dashboard</a>
+        <a href="/user/dashboard.php?tab=episodes" class="tab <?php echo $activeTab === 'episodes' ? 'active' : ''; ?>">Episodes</a>
+        <a href="/user/dashboard.php?tab=articles" class="tab <?php echo $activeTab === 'articles' ? 'active' : ''; ?>">Articles</a>
+        <a href="/user/dashboard.php?tab=movies" class="tab <?php echo $activeTab === 'movies' ? 'active' : ''; ?>">Movies</a>
+        <a href="/stars.php" class="tab">Stars</a>
+        <a href="/user/dashboard.php?tab=events" class="tab <?php echo $activeTab === 'events' ? 'active' : ''; ?>">Events</a>
+        <a href="/user/dashboard.php?tab=tickets" class="tab <?php echo $activeTab === 'tickets' ? 'active' : ''; ?>">My Tickets</a>
         <span class="tab-sep">· EVENT MANAGEMENT ·</span>
-        <a href="/TMZ%20PODCAST/sell-tickets.php" class="tab" style="color:#c9a227;font-weight:800">🎟 Sale Tickets With Us</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=event-create" class="tab <?php echo $activeTab === 'event-create' ? 'active' : ''; ?>">Create New Event</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=my-events" class="tab <?php echo $activeTab === 'my-events' ? 'active' : ''; ?>">My Events</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=event-fees" class="tab <?php echo $activeTab === 'event-fees' ? 'active' : ''; ?>">Publishing &amp; Payments</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=payment-history" class="tab <?php echo $activeTab === 'payment-history' ? 'active' : ''; ?>">Payment History</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=event-reports" class="tab <?php echo $activeTab === 'event-reports' ? 'active' : ''; ?>">Event Reports</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=hosts" class="tab <?php echo $activeTab === 'hosts' ? 'active' : ''; ?>">Hosts</a>
-        <a href="/TMZ%20PODCAST/user/dashboard.php?tab=comments" class="tab <?php echo $activeTab === 'comments' ? 'active' : ''; ?>">My Comments</a>
-        <a href="/TMZ%20PODCAST/user/profile.php" class="tab">Profile</a>
-        <a href="/TMZ%20PODCAST/user/settings.php" class="tab">Settings</a>
+        <a href="/sell-tickets.php" class="tab" style="color:#c9a227;font-weight:800">🎟 Sale Tickets With Us</a>
+        <a href="/user/dashboard.php?tab=event-create" class="tab <?php echo $activeTab === 'event-create' ? 'active' : ''; ?>">Create New Event</a>
+        <a href="/user/dashboard.php?tab=my-events" class="tab <?php echo $activeTab === 'my-events' ? 'active' : ''; ?>">My Events</a>
+        <a href="/user/dashboard.php?tab=event-fees" class="tab <?php echo $activeTab === 'event-fees' ? 'active' : ''; ?>">Publishing &amp; Payments</a>
+        <a href="/user/dashboard.php?tab=payment-history" class="tab <?php echo $activeTab === 'payment-history' ? 'active' : ''; ?>">Payment History</a>
+        <a href="/user/dashboard.php?tab=event-reports" class="tab <?php echo $activeTab === 'event-reports' ? 'active' : ''; ?>">Event Reports</a>
+        <a href="/user/dashboard.php?tab=hosts" class="tab <?php echo $activeTab === 'hosts' ? 'active' : ''; ?>">Hosts</a>
+        <a href="/user/dashboard.php?tab=comments" class="tab <?php echo $activeTab === 'comments' ? 'active' : ''; ?>">My Comments</a>
+        <a href="/user/profile.php" class="tab">Profile</a>
+        <a href="/user/settings.php" class="tab">Settings</a>
     </div>
 
     <!-- Dashboard Overview -->
@@ -163,8 +163,8 @@
                 <h2>Sale Tickets With Us</h2>
                 <p>Create your event, set ticket prices and start selling — pay a one-time publishing fee to go live.</p>
                 <div class="member-spotlight-actions">
-                    <a class="btn btn-primary" href="/TMZ%20PODCAST/sell-tickets.php">Create Your Event</a>
-                    <a class="btn btn-outline" href="/TMZ%20PODCAST/user/dashboard.php?tab=event-fees">Publishing &amp; Payments</a>
+                    <a class="btn btn-primary" href="/sell-tickets.php">Create Your Event</a>
+                    <a class="btn btn-outline" href="/user/dashboard.php?tab=event-fees">Publishing &amp; Payments</a>
                 </div>
             </div>
         </section>
@@ -175,8 +175,8 @@
                 <h2>Fresh cinema. New voices. More to discover.</h2>
                 <p>Stay close to every new release from the THE DAK FILM PODCAST MEDIA newsroom and screening room.</p>
                 <div class="member-spotlight-actions">
-                    <a class="btn btn-primary" href="/TMZ%20PODCAST/videos.php">Open Video Centre</a>
-                    <a class="btn btn-outline" href="/TMZ%20PODCAST/news.php">Read New Stories</a>
+                    <a class="btn btn-primary" href="/videos.php">Open Video Centre</a>
+                    <a class="btn btn-outline" href="/news.php">Read New Stories</a>
                 </div>
             </div>
             <div class="member-spotlight-lines" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
@@ -187,11 +187,11 @@
         <?php tmz_ad_slot('dashboard', 'leaderboard', 3); ?>
 
         <section class="member-content-section">
-            <div class="member-section-heading"><div><span class="member-eyebrow">SCREENING ROOM</span><h2>Latest videos</h2></div><a href="/TMZ%20PODCAST/videos.php">View all videos</a></div>
+            <div class="member-section-heading"><div><span class="member-eyebrow">SCREENING ROOM</span><h2>Latest videos</h2></div><a href="/videos.php">View all videos</a></div>
             <div class="member-video-grid">
                 <?php foreach (($recentVideos ?? []) as $video): ?>
                     <article class="member-video-card">
-                        <video controls preload="metadata" src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($video['storage_path'], '/')); ?>"></video>
+                        <video controls preload="metadata" src="<?php echo htmlspecialchars('/' . ltrim($video['storage_path'], '/')); ?>"></video>
                         <div><h3><?php echo htmlspecialchars($video['alt_text'] ?: $video['original_filename']); ?></h3><p>New video release</p></div>
                     </article>
                 <?php endforeach; ?>
@@ -200,13 +200,13 @@
         </section>
 
         <section class="member-content-section">
-            <div class="member-section-heading"><div><span class="member-eyebrow">FEATURED FILMS</span><h2>Latest movies</h2></div><a href="/TMZ%20PODCAST/movies.php">Browse movies</a></div>
+            <div class="member-section-heading"><div><span class="member-eyebrow">FEATURED FILMS</span><h2>Latest movies</h2></div><a href="/movies.php">Browse movies</a></div>
             <div class="member-movie-strip">
                 <?php foreach (($recentMovies ?? []) as $movie): ?>
                     <article class="member-movie-card">
-                        <?php if (!empty($movie['poster_path'])): ?><img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
+                        <?php if (!empty($movie['poster_path'])): ?><img src="<?php echo htmlspecialchars('/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
                         <?php else: ?><div class="member-movie-fallback"><span>DAK</span><strong><?php echo htmlspecialchars($movie['title']); ?></strong></div><?php endif; ?>
-                        <div class="member-movie-card-body"><h3><?php echo htmlspecialchars($movie['title']); ?></h3><p><?php echo !empty($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'New release'; ?></p><a href="/TMZ%20PODCAST/movies.php?slug=<?php echo urlencode($movie['slug']); ?>">Open film</a></div>
+                        <div class="member-movie-card-body"><h3><?php echo htmlspecialchars($movie['title']); ?></h3><p><?php echo !empty($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'New release'; ?></p><a href="/movies.php?slug=<?php echo urlencode($movie['slug']); ?>">Open film</a></div>
                     </article>
                 <?php endforeach; ?>
                 <?php if (empty($recentMovies)): ?><div class="member-empty-state">New movies will appear here as the catalogue grows.</div><?php endif; ?>
@@ -223,7 +223,7 @@
                         <div class="content-item">
                             <h3><?php echo htmlspecialchars($episode['title']); ?></h3>
                             <p><?php echo date('M d, Y', strtotime($episode['published_at'])); ?></p>
-                            <a href="/TMZ%20PODCAST/episodes.php?slug=<?php echo $episode['slug']; ?>" class="btn btn-small">View</a>
+                            <a href="/episodes.php?slug=<?php echo $episode['slug']; ?>" class="btn btn-small">View</a>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -236,14 +236,14 @@
                         <div class="content-item">
                             <h3><?php echo htmlspecialchars($article['title']); ?></h3>
                             <p><?php echo date('M d, Y', strtotime($article['published_at'])); ?></p>
-                            <a href="/TMZ%20PODCAST/news.php?slug=<?php echo $article['slug']; ?>" class="btn btn-small">View</a>
+                            <a href="/news.php?slug=<?php echo $article['slug']; ?>" class="btn btn-small">View</a>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
 
             <div class="dashboard-section dashboard-events">
-                <h2>Upcoming Events <a class="btn btn-small btn-outline" href="/TMZ%20PODCAST/user/dashboard.php?tab=tickets">My Tickets (<?php echo (int)($myTicketCount ?? 0); ?>)</a></h2>
+                <h2>Upcoming Events <a class="btn btn-small btn-outline" href="/user/dashboard.php?tab=tickets">My Tickets (<?php echo (int)($myTicketCount ?? 0); ?>)</a></h2>
                 <div class="content-list">
                     <?php if (empty($upcomingEvents)): ?><p class="form-help">No upcoming events right now — check back soon.</p><?php endif; ?>
                     <?php foreach ($upcomingEvents as $event): ?>
@@ -257,7 +257,7 @@
                                     <?php if (!empty($event['active_discounts'])): ?><span class="discount-pill">Discount available</span><?php endif; ?></p>
                                 <?php endif; ?>
                             </div>
-                            <a href="/TMZ%20PODCAST/events.php?slug=<?php echo urlencode($event['slug']); ?>#tickets" class="btn btn-small btn-primary">Buy tickets</a>
+                            <a href="/events.php?slug=<?php echo urlencode($event['slug']); ?>#tickets" class="btn btn-small btn-primary">Buy tickets</a>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -273,7 +273,7 @@
                     <h3><?php echo htmlspecialchars($episode['title']); ?></h3>
                     <p><?php echo date('M d, Y', strtotime($episode['published_at'])); ?></p>
                     <p><?php echo htmlspecialchars(substr($episode['description'], 0, 150)); ?>...</p>
-                    <a href="/TMZ%20PODCAST/episodes.php?slug=<?php echo $episode['slug']; ?>" class="btn btn-small">View Episode</a>
+                    <a href="/episodes.php?slug=<?php echo $episode['slug']; ?>" class="btn btn-small">View Episode</a>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -287,7 +287,7 @@
                     <h3><?php echo htmlspecialchars($article['title']); ?></h3>
                     <p><?php echo date('M d, Y', strtotime($article['published_at'])); ?></p>
                     <p><?php echo htmlspecialchars(substr($article['excerpt'], 0, 150)); ?>...</p>
-                    <a href="/TMZ%20PODCAST/news.php?slug=<?php echo $article['slug']; ?>" class="btn btn-small">Read Article</a>
+                    <a href="/news.php?slug=<?php echo $article['slug']; ?>" class="btn btn-small">Read Article</a>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -301,7 +301,7 @@
                     <h3><?php echo htmlspecialchars($movie['title']); ?></h3>
                     <p><?php echo !empty($movie['release_date']) ? date('M d, Y', strtotime($movie['release_date'])) : 'Release date not set'; ?></p>
                     <p><?php echo htmlspecialchars(substr($movie['synopsis'] ?? 'No synopsis available.', 0, 150)); ?>...</p>
-                    <a href="/TMZ%20PODCAST/movies.php?slug=<?php echo $movie['slug']; ?>" class="btn btn-small">View Movie</a>
+                    <a href="/movies.php?slug=<?php echo $movie['slug']; ?>" class="btn btn-small">View Movie</a>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -322,7 +322,7 @@
                                     <?php if (!empty($event['active_discounts'])): ?><span class="discount-pill">Discount available</span><?php endif; ?></p>
                                 <?php endif; ?>
                             </div>
-                            <a href="/TMZ%20PODCAST/events.php?slug=<?php echo urlencode($event['slug']); ?>#tickets" class="btn btn-small btn-primary">Buy tickets</a>
+                            <a href="/events.php?slug=<?php echo urlencode($event['slug']); ?>#tickets" class="btn btn-small btn-primary">Buy tickets</a>
                         </div>
             <?php endforeach; ?>
         </div>
@@ -333,7 +333,7 @@
                     <div class="content-card">
                         <h3><?php echo htmlspecialchars($event['title']); ?></h3>
                         <p><?php echo !empty($event['event_date']) ? htmlspecialchars(date('M d, Y', strtotime($event['event_date']))) : ''; ?></p>
-                        <a href="/TMZ%20PODCAST/events.php?slug=<?php echo urlencode($event['slug']); ?>" class="btn btn-small">View</a>
+                        <a href="/events.php?slug=<?php echo urlencode($event['slug']); ?>" class="btn btn-small">View</a>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -353,7 +353,7 @@
                     <h3><?php echo htmlspecialchars($host['name']); ?></h3>
                     <p><?php echo htmlspecialchars($host['profession'] ?? 'N/A'); ?></p>
                     <p><?php echo htmlspecialchars(substr($host['biography'], 0, 150)); ?>...</p>
-                    <a href="/TMZ%20PODCAST/hosts.php?slug=<?php echo $host['slug']; ?>" class="btn btn-small">View Profile</a>
+                    <a href="/hosts.php?slug=<?php echo $host['slug']; ?>" class="btn btn-small">View Profile</a>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -404,7 +404,7 @@
                 <p class="form-help">One-time fixed publishing fee per event. Pay it before your event can go live.</p>
             </div>
             <?php endif; ?>
-            <form method="POST" action="/TMZ%20PODCAST/user/dashboard.php?tab=event-create" enctype="multipart/form-data" class="admin-form">
+            <form method="POST" action="/user/dashboard.php?tab=event-create" enctype="multipart/form-data" class="admin-form">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="org_action" value="save_event">
                 <input type="hidden" name="id" value="<?php echo (int)($ev['id'] ?? 0); ?>">
@@ -465,33 +465,33 @@
     <?php endif; ?>
 
     <?php if ($activeTab === 'my-events'): ?>
-        <div class="section-header"><h2>My Events</h2><a class="btn btn-primary" href="/TMZ%20PODCAST/user/dashboard.php?tab=event-create">+ Create Event</a></div>
+        <div class="section-header"><h2>My Events</h2><a class="btn btn-primary" href="/user/dashboard.php?tab=event-create">+ Create Event</a></div>
         <?php $feeModel = $feeModel ?? new EventPublishFee(); ?>
         <?php if (empty($myEvents)): ?><p class="form-help">No events yet — create your first one.</p><?php endif; ?>
         <div class="content-grid">
         <?php foreach (($myEvents ?? []) as $ev): $fee = $feeModel->forEvent($ev['id']); $fstatus = $fee['status'] ?? 'none';
             $pubStatus = $ev['status'] === 'published' ? 'Published' : ($fstatus === 'pending' ? 'Awaiting Payment' : ($fstatus === 'paid' ? 'Ready to Publish' : ($fstatus === 'exempt' ? 'Ready to Publish' : ucfirst($ev['status'])))); ?>
             <div class="content-card" style="position:relative">
-                <?php if (!empty($ev['poster_path'])): ?><img src="/TMZ%20PODCAST/<?php echo htmlspecialchars($ev['poster_path']); ?>" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:10px"><?php endif; ?>
+                <?php if (!empty($ev['poster_path'])): ?><img src="/<?php echo htmlspecialchars($ev['poster_path']); ?>" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:10px"><?php endif; ?>
                 <h3><?php echo htmlspecialchars($ev['title']); ?></h3>
                 <p><?php echo !empty($ev['event_date']) ? htmlspecialchars(date('D, M d Y H:i', strtotime($ev['event_date']))) : 'Date TBA'; ?> · <?php echo htmlspecialchars($ev['venue_name'] ?? $ev['location'] ?? 'Venue TBA'); ?></p>
                 <p class="form-help"><?php echo (int)($ev['ticket_count'] ?? 0); ?> ticket categories · <?php echo (int)($ev['tickets_sold'] ?? 0); ?> sold</p>
                 <p>Publishing fee: <strong><?php echo $fee ? htmlspecialchars($fee['currency'] . ' ' . number_format((float)$fee['amount'])) : '—'; ?></strong>
                     · <span class="status-badge status-<?php echo $ev['status'] === 'published' ? 'published' : 'draft'; ?>"><?php echo htmlspecialchars($pubStatus); ?></span></p>
                 <div class="admin-actions" style="flex-wrap:wrap">
-                    <a class="btn btn-small btn-outline" href="/TMZ%20PODCAST/events.php?slug=<?php echo urlencode($ev['slug']); ?>" target="_blank">Preview</a>
-                    <a class="btn btn-small" href="/TMZ%20PODCAST/user/dashboard.php?tab=event-create&id=<?php echo (int)$ev['id']; ?>">Edit</a>
+                    <a class="btn btn-small btn-outline" href="/events.php?slug=<?php echo urlencode($ev['slug']); ?>" target="_blank">Preview</a>
+                    <a class="btn btn-small" href="/user/dashboard.php?tab=event-create&id=<?php echo (int)$ev['id']; ?>">Edit</a>
                     <?php if ($ev['status'] !== 'published'): ?>
-                    <form method="POST" action="/TMZ%20PODCAST/user/dashboard.php?tab=my-events" class="inline-form"><?php echo CSRF::getField(); ?>
+                    <form method="POST" action="/user/dashboard.php?tab=my-events" class="inline-form"><?php echo CSRF::getField(); ?>
                         <input type="hidden" name="org_action" value="publish_event"><input type="hidden" name="id" value="<?php echo (int)$ev['id']; ?>">
                         <button class="btn btn-small btn-primary" type="submit" <?php echo in_array($fstatus, ['paid','exempt'], true) || !EventPublishFee::feeEnabled() ? '' : 'disabled title="Pay the publishing fee first"'; ?>>Publish</button></form>
                     <?php else: ?>
-                    <form method="POST" action="/TMZ%20PODCAST/user/dashboard.php?tab=my-events" class="inline-form" onsubmit="return confirm('Unpublish this event?')"><?php echo CSRF::getField(); ?>
+                    <form method="POST" action="/user/dashboard.php?tab=my-events" class="inline-form" onsubmit="return confirm('Unpublish this event?')"><?php echo CSRF::getField(); ?>
                         <input type="hidden" name="org_action" value="unpublish_event"><input type="hidden" name="id" value="<?php echo (int)$ev['id']; ?>">
                         <button class="btn btn-small" type="submit">Unpublish</button></form>
                     <?php endif; ?>
-                    <a class="btn btn-small btn-outline" href="/TMZ%20PODCAST/user/dashboard.php?tab=event-fees">Payments</a>
-                    <form method="POST" action="/TMZ%20PODCAST/user/dashboard.php?tab=my-events" class="inline-form" onsubmit="return confirm('Delete this event?')"><?php echo CSRF::getField(); ?>
+                    <a class="btn btn-small btn-outline" href="/user/dashboard.php?tab=event-fees">Payments</a>
+                    <form method="POST" action="/user/dashboard.php?tab=my-events" class="inline-form" onsubmit="return confirm('Delete this event?')"><?php echo CSRF::getField(); ?>
                         <input type="hidden" name="org_action" value="delete_event"><input type="hidden" name="id" value="<?php echo (int)$ev['id']; ?>">
                         <button class="btn btn-small btn-danger" type="submit">Delete</button></form>
                 </div>
@@ -508,7 +508,7 @@
             <p style="font-size:1.5rem;font-weight:700;color:#c9a227"><?php echo htmlspecialchars($fs['currency'] . ' ' . number_format($fs['amount'])); ?></p>
             <p class="form-help">One-time fixed publishing fee per event, set by the platform administrator.</p>
         </div>
-        <?php if (empty($feeEvents)): ?><p class="form-help">No events yet — <a href="/TMZ%20PODCAST/user/dashboard.php?tab=event-create">create one</a> to see its publishing fee here.</p><?php endif; ?>
+        <?php if (empty($feeEvents)): ?><p class="form-help">No events yet — <a href="/user/dashboard.php?tab=event-create">create one</a> to see its publishing fee here.</p><?php endif; ?>
         <?php foreach (($feeEvents ?? []) as $ev): $f = $ev['fee']; ?>
         <div class="content-card">
             <h3><?php echo htmlspecialchars($ev['title']); ?></h3>
@@ -517,11 +517,11 @@
                 <?php if (!empty($f['reference'])): ?> · Ref <?php echo htmlspecialchars($f['reference']); ?><?php endif; ?>
                 <?php if (!empty($f['paid_at'])): ?> · Paid <?php echo htmlspecialchars($f['paid_at']); ?><?php endif; ?></p>
             <?php if (!$ev['fee_ok'] && ($f['status'] ?? 'pending') !== 'exempt'): ?>
-            <form method="POST" action="/TMZ%20PODCAST/user/dashboard.php?tab=event-fees" class="inline-form"><?php echo CSRF::getField(); ?>
+            <form method="POST" action="/user/dashboard.php?tab=event-fees" class="inline-form"><?php echo CSRF::getField(); ?>
                 <input type="hidden" name="org_action" value="pay_event_fee"><input type="hidden" name="id" value="<?php echo (int)$ev['id']; ?>">
                 <button class="btn btn-primary btn-small" type="submit">Pay Publishing Fee — <?php echo htmlspecialchars(($f['currency'] ?? $fs['currency']) . ' ' . number_format((float)($f['amount'] ?? $fs['amount']))); ?></button></form>
             <?php elseif ($ev['fee_ok'] && $ev['status'] !== 'published'): ?>
-            <form method="POST" action="/TMZ%20PODCAST/user/dashboard.php?tab=my-events" class="inline-form"><?php echo CSRF::getField(); ?>
+            <form method="POST" action="/user/dashboard.php?tab=my-events" class="inline-form"><?php echo CSRF::getField(); ?>
                 <input type="hidden" name="org_action" value="publish_event"><input type="hidden" name="id" value="<?php echo (int)$ev['id']; ?>">
                 <button class="btn btn-primary btn-small" type="submit">Publish Event</button></form>
             <?php endif; ?>

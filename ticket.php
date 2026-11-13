@@ -11,7 +11,7 @@ $isAdminViewer = $ticket && isAdmin();
 if (!$ticket || (!$isOwner && !$isAdminViewer)) {
     if (empty($_SESSION['user_id']) && empty($_SESSION['admin_id'])) tmzRequireCustomerLogin();
     http_response_code(404);
-    tmzRenderPage('Ticket not found', '<section class="checkout-page"><div class="checkout-card"><h1>Ticket not found</h1><p>This ticket does not exist or belongs to another account.</p><a class="btn btn-primary" href="/TMZ%20PODCAST/my-tickets.php">My tickets</a></div></section>');
+    tmzRenderPage('Ticket not found', '<section class="checkout-page"><div class="checkout-card"><h1>Ticket not found</h1><p>This ticket does not exist or belongs to another account.</p><a class="btn btn-primary" href="/my-tickets.php">My tickets</a></div></section>');
     exit;
 }
 
@@ -41,7 +41,7 @@ ob_start(); ?>
         </div>
         <div class="print-actions">
             <button class="btn btn-primary" onclick="window.print()">Print ticket</button>
-            <a class="btn btn-outline" href="/TMZ%20PODCAST/my-tickets.php">All my tickets</a>
+            <a class="btn btn-outline" href="/my-tickets.php">All my tickets</a>
         </div>
     </div>
 </section>

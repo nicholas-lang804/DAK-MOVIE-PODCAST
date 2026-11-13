@@ -41,9 +41,9 @@
                         <td><span class="status-badge status-<?php echo $message['status']; ?>"><?php echo ucfirst($message['status']); ?></span></td>
                         <td><?php echo date('M d, Y', strtotime($message['created_at'])); ?></td>
                         <td>
-                            <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=contacts&action=view&id=<?php echo $message['id']; ?>" class="btn btn-small">View</a>
+                            <a href="/admin/dashboard.php?tab=contacts&action=view&id=<?php echo $message['id']; ?>" class="btn btn-small">View</a>
                             <?php if ($message['status'] === 'new'): ?>
-                                <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=contacts" style="display: inline;">
+                                <form method="POST" action="/admin/dashboard.php?tab=contacts" style="display: inline;">
                                     <?php echo CSRF::getField(); ?>
                                     <input type="hidden" name="message_id" value="<?php echo $message['id']; ?>">
                                     <input type="hidden" name="status" value="read">

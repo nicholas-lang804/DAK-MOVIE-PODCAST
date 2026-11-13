@@ -80,10 +80,10 @@
 <section class="admin-section live-share-tools" id="liveShareTools" data-share-url="<?php echo htmlspecialchars($shareUrl, ENT_QUOTES, 'UTF-8'); ?>" data-share-title="<?php echo htmlspecialchars($live['title'], ENT_QUOTES, 'UTF-8'); ?>">
   <div class="live-share-heading"><div><span class="eyebrow">INVITE YOUR AUDIENCE</span><h2>Share this live show</h2><p>The link preview uses this show’s title, description, and cover image in messaging and social apps.</p></div></div>
   <div class="live-share-preview">
-    <?php if(!empty($live['cover_image_path'])): ?><img src="/TMZ%20PODCAST/<?php echo htmlspecialchars(ltrim($live['cover_image_path'], '/'), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($live['title'], ENT_QUOTES, 'UTF-8'); ?>"><?php else: ?><div class="live-share-image-empty">Add a cover image for a rich preview</div><?php endif; ?>
+    <?php if(!empty($live['cover_image_path'])): ?><img src="/<?php echo htmlspecialchars(ltrim($live['cover_image_path'], '/'), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($live['title'], ENT_QUOTES, 'UTF-8'); ?>"><?php else: ?><div class="live-share-image-empty">Add a cover image for a rich preview</div><?php endif; ?>
     <div><strong><?php echo htmlspecialchars($live['title'], ENT_QUOTES, 'UTF-8'); ?></strong><p><?php echo nl2br(htmlspecialchars($live['description'] ?? '', ENT_QUOTES, 'UTF-8')); ?></p></div>
   </div>
-  <form method="post" enctype="multipart/form-data" action="/TMZ%20PODCAST/admin/dashboard.php?tab=live&amp;live_id=<?php echo (int)$live['id']; ?>" class="live-share-edit-form">
+  <form method="post" enctype="multipart/form-data" action="/admin/dashboard.php?tab=live&amp;live_id=<?php echo (int)$live['id']; ?>" class="live-share-edit-form">
     <?php echo CSRF::getField(); ?><input type="hidden" name="live_action" value="update_share">
     <label>Share title<input name="title" maxlength="255" required value="<?php echo htmlspecialchars($live['title'], ENT_QUOTES, 'UTF-8'); ?>"></label>
     <label>Share description<textarea name="description" rows="3" maxlength="5000"><?php echo htmlspecialchars($live['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea></label>
@@ -93,7 +93,7 @@
   <label class="live-share-link-label">Public show link<input id="liveShareLink" type="url" readonly value="<?php echo htmlspecialchars($shareUrl, ENT_QUOTES, 'UTF-8'); ?>"></label>
   <div class="live-share-actions"><button type="button" class="btn btn-primary" id="shareLiveShow">Share…</button><button type="button" class="btn btn-outline" id="copyLiveShowLink">Copy link</button><a class="btn btn-outline" id="whatsappLiveShow" target="_blank" rel="noopener noreferrer">WhatsApp</a><a class="btn btn-outline" id="emailLiveShow">Email</a><span id="liveShareStatus" role="status" aria-live="polite"></span></div>
 </section>
-<script src="/TMZ%20PODCAST/assets/js/live-share.js?v=live-share-1"></script>
+<script src="/assets/js/live-share.js?v=live-share-1"></script>
 <?php endif; ?>
 <?php if($live): ?>
 <section class="admin-section live-control-panel">
@@ -177,10 +177,10 @@
     <label>To (HH:MM:SS)<input name="to" inputmode="numeric" placeholder="01:00:00" pattern="[0-9]{1,5}:[0-5][0-9]:[0-5][0-9]"></label>
     <button type="submit" class="btn btn-outline">Apply time range</button><button type="reset" class="btn btn-outline">Full transcript</button>
   </form>
-  <nav class="live-transcript-downloads" aria-label="Download live transcript"><?php foreach(['txt'=>'TXT','srt'=>'SRT','vtt'=>'VTT'] as $format=>$label): ?><a class="btn btn-outline" href="/TMZ%20PODCAST/api/live-captions.php?live_id=<?php echo (int)$live['id']; ?>&amp;format=<?php echo $format; ?>"><?php echo $label; ?></a><?php endforeach; ?></nav>
+  <nav class="live-transcript-downloads" aria-label="Download live transcript"><?php foreach(['txt'=>'TXT','srt'=>'SRT','vtt'=>'VTT'] as $format=>$label): ?><a class="btn btn-outline" href="/api/live-captions.php?live_id=<?php echo (int)$live['id']; ?>&amp;format=<?php echo $format; ?>"><?php echo $label; ?></a><?php endforeach; ?></nav>
   <div id="adminTranscriptResults" class="live-transcript-results" aria-live="polite"></div>
 </section><?php endif; ?>
-<?php if($live): ?><section class="admin-section live-recordings-panel" id="adminLiveRecordings" data-live-id="<?php echo (int)$live['id']; ?>" data-api="/TMZ%20PODCAST/api/live-recordings.php">
+<?php if($live): ?><section class="admin-section live-recordings-panel" id="adminLiveRecordings" data-live-id="<?php echo (int)$live['id']; ?>" data-api="/api/live-recordings.php">
   <div class="live-recordings-heading"><div><span class="eyebrow">LIVE MEDIA ARCHIVE</span><h2>Recordings &amp; downloads</h2><p>While the show is LIVE, choose Start video (MP4) or select an audio format and choose Start audio. Press Stop recording to finish; completed files appear below with Download and Delete controls. A recording only captures content from when you press Start onward.</p></div></div>
   <p class="live-recording-consent">Viewers are informed before joining that recording may begin at any time during the live show. Starting a recording does not prompt viewers to approve it. Video is saved as MP4; audio is saved as MP3 or OGG.</p>
   <?php if($live['status']==='live'): ?>
@@ -201,11 +201,11 @@
   <section class="live-admin-video-monitor" aria-labelledby="liveAdminVideoHeading"><div class="live-admin-video-heading"><div><h3 id="liveAdminVideoHeading">Participant video monitor</h3><p>Spotlight a speaker for everyone or leave each viewer in control of their own layout.</p></div><button type="button" class="btn btn-outline" id="clearLiveSpotlight">Show gallery to viewers</button></div><div id="liveAdminVideoGrid" class="live-admin-video-grid" aria-live="polite"><p class="form-help">Waiting for participants to publish audio or video.</p></div></section>
   <div id="liveParticipantList" class="live-participant-list" aria-live="polite"><p class="form-help">Connect the studio to load participants.</p></div>
 </section><?php endif; ?>
-<script src="/TMZ%20PODCAST/assets/js/livekit-client.umd.js"></script><script src="/TMZ%20PODCAST/assets/js/audio-pipeline.js?v=browser-audio-2"></script><script src="/TMZ%20PODCAST/assets/js/live-studio-controls.js?v=audio-controls-2"></script><script src="/TMZ%20PODCAST/assets/js/live-chat-profile.js"></script><script src="/TMZ%20PODCAST/assets/js/live-room-admin.js?v=open-talk-1"></script>
+<script src="/assets/js/livekit-client.umd.js"></script><script src="/assets/js/audio-pipeline.js?v=browser-audio-2"></script><script src="/assets/js/live-studio-controls.js?v=audio-controls-2"></script><script src="/assets/js/live-chat-profile.js"></script><script src="/assets/js/live-room-admin.js?v=open-talk-1"></script>
 <script>(async function(){if(!navigator.mediaDevices?.enumerateDevices)return;const fill=async()=>{try{const devices=await navigator.mediaDevices.enumerateDevices(),camera=document.getElementById('cameraSelect'),mic=document.getElementById('microphoneSelect');if(!camera||!mic)return;const camPrev=camera.value,micPrev=mic.value;camera.textContent='';mic.textContent='';const co=document.createElement('option');co.value='';co.textContent='Default camera';camera.appendChild(co);const mo=document.createElement('option');mo.value='';mo.textContent='Default microphone';mic.appendChild(mo);devices.forEach(d=>{if(d.kind!=='videoinput'&&d.kind!=='audioinput')return;const o=document.createElement('option');o.value=d.deviceId;const l=(d.label||'').toLowerCase();const tag=d.kind==='videoinput'?(/back|rear|environment/.test(l)?' · Back camera':(/front|user|face/.test(l)?' · Front camera':'')):'';o.textContent=(d.label||(d.kind==='videoinput'?'Camera':'Microphone'))+tag;(d.kind==='videoinput'?camera:mic).appendChild(o);});if(camPrev&&[...camera.options].some(o=>o.value===camPrev))camera.value=camPrev;if(micPrev&&[...mic.options].some(o=>o.value===micPrev))mic.value=micPrev;}catch(e){}};await fill();if(window.isSecureContext&&navigator.mediaDevices?.getUserMedia){try{const s=await navigator.mediaDevices.getUserMedia({video:true,audio:false});s.getTracks().forEach(t=>t.stop());await fill();}catch(e){}}})();</script>
-<script src="/TMZ%20PODCAST/assets/js/live-studio-host.js?v=device-settings-1"></script>
-<?php if($live): ?><script src="/TMZ%20PODCAST/assets/js/live-captions.js?v=phase2-1"></script><script src="/TMZ%20PODCAST/assets/js/live-recordings.js?v=live-recordings-2"></script><script src="/TMZ%20PODCAST/assets/js/live-transcript-range.js?v=live-transcript-range-1"></script><?php endif; ?>
-<?php if($live): ?><script src="/TMZ%20PODCAST/assets/js/live-requests.js?v=live-requests-2"></script><script src="/TMZ%20PODCAST/assets/js/live-soundboard.js?v=soundboard-1"></script><?php endif; ?>
+<script src="/assets/js/live-studio-host.js?v=device-settings-1"></script>
+<?php if($live): ?><script src="/assets/js/live-captions.js?v=phase2-1"></script><script src="/assets/js/live-recordings.js?v=live-recordings-2"></script><script src="/assets/js/live-transcript-range.js?v=live-transcript-range-1"></script><?php endif; ?>
+<?php if($live): ?><script src="/assets/js/live-requests.js?v=live-requests-2"></script><script src="/assets/js/live-soundboard.js?v=soundboard-1"></script><?php endif; ?>
 <?php $pastLives = $pastLives ?? []; ?>
 <section class="admin-section live-past-lives">
   <div class="live-recordings-heading">

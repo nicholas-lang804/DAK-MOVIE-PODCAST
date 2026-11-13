@@ -18,7 +18,7 @@
     </div>
     <div class="genre-directory-grid">
         <?php foreach (($genres ?? []) as $genre): ?>
-            <a class="genre-directory-card <?php echo ((string)$selectedGenre === (string)$genre['id']) ? 'active' : ''; ?>" href="/TMZ%20PODCAST/movies.php?genre=<?php echo (int)$genre['id']; ?>">
+            <a class="genre-directory-card <?php echo ((string)$selectedGenre === (string)$genre['id']) ? 'active' : ''; ?>" href="/movies.php?genre=<?php echo (int)$genre['id']; ?>">
                 <span class="genre-card-number"><?php echo str_pad((string)$genre['id'], 2, '0', STR_PAD_LEFT); ?></span>
                 <strong><?php echo htmlspecialchars($genre['name']); ?></strong>
                 <span><?php echo (int)($genre['movie_count'] ?? 0); ?> <?php echo ((int)($genre['movie_count'] ?? 0) === 1) ? 'movie' : 'movies'; ?></span>
@@ -29,7 +29,7 @@
 
 <!-- Search and Filters -->
 <section class="filters">
-    <form method="GET" action="/TMZ%20PODCAST/movies.php" class="filter-form">
+    <form method="GET" action="/movies.php" class="filter-form">
         <div class="filter-group">
             <input type="text" name="q" placeholder="Search movies..." value="<?php echo htmlspecialchars($searchQuery ?? ''); ?>">
         </div>
@@ -59,7 +59,7 @@
                 <div class="movie-card">
                     <div class="movie-poster">
                         <?php if ($movie['poster_path']): ?>
-                            <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
+                            <img src="<?php echo htmlspecialchars('/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
                         <?php else: ?>
                             <div class="movie-cover-fallback">
                                 <span>DAK</span>
@@ -69,7 +69,7 @@
                         <?php endif; ?>
                         <?php if (!empty($movie['video_path'])): ?>
                             <span class="movie-play-badge">VIDEO AVAILABLE</span>
-                            <a class="movie-quick-play" href="/TMZ%20PODCAST/movies.php?slug=<?php echo urlencode($movie['slug']); ?>#watch-movie" aria-label="Play <?php echo htmlspecialchars($movie['title']); ?>">
+                            <a class="movie-quick-play" href="/movies.php?slug=<?php echo urlencode($movie['slug']); ?>#watch-movie" aria-label="Play <?php echo htmlspecialchars($movie['title']); ?>">
                                 <span aria-hidden="true">▶</span>
                             </a>
                         <?php endif; ?>
@@ -95,11 +95,11 @@
                         <p class="movie-synopsis"><?php echo htmlspecialchars(substr($movie['synopsis'] ?? '', 0, 150)); ?>...</p>
                         <div class="movie-card-actions">
                             <?php if (!empty($movie['video_path'])): ?>
-                                <a href="/TMZ%20PODCAST/movies.php?slug=<?php echo urlencode($movie['slug']); ?>#watch-movie" class="btn btn-primary movie-watch-button">Watch Full Movie</a>
+                                <a href="/movies.php?slug=<?php echo urlencode($movie['slug']); ?>#watch-movie" class="btn btn-primary movie-watch-button">Watch Full Movie</a>
                             <?php else: ?>
                                 <span class="movie-unavailable">Video not yet available</span>
                             <?php endif; ?>
-                            <a href="/TMZ%20PODCAST/movies.php?slug=<?php echo urlencode($movie['slug']); ?>" class="btn btn-outline">View Details</a>
+                            <a href="/movies.php?slug=<?php echo urlencode($movie['slug']); ?>" class="btn btn-outline">View Details</a>
                         </div>
                     </div>
                 </div>

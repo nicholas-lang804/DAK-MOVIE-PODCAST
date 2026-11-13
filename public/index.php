@@ -61,7 +61,7 @@ $path = parse_url($requestUri, PHP_URL_PATH) ?: '/';
 $query = $_GET;
 
 // Remove the base path and the public entry script portion from the requested URL.
-foreach (['/TMZ%20PODCAST/public', '/TMZ%20PODCAST', '/TMZ PODCAST/public', '/TMZ PODCAST'] as $basePath) {
+foreach (['/public', '/', '/public', '/'] as $basePath) {
     if (strpos($path, $basePath) === 0) {
         $path = substr($path, strlen($basePath));
         break;

@@ -7,7 +7,7 @@
 <section class="admin-section">
     <div class="section-header">
         <h1>Manage Advertisements</h1>
-        <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=advertisements&action=create" class="btn btn-primary">Add Advertisement</a>
+        <a href="/admin/dashboard.php?tab=advertisements&action=create" class="btn btn-primary">Add Advertisement</a>
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -22,7 +22,7 @@
     <?php if ($action === 'create' || $action === 'edit'): ?>
         <div class="form-container">
             <h2><?php echo $action === 'create' ? 'Create Advertisement' : 'Edit Advertisement'; ?></h2>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=advertisements" class="admin-form" enctype="multipart/form-data">
+            <form method="POST" action="/admin/dashboard.php?tab=advertisements" class="admin-form" enctype="multipart/form-data">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="id" value="<?php echo $advertisement['id'] ?? ''; ?>">
                 
@@ -77,7 +77,7 @@
                 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save Advertisement</button>
-                    <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=advertisements" class="btn btn-outline">Cancel</a>
+                    <a href="/admin/dashboard.php?tab=advertisements" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </div>
@@ -103,8 +103,8 @@
                             <td><?php echo $advertisement['end_date'] ? date('M d, Y', strtotime($advertisement['end_date'])) : 'N/A'; ?></td>
                             <td><span class="status-badge status-<?php echo $advertisement['status']; ?>"><?php echo ucfirst($advertisement['status']); ?></span></td>
                             <td>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=advertisements&action=edit&id=<?php echo $advertisement['id']; ?>" class="btn btn-small">Edit</a>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=advertisements&action=delete&id=<?php echo $advertisement['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                                <a href="/admin/dashboard.php?tab=advertisements&action=edit&id=<?php echo $advertisement['id']; ?>" class="btn btn-small">Edit</a>
+                                <a href="/admin/dashboard.php?tab=advertisements&action=delete&id=<?php echo $advertisement['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

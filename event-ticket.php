@@ -37,7 +37,7 @@ if (!$event || $event['status'] !== 'published' || !$ticket) {
 
                 if ($order['amount'] <= 0) { // free ticket: issue immediately
                     $eventModel->completeOrder($order['id']);
-                    header('Location: /TMZ%20PODCAST/my-tickets.php?new=1');
+                    header('Location: /my-tickets.php?new=1');
                     exit;
                 }
 
@@ -112,7 +112,7 @@ ob_start();
             </form>
         <?php endif; ?>
 
-        <a class="back-link" href="/TMZ%20PODCAST/events.php?slug=<?php echo urlencode($event['slug'] ?? ''); ?>">← Back to event</a>
+        <a class="back-link" href="/events.php?slug=<?php echo urlencode($event['slug'] ?? ''); ?>">← Back to event</a>
     </div>
 </section>
 <?php

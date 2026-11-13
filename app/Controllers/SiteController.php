@@ -23,7 +23,7 @@ class SiteController extends Controller {
 
     public function myList() {
         if (empty($_SESSION['user_id'])) {
-            $this->redirect('/TMZ%20PODCAST/login.php');
+            $this->redirect('/login.php');
         }
         $this->render('my-list', [
             'title' => 'My List',

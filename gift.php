@@ -6,7 +6,7 @@ require_once __DIR__ . '/app/Middleware/CSRF.php';
 require_once __DIR__ . '/app/Models/Gift.php';
 require_once __DIR__ . '/app/Models/LivePodcast.php';
 
-if (!isLoggedIn() || empty($_SESSION['user_id'])) { header('Location: /TMZ%20PODCAST/login.php'); exit; }
+if (!isLoggedIn() || empty($_SESSION['user_id'])) { header('Location: /login.php'); exit; }
 
 $liveId = (int)($_GET['live_id'] ?? 0);
 $preGift = (int)($_GET['gift_id'] ?? 0);
@@ -25,8 +25,8 @@ $h = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Send a Gift - THE DAK FILM PODCAST MEDIA</title>
-<link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/style.css">
-<link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/cinematic.css">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/cinematic.css">
 <style>
 .gift-page{max-width:1100px;margin:0 auto;padding:2rem 1rem 4rem}
 .gift-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.7rem;margin:1rem 0 1.5rem}
@@ -48,17 +48,17 @@ $h = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 </head>
 <body class="tmz-cinema">
 <main class="gift-page">
-    <nav class="cine-crumbs"><a href="/TMZ%20PODCAST/live.php<?php echo $liveId ? '?live_id=' . $liveId : ''; ?>">&larr; Back to live</a></nav>
+    <nav class="cine-crumbs"><a href="/live.php<?php echo $liveId ? '?live_id=' . $liveId : ''; ?>">&larr; Back to live</a></nav>
     <span class="eyebrow">LIVE GIFTS</span>
     <h1>Send a gift<?php echo $live ? ' — ' . $h($live['title']) : ''; ?></h1>
     <p style="color:#9fb4dd">Pick a gift, choose who receives it, and pay in your currency. The amount is converted automatically.</p>
 
     <?php if (!$live): ?>
-        <div class="empty-state"><h2>No live show selected</h2><p><a href="/TMZ%20PODCAST/live.php">Open the live page</a> and tap “Send a gift” there.</p></div>
+        <div class="empty-state"><h2>No live show selected</h2><p><a href="/live.php">Open the live page</a> and tap “Send a gift” there.</p></div>
     <?php else: ?>
         <?php if ($error): ?><div class="gift-error"><?php echo $h($error); ?></div><?php endif; ?>
 
-        <form method="post" action="/TMZ%20PODCAST/gift-checkout.php" id="giftForm">
+        <form method="post" action="/gift-checkout.php" id="giftForm">
             <?php echo CSRF::getField(); ?>
             <input type="hidden" name="live_id" value="<?php echo $liveId; ?>">
             <input type="hidden" name="gift_id" id="giftId" value="<?php echo $preGift; ?>">

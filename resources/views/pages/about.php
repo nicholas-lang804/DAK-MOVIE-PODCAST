@@ -9,7 +9,7 @@
     <span class="cine-eyebrow">Stories worth staying for</span>
     <h1>Entertainment brings us together.</h1>
     <p>THE DAK FILM PODCAST MEDIA is your place for fresh perspectives on film, culture and the stories behind the screen.</p>
-    <a class="btn btn-primary" href="/TMZ%20PODCAST/contact.php">Get in touch</a>
+    <a class="btn btn-primary" href="/contact.php">Get in touch</a>
 </section>
 
 <section class="about-content about-page">

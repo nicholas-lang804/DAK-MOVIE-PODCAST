@@ -47,7 +47,7 @@
         if (reloaded || document.hidden) return;
         var target = Date.parse(featured.getAttribute('data-lx-countdown'));
         if (!isNaN(target) && target - (Date.now() + skew) > 60000) return;
-        fetch('/TMZ%20PODCAST/api/live-extras.php?action=state&live_id=' + encodeURIComponent(liveId), { credentials: 'same-origin', cache: 'no-store' })
+        fetch('/api/live-extras.php?action=state&live_id=' + encodeURIComponent(liveId), { credentials: 'same-origin', cache: 'no-store' })
           .then(function (r) { return r.json(); })
           .then(function (s) { if (s && s.live && s.live.status === 'live' && !reloaded) { reloaded = true; window.location.reload(); } })
           .catch(function () {});
@@ -57,13 +57,13 @@
 
   document.querySelectorAll('[data-lx-remind]').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      if (btn.getAttribute('data-logged-in') !== '1') { window.location.href = '/TMZ%20PODCAST/login.php'; return; }
+      if (btn.getAttribute('data-logged-in') !== '1') { window.location.href = '/login.php'; return; }
       var body = new URLSearchParams();
       body.set('action', 'remind');
       body.set('live_id', btn.getAttribute('data-lx-remind'));
       body.set('csrf_token', btn.getAttribute('data-csrf'));
       btn.disabled = true;
-      fetch('/TMZ%20PODCAST/api/live-extras.php', { method: 'POST', body: body, credentials: 'same-origin' })
+      fetch('/api/live-extras.php', { method: 'POST', body: body, credentials: 'same-origin' })
         .then(function (r) { return r.json(); })
         .then(function (j) {
           if (j && j.error) throw new Error(j.error);

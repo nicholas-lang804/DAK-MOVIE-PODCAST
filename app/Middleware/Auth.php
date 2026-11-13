@@ -12,7 +12,7 @@ class AuthMiddleware {
      */
     public static function requireLogin() {
         if (!isLoggedIn()) {
-            header('Location: /TMZ%20PODCAST/login.php');
+            header('Location: /login.php');
             exit();
         }
     }
@@ -22,7 +22,7 @@ class AuthMiddleware {
      */
     public static function requireAdmin() {
         if (!isAdmin()) {
-            header('Location: /TMZ%20PODCAST/admin/login.php');
+            header('Location: /admin/login.php');
             exit();
         }
     }

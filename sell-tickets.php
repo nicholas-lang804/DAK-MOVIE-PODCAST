@@ -6,11 +6,11 @@
 session_start();
 require_once __DIR__ . '/config/database.php';
 
-$target = '/TMZ%20PODCAST/user/dashboard.php?tab=event-create';
+$target = '/user/dashboard.php?tab=event-create';
 
 if (empty($_SESSION['user_id'])) {
     $_SESSION['after_login'] = $target;
-    header('Location: /TMZ%20PODCAST/login.php');
+    header('Location: /login.php');
     exit;
 }
 header('Location: ' . $target);

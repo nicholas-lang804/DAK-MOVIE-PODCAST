@@ -2,12 +2,12 @@
 /** Public star profile: picture, write-up and video. Open to everyone. */
 require_once __DIR__ . '/../partials/star-card.php';
 $h = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); };
-$photo = !empty($star['photo_path']) ? '/TMZ%20PODCAST/' . ltrim($star['photo_path'], '/') : '';
-$video = !empty($star['video_path']) ? '/TMZ%20PODCAST/' . ltrim($star['video_path'], '/') : '';
+$photo = !empty($star['photo_path']) ? '/' . ltrim($star['photo_path'], '/') : '';
+$video = !empty($star['video_path']) ? '/' . ltrim($star['video_path'], '/') : '';
 $embed = Star::embedUrl($star['video_url'] ?? '');
 ?>
 <article class="star-detail">
-    <nav class="cine-crumbs" aria-label="Breadcrumb"><a href="/TMZ%20PODCAST/stars.php">&larr; All actors &amp; actresses</a></nav>
+    <nav class="cine-crumbs" aria-label="Breadcrumb"><a href="/stars.php">&larr; All actors &amp; actresses</a></nav>
 
     <header class="star-hero">
         <div class="star-hero-photo">
@@ -27,9 +27,9 @@ $embed = Star::embedUrl($star['video_url'] ?? '');
                 <p class="cine-empty">More about <?php echo $h($star['name']); ?> is coming soon.</p>
             <?php endif; ?>
             <div class="star-actions">
-                <a class="btn btn-primary" href="/TMZ%20PODCAST/movies.php">Watch movies</a>
+                <a class="btn btn-primary" href="/movies.php">Watch movies</a>
                 <?php if (!function_exists('isLoggedIn') || !isLoggedIn()): ?>
-                    <a class="btn btn-outline" href="/TMZ%20PODCAST/register.php">Join free</a>
+                    <a class="btn btn-outline" href="/register.php">Join free</a>
                 <?php endif; ?>
             </div>
         </div>

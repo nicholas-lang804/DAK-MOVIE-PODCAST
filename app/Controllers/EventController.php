@@ -79,7 +79,7 @@ class EventController extends Controller {
 
         if ($name === '' || strlen($name) > 640 || !Validation::validateEmail($email) || strlen($email) > 254 || $message === '' || strlen($message) > 20000) {
             $_SESSION['event_contact_error'] = 'Please enter your name, a valid email address, and a message of no more than 5,000 characters.';
-            $this->redirect('/TMZ%20PODCAST/events.php?slug=' . rawurlencode($event['slug']) . '#event-contact');
+            $this->redirect('/events.php?slug=' . rawurlencode($event['slug']) . '#event-contact');
         }
 
         $messageId = $this->contactMessageModel->create([
@@ -92,7 +92,7 @@ class EventController extends Controller {
 
         if (!$messageId) {
             $_SESSION['event_contact_error'] = 'We could not save your enquiry. Please try again.';
-            $this->redirect('/TMZ%20PODCAST/events.php?slug=' . rawurlencode($event['slug']) . '#event-contact');
+            $this->redirect('/events.php?slug=' . rawurlencode($event['slug']) . '#event-contact');
         }
         try {
             (new SiteNotification())->create(
@@ -101,7 +101,7 @@ class EventController extends Controller {
                 'contact_message',
                 'New event enquiry',
                 $name . ' · ' . $event['title'] . ': ' . substr($message, 0, 600),
-                '/TMZ%20PODCAST/admin/dashboard.php?tab=contacts'
+                '/admin/dashboard.php?tab=contacts'
             );
         } catch (Throwable $error) {
             error_log('Event-enquiry notification could not be saved: ' . $error->getMessage());
@@ -111,7 +111,7 @@ class EventController extends Controller {
         if (!Validation::validateEmail($recipient)) {
             error_log('Event enquiry ' . $messageId . ' saved but no valid site contact email is configured.');
             $_SESSION['event_contact_error'] = 'Your enquiry was saved, but email delivery is unavailable right now. Please try again later.';
-            $this->redirect('/TMZ%20PODCAST/events.php?slug=' . rawurlencode($event['slug']) . '#event-contact');
+            $this->redirect('/events.php?slug=' . rawurlencode($event['slug']) . '#event-contact');
         }
 
         $subject = 'New event enquiry';
@@ -124,11 +124,11 @@ class EventController extends Controller {
         if (!@mail($recipient, $subject, $body, $headers)) {
             error_log('Event enquiry ' . $messageId . ' was saved, but email delivery failed.');
             $_SESSION['event_contact_error'] = 'Your enquiry was saved, but email delivery failed. Please try again later.';
-            $this->redirect('/TMZ%20PODCAST/events.php?slug=' . rawurlencode($event['slug']) . '#event-contact');
+            $this->redirect('/events.php?slug=' . rawurlencode($event['slug']) . '#event-contact');
         }
 
         $_SESSION['event_contact_success'] = 'Your message has been sent to the event team.';
-        $this->redirect('/TMZ%20PODCAST/events.php?slug=' . rawurlencode($event['slug']) . '#event-contact');
+        $this->redirect('/events.php?slug=' . rawurlencode($event['slug']) . '#event-contact');
     }
 }
 ?>

@@ -29,8 +29,8 @@ $ticketPages = max(1, (int) ceil(($ticketCount ?? 0) / ($pageSize ?? 50)));
             <p class="form-help">Monitor recorded payments, ticket sales and income by currency.</p>
         </div>
         <div class="finance-downloads">
-            <a class="btn btn-outline" href="/TMZ%20PODCAST/admin/financial-download.php?type=payments">Download payments CSV</a>
-            <a class="btn btn-outline" href="/TMZ%20PODCAST/admin/financial-download.php?type=tickets">Download tickets CSV</a>
+            <a class="btn btn-outline" href="/admin/financial-download.php?type=payments">Download payments CSV</a>
+            <a class="btn btn-outline" href="/admin/financial-download.php?type=tickets">Download tickets CSV</a>
         </div>
     </div>
 
@@ -79,7 +79,7 @@ $ticketPages = max(1, (int) ceil(($ticketCount ?? 0) / ($pageSize ?? 50)));
                 <?php foreach ($charts as $currency => $values):
                     $max = max($values) ?: 1; ?>
                     <div class="finance-chart" role="img" aria-label="<?php echo $h($currency); ?> monthly revenue for the last six months">
-                        <img class="tmz-chart-logo" src="/TMZ%20PODCAST/assets/img/dak-mark.png" alt="THE DAK FILM PODCAST MEDIA">
+                        <img class="tmz-chart-logo" src="/assets/img/dak-mark.png" alt="THE DAK FILM PODCAST MEDIA">
                         <h3><?php echo $h($currency); ?> monthly revenue</h3>
                         <div class="finance-chart-bars">
                             <?php foreach ($months as $key => $label):
@@ -132,9 +132,9 @@ $ticketPages = max(1, (int) ceil(($ticketCount ?? 0) / ($pageSize ?? 50)));
         </div>
         <?php if ($paymentPages > 1): ?>
             <nav class="finance-pagination" aria-label="Payment pages">
-                <?php if ($paymentPage > 1): ?><a href="/TMZ%20PODCAST/admin/dashboard.php?tab=finance&amp;payments_page=<?php echo (int) $paymentPage - 1; ?>&amp;tickets_page=<?php echo (int) $ticketPage; ?>">Previous</a><?php endif; ?>
+                <?php if ($paymentPage > 1): ?><a href="/admin/dashboard.php?tab=finance&amp;payments_page=<?php echo (int) $paymentPage - 1; ?>&amp;tickets_page=<?php echo (int) $ticketPage; ?>">Previous</a><?php endif; ?>
                 <span>Page <?php echo (int) $paymentPage; ?> of <?php echo $paymentPages; ?></span>
-                <?php if ($paymentPage < $paymentPages): ?><a href="/TMZ%20PODCAST/admin/dashboard.php?tab=finance&amp;payments_page=<?php echo (int) $paymentPage + 1; ?>&amp;tickets_page=<?php echo (int) $ticketPage; ?>">Next</a><?php endif; ?>
+                <?php if ($paymentPage < $paymentPages): ?><a href="/admin/dashboard.php?tab=finance&amp;payments_page=<?php echo (int) $paymentPage + 1; ?>&amp;tickets_page=<?php echo (int) $ticketPage; ?>">Next</a><?php endif; ?>
             </nav>
         <?php endif; ?>
     </section>
@@ -171,9 +171,9 @@ $ticketPages = max(1, (int) ceil(($ticketCount ?? 0) / ($pageSize ?? 50)));
         </div>
         <?php if ($ticketPages > 1): ?>
             <nav class="finance-pagination" aria-label="Ticket pages">
-                <?php if ($ticketPage > 1): ?><a href="/TMZ%20PODCAST/admin/dashboard.php?tab=finance&amp;payments_page=<?php echo (int) $paymentPage; ?>&amp;tickets_page=<?php echo (int) $ticketPage - 1; ?>">Previous</a><?php endif; ?>
+                <?php if ($ticketPage > 1): ?><a href="/admin/dashboard.php?tab=finance&amp;payments_page=<?php echo (int) $paymentPage; ?>&amp;tickets_page=<?php echo (int) $ticketPage - 1; ?>">Previous</a><?php endif; ?>
                 <span>Page <?php echo (int) $ticketPage; ?> of <?php echo $ticketPages; ?></span>
-                <?php if ($ticketPage < $ticketPages): ?><a href="/TMZ%20PODCAST/admin/dashboard.php?tab=finance&amp;payments_page=<?php echo (int) $paymentPage; ?>&amp;tickets_page=<?php echo (int) $ticketPage + 1; ?>">Next</a><?php endif; ?>
+                <?php if ($ticketPage < $ticketPages): ?><a href="/admin/dashboard.php?tab=finance&amp;payments_page=<?php echo (int) $paymentPage; ?>&amp;tickets_page=<?php echo (int) $ticketPage + 1; ?>">Next</a><?php endif; ?>
             </nav>
         <?php endif; ?>
     </section>

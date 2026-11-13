@@ -267,7 +267,7 @@ class Gift {
                 (new SiteNotification())->create('user', (int)$order['recipient_user_id'], 'gift',
                     '🎁 You received a gift!',
                     $order['sender_name'] . ' sent you ' . $order['gift_name'] . ' (' . $order['emoji'] . ') on the live show' . ($order['message'] !== '' ? ': “' . $order['message'] . '”' : '.') . ' — ' . $order['currency'] . ' ' . number_format((float)$order['amount'], 2),
-                    '/TMZ%20PODCAST/live.php?live_id=' . (int)$order['live_id']);
+                    '/live.php?live_id=' . (int)$order['live_id']);
             } catch (Throwable $e) { error_log('Gift notify failed: ' . $e->getMessage()); }
         }
         return true;

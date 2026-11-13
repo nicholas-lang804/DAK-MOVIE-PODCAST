@@ -19,7 +19,7 @@ $chatName = $chatUser['username'] ?? 'Viewer';
                 <h2><?php echo htmlspecialchars($live['title'], ENT_QUOTES, 'UTF-8'); ?></h2>
                 <p><?php echo htmlspecialchars($live['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                 <?php if (!empty($live['cover_image_path'])): ?>
-                    <img class="live-share-cover" src="/TMZ%20PODCAST/<?php echo htmlspecialchars(ltrim($live['cover_image_path'], '/'), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($live['title'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <img class="live-share-cover" src="/<?php echo htmlspecialchars(ltrim($live['cover_image_path'], '/'), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($live['title'], ENT_QUOTES, 'UTF-8'); ?>">
                 <?php endif; ?>
             </div>
 
@@ -42,16 +42,16 @@ $chatName = $chatUser['username'] ?? 'Viewer';
                     <?php endif; ?>
                     <div class="live-gate-actions">
                         <button type="button" class="btn btn-primary" data-lx-remind="<?php echo (int)$live['id']; ?>" data-csrf="<?php echo htmlspecialchars(CSRF::generateToken(), ENT_QUOTES, 'UTF-8'); ?>" data-logged-in="<?php echo !empty($_SESSION['user_id']) ? '1' : '0'; ?>" aria-pressed="<?php echo $lxHasReminder ? 'true' : 'false'; ?>"><?php echo $lxHasReminder ? '🔔 Reminder set' : '🔔 Remind me'; ?></button>
-                        <?php if ($lxIso): ?><a class="btn btn-outline" href="/TMZ%20PODCAST/api/live-calendar.php?live_id=<?php echo (int)$live['id']; ?>">📅 Add to calendar</a><?php endif; ?>
+                        <?php if ($lxIso): ?><a class="btn btn-outline" href="/api/live-calendar.php?live_id=<?php echo (int)$live['id']; ?>">📅 Add to calendar</a><?php endif; ?>
                     </div>
-                    <link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/live-extras.css?v=lx-1">
-                    <script src="/TMZ%20PODCAST/assets/js/live-countdown.js?v=lx-1" defer></script>
+                    <link rel="stylesheet" href="/assets/css/live-extras.css?v=lx-1">
+                    <script src="/assets/js/live-countdown.js?v=lx-1" defer></script>
                 </div>
             <?php elseif (!$canJoin): ?>
                 <div class="live-gate">
                     <h3>🔒 Paid live episode</h3>
                     <p>This live room requires a completed purchase or active all-access membership. Sign in to unlock access.</p>
-                    <a class="btn btn-primary" href="/TMZ%20PODCAST/membership.php">Unlock this live show</a>
+                    <a class="btn btn-primary" href="/membership.php">Unlock this live show</a>
                 </div>
             <?php elseif ($live['status'] === 'ended'): ?>
                 <div class="live-gate live-replay-gate">
@@ -65,7 +65,7 @@ $chatName = $chatUser['username'] ?? 'Viewer';
                     </form>
                     <nav class="live-transcript-downloads" aria-label="Download transcript">
                         <?php foreach (['txt' => 'TXT', 'srt' => 'SRT', 'vtt' => 'VTT'] as $format => $label): ?>
-                            <a class="btn btn-outline" href="/TMZ%20PODCAST/api/live-captions.php?live_id=<?php echo (int)$live['id']; ?>&amp;format=<?php echo $format; ?>"><?php echo $label; ?></a>
+                            <a class="btn btn-outline" href="/api/live-captions.php?live_id=<?php echo (int)$live['id']; ?>&amp;format=<?php echo $format; ?>"><?php echo $label; ?></a>
                         <?php endforeach; ?>
                     </nav>
                 </div>
@@ -153,7 +153,7 @@ $chatName = $chatUser['username'] ?? 'Viewer';
                         </form>
                         <nav class="live-transcript-downloads" aria-label="Download transcript">
                             <?php foreach (['txt' => 'TXT', 'srt' => 'SRT', 'vtt' => 'VTT'] as $format => $label): ?>
-                                <a class="btn btn-outline" href="/TMZ%20PODCAST/api/live-captions.php?live_id=<?php echo (int)$live['id']; ?>&amp;format=<?php echo $format; ?>"><?php echo $label; ?></a>
+                                <a class="btn btn-outline" href="/api/live-captions.php?live_id=<?php echo (int)$live['id']; ?>&amp;format=<?php echo $format; ?>"><?php echo $label; ?></a>
                             <?php endforeach; ?>
                         </nav>
                         <div id="liveTranscriptResults" class="live-transcript-results" aria-live="polite"></div>
@@ -174,7 +174,7 @@ $chatName = $chatUser['username'] ?? 'Viewer';
 
                 <?php if ($canChat): ?>
                     <div class="live-actions">
-                        <form id="liveActionsForm" method="post" action="/TMZ%20PODCAST/live-action.php">
+                        <form id="liveActionsForm" method="post" action="/live-action.php">
                             <?php echo CSRF::getField(); ?>
                             <input type="hidden" name="live_id" value="<?php echo (int)$live['id']; ?>">
                             <button type="button" data-reaction="like">👍 Like</button>
@@ -183,7 +183,7 @@ $chatName = $chatUser['username'] ?? 'Viewer';
                             <button type="button" data-speaker-request="audio">Request to speak (audio)</button>
                             <button type="button" data-speaker-request="video">Request to speak (video)</button>
                         </form>
-                        <a class="btn btn-primary" href="/TMZ%20PODCAST/gift.php?live_id=<?php echo (int)$live['id']; ?>">🎁 Send a gift</a>
+                        <a class="btn btn-primary" href="/gift.php?live_id=<?php echo (int)$live['id']; ?>">🎁 Send a gift</a>
                     </div>
                 <?php endif; ?>
 
@@ -193,7 +193,7 @@ $chatName = $chatUser['username'] ?? 'Viewer';
                         <?php foreach ($comments as $comment): ?>
                             <div class="live-message-item">
                                 <?php if (!empty($comment['profile_image_path'])): ?>
-                                    <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($comment['profile_image_path'], '/'), ENT_QUOTES, 'UTF-8'); ?>" alt="">
+                                    <img src="<?php echo htmlspecialchars('/' . ltrim($comment['profile_image_path'], '/'), ENT_QUOTES, 'UTF-8'); ?>" alt="">
                                 <?php else: ?>
                                     <span class="live-avatar-fallback"><?php echo htmlspecialchars(strtoupper(substr($comment['username'], 0, 1)), ENT_QUOTES, 'UTF-8'); ?></span>
                                 <?php endif; ?>
@@ -202,7 +202,7 @@ $chatName = $chatUser['username'] ?? 'Viewer';
                         <?php endforeach; ?>
                     </div>
                     <?php if ($canChat): ?>
-                        <form id="liveChatForm" method="post" action="/TMZ%20PODCAST/live-action.php">
+                        <form id="liveChatForm" method="post" action="/live-action.php">
                             <?php echo CSRF::getField(); ?>
                             <input type="hidden" name="live_id" value="<?php echo (int)$live['id']; ?>">
                             <input id="liveChatInput" name="comment" maxlength="500" required placeholder="Join the conversation">
@@ -218,21 +218,21 @@ $chatName = $chatUser['username'] ?? 'Viewer';
 </section>
 
 <?php if ($live && $canJoin): ?>
-    <section class="live-recordings-panel" id="publicLiveRecordings" data-live-id="<?php echo (int)$live['id']; ?>" data-api="/TMZ%20PODCAST/api/live-recordings.php">
+    <section class="live-recordings-panel" id="publicLiveRecordings" data-live-id="<?php echo (int)$live['id']; ?>" data-api="/api/live-recordings.php">
         <div class="live-recordings-heading"><div><span class="eyebrow">DOWNLOADS</span><h2>Live show recordings</h2><p>Choose a completed video or audio file to download. Download links expire after 10 minutes; only the admin can delete recordings.</p></div></div>
         <div class="live-recordings-list" aria-live="polite"><p class="form-help">Loading available recordings…</p></div>
         <p class="live-recordings-status" role="status" aria-live="polite"></p>
     </section>
-    <script src="/TMZ%20PODCAST/assets/js/live-recordings.js?v=live-recordings-2"></script>
-    <script src="/TMZ%20PODCAST/assets/js/live-transcript-range.js?v=live-transcript-range-1"></script>
+    <script src="/assets/js/live-recordings.js?v=live-recordings-2"></script>
+    <script src="/assets/js/live-transcript-range.js?v=live-transcript-range-1"></script>
 <?php endif; ?>
 
 <?php if ($live && $live['status'] === 'live' && $canJoin): ?>
-    <script src="/TMZ%20PODCAST/assets/js/livekit-client.umd.js"></script>
-    <script src="/TMZ%20PODCAST/assets/js/live-viewer-controls.js?v=watch-controls-3"></script>
-    <script src="/TMZ%20PODCAST/assets/js/live-room-viewer.js?v=device-settings-1"></script>
-    <script src="/TMZ%20PODCAST/assets/js/live-captions.js?v=phase2-1"></script>
-    <script src="/TMZ%20PODCAST/assets/js/live-extras.js?v=lx-1" defer></script>
+    <script src="/assets/js/livekit-client.umd.js"></script>
+    <script src="/assets/js/live-viewer-controls.js?v=watch-controls-3"></script>
+    <script src="/assets/js/live-room-viewer.js?v=device-settings-1"></script>
+    <script src="/assets/js/live-captions.js?v=phase2-1"></script>
+    <script src="/assets/js/live-extras.js?v=lx-1" defer></script>
 <?php endif; ?>
 
 <?php include __DIR__ . '/../partials/live-lobby.php'; ?>

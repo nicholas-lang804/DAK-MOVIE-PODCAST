@@ -51,23 +51,23 @@
     <section class="quick-actions">
         <h2>Quick Actions</h2>
         <div class="actions-grid">
-            <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=finance" class="action-card">
+            <a href="/admin/dashboard.php?tab=finance" class="action-card">
                 <h3>Financial Control</h3>
                 <p>Review payments, ticket sales, revenue charts and downloadable reports</p>
             </a>
-            <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=episodes&action=create" class="action-card">
+            <a href="/admin/dashboard.php?tab=episodes&action=create" class="action-card">
                 <h3>Add Episode</h3>
                 <p>Create a new podcast episode</p>
             </a>
-            <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=articles&action=create" class="action-card">
+            <a href="/admin/dashboard.php?tab=articles&action=create" class="action-card">
                 <h3>Add Article</h3>
                 <p>Write a new news article</p>
             </a>
-            <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=movies&action=create" class="action-card">
+            <a href="/admin/dashboard.php?tab=movies&action=create" class="action-card">
                 <h3>Add Movie</h3>
                 <p>Add a new movie to the catalogue</p>
             </a>
-            <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=media&action=upload" class="action-card">
+            <a href="/admin/dashboard.php?tab=media&action=upload" class="action-card">
                 <h3>Upload Media</h3>
                 <p>Upload images, audio, or video</p>
             </a>

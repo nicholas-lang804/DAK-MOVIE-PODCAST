@@ -91,7 +91,7 @@ class ArticleController extends Controller {
      */
     public function addComment() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/TMZ%20PODCAST/news.php');
+            $this->redirect('/news.php');
         }
 
         $articleId = intval($_POST['article_id'] ?? 0);
@@ -101,7 +101,7 @@ class ArticleController extends Controller {
 
         if (empty($userName) || empty($comment)) {
             $_SESSION['comment_error'] = 'Please fill in all required fields';
-            $this->redirect('/TMZ%20PODCAST/news.php');
+            $this->redirect('/news.php');
         }
 
         $result = $this->commentModel->create([
@@ -118,7 +118,7 @@ class ArticleController extends Controller {
             $_SESSION['comment_error'] = 'Failed to submit comment. Please try again.';
         }
 
-        $this->redirect('/TMZ%20PODCAST/news.php');
+        $this->redirect('/news.php');
     }
 }
 ?>

@@ -8,7 +8,7 @@
 <section class="page-header">
     <h1>Events</h1>
     <p>Upcoming and past events from THE DAK FILM PODCAST MEDIA.</p>
-    <p style="margin-top:12px"><a href="/TMZ%20PODCAST/sell-tickets.php" class="btn btn-primary">🎟 Sale Tickets With Us</a></p>
+    <p style="margin-top:12px"><a href="/sell-tickets.php" class="btn btn-primary">🎟 Sale Tickets With Us</a></p>
 </section>
 
 <!-- Upcoming Events -->
@@ -24,7 +24,7 @@
                 <div class="event-card">
                     <div class="event-image">
                         <?php if (!empty($event['poster_path'])): ?>
-                            <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($event['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                            <img src="<?php echo htmlspecialchars('/' . ltrim($event['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
                         <?php else: ?>
                             <div class="placeholder-image">Event</div>
                         <?php endif; ?>
@@ -41,7 +41,7 @@
                         </p>
                         <?php if (isset($event['min_price']) && $event['min_price'] !== null): ?><p class="event-from-price">Tickets from <strong><?php echo htmlspecialchars(Event::money($event['price_currency'], $event['min_price'])); ?></strong><?php if (!empty($event['active_discounts'])): ?> <span class="discount-pill">Discount available</span><?php endif; ?></p><?php endif; ?>
                         <p class="event-description"><?php echo htmlspecialchars(substr($event['description'] ?? '', 0, 150)); ?>...</p>
-                        <a href="/TMZ%20PODCAST/events.php?slug=<?php echo urlencode($event['slug']); ?>" class="btn btn-primary">Tickets &amp; details</a>
+                        <a href="/events.php?slug=<?php echo urlencode($event['slug']); ?>" class="btn btn-primary">Tickets &amp; details</a>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -62,7 +62,7 @@
                 <div class="event-card">
                     <div class="event-image">
                         <?php if (!empty($event['poster_path'])): ?>
-                            <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($event['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                            <img src="<?php echo htmlspecialchars('/' . ltrim($event['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
                         <?php else: ?>
                             <div class="placeholder-image">Event</div>
                         <?php endif; ?>
@@ -78,7 +78,7 @@
                             <?php endif; ?>
                         </p>
                         <p class="event-description"><?php echo htmlspecialchars(substr($event['description'] ?? '', 0, 150)); ?>...</p>
-                        <a href="/TMZ%20PODCAST/events.php?slug=<?php echo urlencode($event['slug']); ?>" class="btn btn-outline">View Details</a>
+                        <a href="/events.php?slug=<?php echo urlencode($event['slug']); ?>" class="btn btn-outline">View Details</a>
                     </div>
                 </div>
             <?php endforeach; ?>

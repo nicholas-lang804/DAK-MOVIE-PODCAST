@@ -170,7 +170,7 @@
     document.body.classList.add('has-player'); root.hidden = false;
     if (t.locked) {
       pauseMedia(); render();
-      toast(t.lock_hint || 'This track is locked.', /All Access/.test(t.lock_hint || '') ? '/TMZ%20PODCAST/membership.php' : '/TMZ%20PODCAST/login.php', /All Access/.test(t.lock_hint || '') ? 'See plans' : 'Sign in');
+      toast(t.lock_hint || 'This track is locked.', /All Access/.test(t.lock_hint || '') ? '/membership.php' : '/login.php', /All Access/.test(t.lock_hint || '') ? 'See plans' : 'Sign in');
       return;
     }
     listened = 0; counted = false; lastTick = 0;
@@ -446,7 +446,7 @@
   }
   function toggleLike(t) {
     if (!t) return;
-    if (!LOGGED) { toast('Sign in to like songs.', '/TMZ%20PODCAST/login.php', 'Sign in'); return; }
+    if (!LOGGED) { toast('Sign in to like songs.', '/login.php', 'Sign in'); return; }
     var want = !t.liked; patchTrackEverywhere(t.id, { liked: want }); render();
     api('like', { track_id: t.id }).then(function (j) { patchTrackEverywhere(t.id, { liked: j.liked }); render(); toast(j.liked ? 'Added to Liked songs' : 'Removed from Liked songs'); })
       .catch(function (e) { patchTrackEverywhere(t.id, { liked: !want }); render(); toast(e.message); });
@@ -456,7 +456,7 @@
   function download(t, type) {
     if (!t) return;
     if (t.downloads_enabled === false) { toast('Downloads are currently disabled.'); return; }
-    if (!t.can_download) { toast(t.download_hint || 'Download is not available.', /Sign in/.test(t.download_hint || '') ? '/TMZ%20PODCAST/login.php' : (/All Access/.test(t.download_hint || '') ? '/TMZ%20PODCAST/membership.php' : ''), /Sign in/.test(t.download_hint || '') ? 'Sign in' : 'See plans'); return; }
+    if (!t.can_download) { toast(t.download_hint || 'Download is not available.', /Sign in/.test(t.download_hint || '') ? '/login.php' : (/All Access/.test(t.download_hint || '') ? '/membership.php' : ''), /Sign in/.test(t.download_hint || '') ? 'Sign in' : 'See plans'); return; }
     var url = type === 'video' ? t.download_video : t.download;
     if (!url) { toast('No video file for this track.'); return; }
     var a = document.createElement('a'); a.href = url; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); toast('Download started');
@@ -473,7 +473,7 @@
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
 
   function choosePlaylist(t) {
-    if (!LOGGED) { toast('Sign in to build playlists.', '/TMZ%20PODCAST/login.php', 'Sign in'); return; }
+    if (!LOGGED) { toast('Sign in to build playlists.', '/login.php', 'Sign in'); return; }
     modalCard.textContent = ''; modalCard.appendChild(el('h3', null, 'Add to playlist')); modalCard.appendChild(el('p', 'mz-muted', 'Loading…')); openModal();
     api('playlists', {}, 'GET').then(function (j) {
       modalCard.textContent = ''; modalCard.appendChild(el('h3', null, 'Add to playlist'));
@@ -511,8 +511,8 @@
     var list = node && node.closest('[data-playlist-id]'); var pid = list ? +list.getAttribute('data-playlist-id') : 0;
     if (pid) item('Remove from this playlist', function () { api('playlist_remove', { playlist_id: pid, track_id: t.id }).then(function () { if (node) node.remove(); toast('Removed from playlist'); }).catch(function (e) { toast(e.message); }); });
     menu.appendChild(document.createElement('hr'));
-    var a1 = el('a', null, 'Go to artist'); a1.href = '/TMZ%20PODCAST/music.php?artist=' + encodeURIComponent(t.artist_slug); menu.appendChild(a1);
-    if (t.album_slug) { var a2 = el('a', null, 'Go to album'); a2.href = '/TMZ%20PODCAST/music.php?album=' + encodeURIComponent(t.album_slug); menu.appendChild(a2); }
+    var a1 = el('a', null, 'Go to artist'); a1.href = '/music.php?artist=' + encodeURIComponent(t.artist_slug); menu.appendChild(a1);
+    if (t.album_slug) { var a2 = el('a', null, 'Go to album'); a2.href = '/music.php?album=' + encodeURIComponent(t.album_slug); menu.appendChild(a2); }
     menu.appendChild(document.createElement('hr'));
     item('Share', function () { share(t); });
     if (t.downloads_enabled !== false) {
@@ -534,7 +534,7 @@
   function playFrom(node, opts) {
     opts = opts || {};
     var t = trackFrom(node); if (!t) return;
-    if (t.locked) { toast(t.lock_hint || 'This track is locked.', /All Access/.test(t.lock_hint || '') ? '/TMZ%20PODCAST/membership.php' : '/TMZ%20PODCAST/login.php', /All Access/.test(t.lock_hint || '') ? 'See plans' : 'Sign in'); return; }
+    if (t.locked) { toast(t.lock_hint || 'This track is locked.', /All Access/.test(t.lock_hint || '') ? '/membership.php' : '/login.php', /All Access/.test(t.lock_hint || '') ? 'See plans' : 'Sign in'); return; }
     var c = cur();
     if (c && c.id === t.id && !opts.video) { toggle(); return; }
     var list = node.closest('[data-track-list]'), tracks = [], idx = 0;

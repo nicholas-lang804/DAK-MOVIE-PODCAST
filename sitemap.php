@@ -44,7 +44,7 @@ try {
 header('Content-Type: application/xml; charset=utf-8');
 
 // Base URL
-$baseUrl = 'http://localhost/TMZ%20PODCAST';
+$baseUrl = 'http://localhost';
 
 // Start XML output
 echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";

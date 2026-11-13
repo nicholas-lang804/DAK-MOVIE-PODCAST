@@ -5,6 +5,6 @@
  */
 
 // Redirect to the user dashboard
-header('Location: /TMZ%20PODCAST/user/dashboard.php');
+header('Location: /user/dashboard.php');
 exit;
 

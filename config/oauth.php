@@ -6,7 +6,7 @@
  * Example:
  *   TMZ_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
  *   TMZ_GOOGLE_CLIENT_SECRET=your-client-secret
- *   TMZ_GOOGLE_REDIRECT_URI=http://localhost/TMZ%20PODCAST/auth/google-callback.php
+ *   TMZ_GOOGLE_REDIRECT_URI=http://localhost/auth/google-callback.php
  *
  * For local XAMPP on Windows, use Apache environment variables or add them in php.ini.
  */
@@ -22,7 +22,7 @@ function tmzOAuthConfig() {
         return is_string($value) ? trim($value) : (string) $value;
     };
 
-    $baseUrl = rtrim($getEnv('TMZ_BASE_URL', 'http://localhost/TMZ%20PODCAST'), '/');
+    $baseUrl = rtrim($getEnv('TMZ_BASE_URL', 'http://localhost/'), '/');
 
     return [
         'google' => [

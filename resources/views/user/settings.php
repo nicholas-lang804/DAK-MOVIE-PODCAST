@@ -20,7 +20,7 @@
     <?php endif; ?>
 
     <div class="form-container">
-        <form method="POST" action="/TMZ%20PODCAST/user/settings.php" class="admin-form">
+        <form method="POST" action="/user/settings.php" class="admin-form">
             <?php echo CSRF::getField(); ?>
             
             <div class="form-group">
@@ -59,7 +59,7 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Save Settings</button>
-                <a href="/TMZ%20PODCAST/user/dashboard.php" class="btn btn-outline">Cancel</a>
+                <a href="/user/dashboard.php" class="btn btn-outline">Cancel</a>
             </div>
         </form>
     </div>

@@ -13,7 +13,7 @@ try {
             <span class="cine-eyebrow">Spotlight</span>
             <h2 id="stars-heading">Stars of the Zone</h2>
         </div>
-        <a href="/TMZ%20PODCAST/stars.php" class="btn btn-outline">All actors &amp; actresses</a>
+        <a href="/stars.php" class="btn btn-outline">All actors &amp; actresses</a>
     </div>
     <?php if (empty($tmzStrip)): ?>
         <p class="cine-empty">New stars are being added. Check back soon.</p>

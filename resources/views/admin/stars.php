@@ -7,7 +7,7 @@ $e = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 <section class="admin-section">
     <div class="section-header">
         <h1>Manage Stars</h1>
-        <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=stars&amp;action=create" class="btn btn-primary">Add Actor / Actress</a>
+        <a href="/admin/dashboard.php?tab=stars&amp;action=create" class="btn btn-primary">Add Actor / Actress</a>
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -23,7 +23,7 @@ $e = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
         <?php $star = $star ?: []; ?>
         <div class="form-container">
             <h2><?php echo $action === 'create' ? 'Add a Star' : 'Edit ' . $e($star['name'] ?? 'Star'); ?></h2>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=stars" class="admin-form" enctype="multipart/form-data">
+            <form method="POST" action="/admin/dashboard.php?tab=stars" class="admin-form" enctype="multipart/form-data">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="id" value="<?php echo (int)($star['id'] ?? 0); ?>">
                 <input type="hidden" name="form_action" value="save">
@@ -104,7 +104,7 @@ $e = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save Star</button>
-                    <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=stars" class="btn btn-outline">Cancel</a>
+                    <a href="/admin/dashboard.php?tab=stars" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </div>
@@ -127,9 +127,9 @@ $e = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
                             <td><?php echo !empty($row['is_featured']) ? 'Yes' : '—'; ?></td>
                             <td><span class="status-badge status-<?php echo $e($row['status']); ?>"><?php echo $row['status'] === 'active' ? 'Active' : 'Hidden'; ?></span></td>
                             <td>
-                                <a href="/TMZ%20PODCAST/stars.php?slug=<?php echo urlencode($row['slug']); ?>" class="btn btn-small" target="_blank" rel="noopener">View</a>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=stars&amp;action=edit&amp;id=<?php echo (int)$row['id']; ?>" class="btn btn-small">Edit</a>
-                                <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=stars" style="display:inline" onsubmit="return confirm('Delete <?php echo $e(addslashes($row['name'])); ?>? This also removes their picture and video.')">
+                                <a href="/stars.php?slug=<?php echo urlencode($row['slug']); ?>" class="btn btn-small" target="_blank" rel="noopener">View</a>
+                                <a href="/admin/dashboard.php?tab=stars&amp;action=edit&amp;id=<?php echo (int)$row['id']; ?>" class="btn btn-small">Edit</a>
+                                <form method="POST" action="/admin/dashboard.php?tab=stars" style="display:inline" onsubmit="return confirm('Delete <?php echo $e(addslashes($row['name'])); ?>? This also removes their picture and video.')">
                                     <?php echo CSRF::getField(); ?>
                                     <input type="hidden" name="form_action" value="delete">
                                     <input type="hidden" name="id" value="<?php echo (int)$row['id']; ?>">

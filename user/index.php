@@ -46,7 +46,7 @@ try {
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /TMZ%20PODCAST/login.php');
+    header('Location: /login.php');
     exit;
 }
 
@@ -55,7 +55,7 @@ $requestUri = $_SERVER['REQUEST_URI'];
 $path = parse_url($requestUri, PHP_URL_PATH);
 
 // Remove the base path
-$basePath = '/TMZ%20PODCAST/user';
+$basePath = '/user';
 $path = str_replace($basePath, '', $path);
 $path = trim($path, '/');
 
@@ -83,7 +83,7 @@ switch ($path) {
         unset($_SESSION['user_username']);
         unset($_SESSION['user_email']);
         unset($_SESSION['user_role']);
-        header('Location: /TMZ%20PODCAST/');
+        header('Location: /');
         exit;
         break;
         

@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../partials/star-card.php';
 $qs = function ($extra) use ($category, $search) {
     $params = array_filter(['type' => $category, 'q' => $search], function ($v) { return $v !== '' && $v !== null; });
-    return '/TMZ%20PODCAST/stars.php?' . http_build_query(array_merge($params, $extra));
+    return '/stars.php?' . http_build_query(array_merge($params, $extra));
 };
 ?>
 <section class="stars-page">
@@ -19,7 +19,7 @@ $qs = function ($extra) use ($category, $search) {
             <a href="<?php echo $qs(['type' => 'actor', 'page' => 1]); ?>" class="<?php echo $category === 'actor' ? 'is-active' : ''; ?>">Actors</a>
             <a href="<?php echo $qs(['type' => 'actress', 'page' => 1]); ?>" class="<?php echo $category === 'actress' ? 'is-active' : ''; ?>">Actresses</a>
         </nav>
-        <form class="cine-search" method="GET" action="/TMZ%20PODCAST/stars.php" role="search">
+        <form class="cine-search" method="GET" action="/stars.php" role="search">
             <?php if ($category !== ''): ?><input type="hidden" name="type" value="<?php echo htmlspecialchars($category); ?>"><?php endif; ?>
             <input type="search" name="q" value="<?php echo htmlspecialchars($search); ?>" placeholder="Search a name…" aria-label="Search stars">
             <button type="submit" class="btn btn-primary">Search</button>

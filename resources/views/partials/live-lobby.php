@@ -26,11 +26,11 @@ if (empty($lxUpcoming) && empty($lxPast)) return;
       <?php foreach ($lxUpcoming as $s): $iso = LiveExtras::toIsoUtc($s['scheduled_at']); ?>
         <article class="lobby-card">
           <?php if (!empty($s['cover_image_path'])): ?>
-            <img class="lobby-cover" loading="lazy" src="/TMZ%20PODCAST/<?php echo $lxH(ltrim($s['cover_image_path'], '/')); ?>" alt="">
+            <img class="lobby-cover" loading="lazy" src="/<?php echo $lxH(ltrim($s['cover_image_path'], '/')); ?>" alt="">
           <?php endif; ?>
           <div class="lobby-body">
             <span class="lobby-badge"><?php echo $s['access_type'] === 'paid' ? '🔒 Paid' : 'Free'; ?></span>
-            <h3><a href="/TMZ%20PODCAST/live.php?live_id=<?php echo (int)$s['id']; ?>"><?php echo $lxH($s['title']); ?></a></h3>
+            <h3><a href="/live.php?live_id=<?php echo (int)$s['id']; ?>"><?php echo $lxH($s['title']); ?></a></h3>
             <?php if ($iso): ?>
               <p class="lobby-when"><time data-lx-localtime="<?php echo $lxH($iso); ?>" datetime="<?php echo $lxH($iso); ?>"><?php echo $lxH($iso); ?></time></p>
               <p class="lobby-countdown" data-lx-countdown="<?php echo $lxH($iso); ?>" data-now="<?php echo $lxNow; ?>">--:--:--</p>
@@ -39,7 +39,7 @@ if (empty($lxUpcoming) && empty($lxPast)) return;
             <?php endif; ?>
             <div class="lobby-actions">
               <button type="button" class="btn btn-outline btn-small" data-lx-remind="<?php echo (int)$s['id']; ?>" data-csrf="<?php echo $lxToken; ?>" data-logged-in="<?php echo $lxLogged ? '1' : '0'; ?>">🔔 Remind me</button>
-              <?php if ($iso): ?><a class="btn btn-outline btn-small" href="/TMZ%20PODCAST/api/live-calendar.php?live_id=<?php echo (int)$s['id']; ?>">📅 Add to calendar</a><?php endif; ?>
+              <?php if ($iso): ?><a class="btn btn-outline btn-small" href="/api/live-calendar.php?live_id=<?php echo (int)$s['id']; ?>">📅 Add to calendar</a><?php endif; ?>
             </div>
           </div>
         </article>
@@ -51,9 +51,9 @@ if (empty($lxUpcoming) && empty($lxPast)) return;
     <div class="cine-heading"><div><span class="cine-eyebrow">Replays</span><h2>Past shows</h2></div></div>
     <div class="lobby-grid">
       <?php foreach ($lxPast as $s): ?>
-        <a class="lobby-card lobby-card-link" href="/TMZ%20PODCAST/live.php?live_id=<?php echo (int)$s['id']; ?>">
+        <a class="lobby-card lobby-card-link" href="/live.php?live_id=<?php echo (int)$s['id']; ?>">
           <?php if (!empty($s['cover_image_path'])): ?>
-            <img class="lobby-cover" loading="lazy" src="/TMZ%20PODCAST/<?php echo $lxH(ltrim($s['cover_image_path'], '/')); ?>" alt="">
+            <img class="lobby-cover" loading="lazy" src="/<?php echo $lxH(ltrim($s['cover_image_path'], '/')); ?>" alt="">
           <?php endif; ?>
           <div class="lobby-body">
             <span class="lobby-badge"><?php echo $s['access_type'] === 'paid' ? '🔒 Paid' : 'Free'; ?></span>
@@ -66,5 +66,5 @@ if (empty($lxUpcoming) && empty($lxPast)) return;
     </div>
   <?php endif; ?>
 </section>
-<link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/live-extras.css?v=lx-1">
-<script src="/TMZ%20PODCAST/assets/js/live-countdown.js?v=lx-1" defer></script>
+<link rel="stylesheet" href="/assets/css/live-extras.css?v=lx-1">
+<script src="/assets/js/live-countdown.js?v=lx-1" defer></script>

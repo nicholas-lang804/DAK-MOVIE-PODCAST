@@ -3,7 +3,7 @@
 $now = time();
 ?>
 <?php if (empty($tickets)): ?>
-    <div class="no-results"><p>You have no tickets yet. <a href="/TMZ%20PODCAST/events.php">Find an event</a> and pick Ordinary, VIP or VVIP.</p></div>
+    <div class="no-results"><p>You have no tickets yet. <a href="/events.php">Find an event</a> and pick Ordinary, VIP or VVIP.</p></div>
 <?php else: ?>
     <div class="my-ticket-grid">
     <?php foreach ($tickets as $tk):
@@ -18,7 +18,7 @@ $now = time();
             <div class="my-ticket-stub">
                 <code><?php echo htmlspecialchars($tk['ticket_code']); ?></code>
                 <span class="ticket-status"><?php echo $tk['status'] === 'used' ? 'Checked in' : ($tk['status'] === 'cancelled' ? 'Cancelled' : ($past ? 'Event ended' : 'Valid')); ?></span>
-                <a class="btn btn-small btn-primary" href="/TMZ%20PODCAST/ticket.php?code=<?php echo urlencode($tk['ticket_code']); ?>">View / print</a>
+                <a class="btn btn-small btn-primary" href="/ticket.php?code=<?php echo urlencode($tk['ticket_code']); ?>">View / print</a>
             </div>
         </article>
     <?php endforeach; ?>

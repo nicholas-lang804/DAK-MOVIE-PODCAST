@@ -66,5 +66,5 @@ if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'applicati
     echo json_encode(['ok' => true]);
     exit;
 }
-header('Location: /TMZ%20PODCAST/live.php');
+header('Location: /live.php');
 exit;

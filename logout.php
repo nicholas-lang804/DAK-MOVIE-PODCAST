@@ -12,6 +12,6 @@ session_unset();
 session_destroy();
 
 // Redirect to homepage
-header('Location: /TMZ%20PODCAST/');
+header('Location: /');
 exit;
 

@@ -182,9 +182,9 @@ class UserController extends Controller {
      */
     private function handleOrganiserPost($userId) {
         $token = $_POST['csrf_token'] ?? '';
-        if (!CSRF::validateToken($token)) { $_SESSION['error'] = 'Security check failed. Please try again.'; $this->redirect('/TMZ%20PODCAST/user/dashboard.php?tab=my-events'); }
+        if (!CSRF::validateToken($token)) { $_SESSION['error'] = 'Security check failed. Please try again.'; $this->redirect('/user/dashboard.php?tab=my-events'); }
         $action = $_POST['org_action'] ?? '';
-        $back = '/TMZ%20PODCAST/user/dashboard.php?tab=my-events';
+        $back = '/user/dashboard.php?tab=my-events';
 
         if ($action === 'save_event') {
             $id = (int)($_POST['id'] ?? 0);
@@ -192,7 +192,7 @@ class UserController extends Controller {
             if ($id && !$event) { $_SESSION['error'] = 'Event not found.'; $this->redirect($back); }
 
             $title = trim($_POST['title'] ?? '');
-            if ($title === '') { $_SESSION['error'] = 'Event title is required.'; $this->redirect('/TMZ%20PODCAST/user/dashboard.php?tab=event-create' . ($id ? '&id=' . $id : '')); }
+            if ($title === '') { $_SESSION['error'] = 'Event title is required.'; $this->redirect('/user/dashboard.php?tab=event-create' . ($id ? '&id=' . $id : '')); }
 
             $wantPublish = ($_POST['save_as'] ?? 'draft') === 'publish';
             $data = [
@@ -245,7 +245,7 @@ class UserController extends Controller {
                 $ok = $this->eventModel->create($data);
                 $id = (int)$ok;
             }
-            if (!$ok || !$id) { $_SESSION['error'] = 'Could not save the event. Please try again.'; $this->redirect('/TMZ%20PODCAST/user/dashboard.php?tab=event-create' . ($id ? '&id=' . $id : '')); }
+            if (!$ok || !$id) { $_SESSION['error'] = 'Could not save the event. Please try again.'; $this->redirect('/user/dashboard.php?tab=event-create' . ($id ? '&id=' . $id : '')); }
 
             // Ticket categories
             $this->eventModel->saveTicketTypes($id, $_POST['tickets'] ?? []);
@@ -254,7 +254,7 @@ class UserController extends Controller {
             if (EventPublishFee::feeEnabled()) $feeModel->ensureFee($id, $userId);
 
             $_SESSION['success'] = $status === 'published' ? 'Event published!' : 'Event saved as draft.';
-            $this->redirect('/TMZ%20PODCAST/user/dashboard.php?tab=my-events');
+            $this->redirect('/user/dashboard.php?tab=my-events');
         }
 
         if ($action === 'pay_event_fee') {
@@ -263,7 +263,7 @@ class UserController extends Controller {
             if (!$event) { $_SESSION['error'] = 'Event not found.'; $this->redirect($back); }
             $feeModel = new EventPublishFee();
             $fee = $feeModel->ensureFee($id, $userId);
-            if (in_array($fee['status'], ['paid', 'exempt'], true)) { $_SESSION['success'] = 'Publishing fee already settled.'; $this->redirect('/TMZ%20PODCAST/user/dashboard.php?tab=event-fees'); }
+            if (in_array($fee['status'], ['paid', 'exempt'], true)) { $_SESSION['success'] = 'Publishing fee already settled.'; $this->redirect('/user/dashboard.php?tab=event-fees'); }
             $payments = new Payment();
             $pay = $payments->createPendingEventFeePayment($userId, (int)$fee['id'], (float)$fee['amount'], $fee['currency']);
             $this->pdo->prepare("UPDATE event_publish_fees SET payment_id=? WHERE id=?")->execute([$pay['id'], (int)$fee['id']]);
@@ -276,7 +276,7 @@ class UserController extends Controller {
                 }
                 $_SESSION['error'] = 'Pesapal error: ' . ($gw['message'] ?? 'unknown');
             } catch (Throwable $e) { $_SESSION['error'] = 'Payment gateway unreachable: ' . $e->getMessage(); }
-            $this->redirect('/TMZ%20PODCAST/user/dashboard.php?tab=event-fees');
+            $this->redirect('/user/dashboard.php?tab=event-fees');
         }
 
         if ($action === 'publish_event') {
@@ -291,7 +291,7 @@ class UserController extends Controller {
                 (new EventPublishFee())->ensureFee($id, $userId);
                 $_SESSION['error'] = 'Publishing fee of ' . EventPublishFee::feeAmount() . ' ' . EventPublishFee::feeCurrency() . ' must be paid before publishing.';
             }
-            $this->redirect('/TMZ%20PODCAST/user/dashboard.php?tab=my-events');
+            $this->redirect('/user/dashboard.php?tab=my-events');
         }
 
         if ($action === 'unpublish_event') {
@@ -364,7 +364,7 @@ class UserController extends Controller {
         $user = $this->userModel->findById($userId);
         
         if (!$user) {
-            $this->redirect('/TMZ%20PODCAST/login.php');
+            $this->redirect('/login.php');
         }
 
         $data = [
@@ -382,7 +382,7 @@ class UserController extends Controller {
         AuthMiddleware::requireLogin();
         
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/TMZ%20PODCAST/user/profile.php');
+            $this->redirect('/user/profile.php');
         }
 
         $userId = $_SESSION['user_id'];
@@ -396,19 +396,19 @@ class UserController extends Controller {
         // Validate
         if (empty($username) || empty($email)) {
             $_SESSION['profile_error'] = 'Username and email are required';
-            $this->redirect('/TMZ%20PODCAST/user/profile.php');
+            $this->redirect('/user/profile.php');
         }
 
         if (!Validation::validateEmail($email)) {
             $_SESSION['profile_error'] = 'Invalid email format';
-            $this->redirect('/TMZ%20PODCAST/user/profile.php');
+            $this->redirect('/user/profile.php');
         }
 
         // Check if email is already taken by another user
         $existingUser = $this->userModel->findByEmail($email);
         if ($existingUser && $existingUser['id'] != $userId) {
             $_SESSION['profile_error'] = 'Email is already in use';
-            $this->redirect('/TMZ%20PODCAST/user/profile.php');
+            $this->redirect('/user/profile.php');
         }
 
         // Prepare update data
@@ -422,20 +422,20 @@ class UserController extends Controller {
             $file = $_FILES['profile_image'];
             if ($file['size'] > 5 * 1024 * 1024) {
                 $_SESSION['profile_error'] = 'Profile picture must be 5 MB or smaller';
-                $this->redirect('/TMZ%20PODCAST/user/profile.php');
+                $this->redirect('/user/profile.php');
             }
             $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
             $allowed = ['image/jpeg'=>'jpg','image/png'=>'png','image/webp'=>'webp'];
             if (!isset($allowed[$mime]) || @getimagesize($file['tmp_name']) === false) {
                 $_SESSION['profile_error'] = 'Only valid JPG, PNG or WebP profile pictures are allowed';
-                $this->redirect('/TMZ%20PODCAST/user/profile.php');
+                $this->redirect('/user/profile.php');
             }
             $directory = __DIR__ . '/../../storage/uploads/images/profiles';
             if (!is_dir($directory)) mkdir($directory, 0755, true);
             $filename = 'user-' . (int)$userId . '-' . bin2hex(random_bytes(8)) . '.' . $allowed[$mime];
             if (!move_uploaded_file($file['tmp_name'], $directory . DIRECTORY_SEPARATOR . $filename)) {
                 $_SESSION['profile_error'] = 'The profile picture could not be saved';
-                $this->redirect('/TMZ%20PODCAST/user/profile.php');
+                $this->redirect('/user/profile.php');
             }
             $updateData['profile_image_path'] = 'storage/uploads/images/profiles/' . $filename;
         }
@@ -444,23 +444,23 @@ class UserController extends Controller {
         if (!empty($newPassword)) {
             if (empty($currentPassword)) {
                 $_SESSION['profile_error'] = 'Current password is required to change password';
-                $this->redirect('/TMZ%20PODCAST/user/profile.php');
+                $this->redirect('/user/profile.php');
             }
 
             $user = $this->userModel->findById($userId);
             if (!password_verify($currentPassword, $user['password_hash'] ?? '')) {
                 $_SESSION['profile_error'] = 'Current password is incorrect';
-                $this->redirect('/TMZ%20PODCAST/user/profile.php');
+                $this->redirect('/user/profile.php');
             }
 
             if ($newPassword !== $confirmPassword) {
                 $_SESSION['profile_error'] = 'New passwords do not match';
-                $this->redirect('/TMZ%20PODCAST/user/profile.php');
+                $this->redirect('/user/profile.php');
             }
 
             if (!Validation::validatePassword($newPassword)) {
                 $_SESSION['profile_error'] = 'Password must be at least 8 characters with uppercase, lowercase, and number';
-                $this->redirect('/TMZ%20PODCAST/user/profile.php');
+                $this->redirect('/user/profile.php');
             }
 
             $updateData['password'] = password_hash($newPassword, PASSWORD_DEFAULT);
@@ -487,7 +487,7 @@ class UserController extends Controller {
             $_SESSION['profile_error'] = 'Failed to update profile';
         }
 
-        $this->redirect('/TMZ%20PODCAST/user/profile.php');
+        $this->redirect('/user/profile.php');
     }
 
     /**
@@ -514,7 +514,7 @@ class UserController extends Controller {
         AuthMiddleware::requireLogin();
         
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/TMZ%20PODCAST/user/settings.php');
+            $this->redirect('/user/settings.php');
         }
 
         $userId = $_SESSION['user_id'];
@@ -543,7 +543,7 @@ class UserController extends Controller {
             $_SESSION['settings_error'] = 'Failed to update settings';
         }
 
-        $this->redirect('/TMZ%20PODCAST/user/settings.php');
+        $this->redirect('/user/settings.php');
     }
 }
 ?>

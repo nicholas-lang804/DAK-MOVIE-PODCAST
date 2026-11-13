@@ -112,7 +112,7 @@ class Music {
     }
 
     public static function url($path) {
-        return $path ? '/TMZ%20PODCAST/' . ltrim($path, '/') : '';
+        return $path ? '/' . ltrim($path, '/') : '';
     }
 
     /** Evaluate an access level for a viewer. $viewer = ['user_id'=>int,'sub'=>bool,'admin'=>bool]. */
@@ -486,8 +486,8 @@ class Music {
             'album_slug' => $t['album_slug'] ?? '',
             'cover' => self::url($t['cover'] ?? ''),
             'duration' => (int)$t['duration_seconds'],
-            'src' => '/TMZ%20PODCAST/music-stream.php?id=' . (int)$t['id'],
-            'video' => !empty($t['video_path']) ? '/TMZ%20PODCAST/music-stream.php?id=' . (int)$t['id'] . '&type=video' : '',
+            'src' => '/music-stream.php?id=' . (int)$t['id'],
+            'video' => !empty($t['video_path']) ? '/music-stream.php?id=' . (int)$t['id'] . '&type=video' : '',
             'explicit' => !empty($t['is_explicit']),
             'liked' => in_array((int)$t['id'], $liked, true),
             'likes' => (int)($t['likes_total'] ?? 0),
@@ -497,9 +497,9 @@ class Music {
             'can_download' => $canDl,
             'downloads_enabled' => $downloadsOn,
             'download_hint' => $canDl ? '' : ($downloadsOn ? self::accessHint($t['download_access']) : 'Downloads are currently disabled.'),
-            'download' => '/TMZ%20PODCAST/music-download.php?id=' . (int)$t['id'],
-            'download_video' => !empty($t['video_path']) ? '/TMZ%20PODCAST/music-download.php?id=' . (int)$t['id'] . '&type=video' : '',
-            'url' => '/TMZ%20PODCAST/music.php?track=' . rawurlencode($t['slug']),
+            'download' => '/music-download.php?id=' . (int)$t['id'],
+            'download_video' => !empty($t['video_path']) ? '/music-download.php?id=' . (int)$t['id'] . '&type=video' : '',
+            'url' => '/music.php?track=' . rawurlencode($t['slug']),
         ];
     }
 }

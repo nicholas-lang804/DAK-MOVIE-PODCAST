@@ -12,12 +12,12 @@
     <div class="movie-showcase-shell">
         <?php $featuredMovie = $featuredShowcaseMovies[0] ?? null; ?>
         <?php if ($featuredMovie): ?>
-            <?php $featuredMovieLink = (($featuredMovie['access_type'] ?? 'free') === 'paid') ? '/TMZ%20PODCAST/payment.php?movie_id=' . (int)$featuredMovie['id'] : '/TMZ%20PODCAST/movies.php?slug=' . urlencode($featuredMovie['slug']) . '#watch-movie'; ?>
+            <?php $featuredMovieLink = (($featuredMovie['access_type'] ?? 'free') === 'paid') ? '/payment.php?movie_id=' . (int)$featuredMovie['id'] : '/movies.php?slug=' . urlencode($featuredMovie['slug']) . '#watch-movie'; ?>
             <?php $featuredMovieLabel = (($featuredMovie['access_type'] ?? 'free') === 'paid') ? 'Pay to Watch' : 'Watch now'; ?>
             <div class="movie-showcase-feature">
                 <div class="movie-showcase-poster">
                     <?php if (!empty($featuredMovie['poster_path'])): ?>
-                        <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($featuredMovie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($featuredMovie['title']); ?>">
+                        <img src="<?php echo htmlspecialchars('/' . ltrim($featuredMovie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($featuredMovie['title']); ?>">
                     <?php else: ?>
                         <div class="movie-showcase-fallback">
                             <span>DAK</span>
@@ -40,7 +40,7 @@
 
                     <div class="movie-showcase-actions">
                         <a href="<?php echo htmlspecialchars($featuredMovieLink); ?>" class="btn btn-primary"><?php echo htmlspecialchars($featuredMovieLabel); ?></a>
-                        <a href="/TMZ%20PODCAST/membership.php" class="btn btn-outline">Plans from UGX 500</a>
+                        <a href="/membership.php" class="btn btn-outline">Plans from UGX 500</a>
                     </div>
                 </div>
             </div>
@@ -55,11 +55,11 @@
             <div class="movie-showcase-track">
                 <?php foreach (array_merge($featuredShowcaseMovies, $featuredShowcaseMovies) as $movie): ?>
                     <?php $isPaid = (($movie['access_type'] ?? 'free') === 'paid'); ?>
-                    <?php $movieUrl = $isPaid ? '/TMZ%20PODCAST/payment.php?movie_id=' . (int)$movie['id'] : '/TMZ%20PODCAST/movies.php?slug=' . urlencode($movie['slug']) . '#watch-movie'; ?>
+                    <?php $movieUrl = $isPaid ? '/payment.php?movie_id=' . (int)$movie['id'] : '/movies.php?slug=' . urlencode($movie['slug']) . '#watch-movie'; ?>
                     <?php $movieButtonText = $isPaid ? 'Pay to Watch' : 'Watch now'; ?>
                     <article class="movie-showcase-item"
                         data-title="<?php echo htmlspecialchars(addslashes($movie['title'])); ?>"
-                        data-image="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim((string)($movie['poster_path'] ?? ''), '/')); ?>"
+                        data-image="<?php echo htmlspecialchars('/' . ltrim((string)($movie['poster_path'] ?? ''), '/')); ?>"
                         data-link="<?php echo htmlspecialchars($movieUrl); ?>"
                         data-button-label="<?php echo htmlspecialchars($movieButtonText); ?>"
                         data-synopsis="<?php echo htmlspecialchars(addslashes(substr($movie['synopsis'] ?? '', 0, 160))); ?>"
@@ -69,7 +69,7 @@
                         data-paid="<?php echo $isPaid ? '1' : '0'; ?>">
                         <div class="movie-showcase-item-poster">
                             <?php if (!empty($movie['poster_path'])): ?>
-                                <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
+                                <img src="<?php echo htmlspecialchars('/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
                             <?php else: ?>
                                 <div class="movie-showcase-item-fallback"><?php echo htmlspecialchars($movie['title']); ?></div>
                             <?php endif; ?>
@@ -87,7 +87,7 @@
 </section>
 
 <?php if (!empty($currentLive)): ?>
-<section class="home-live-alert"><div><span class="live-pill">● LIVE NOW</span><h2><?php echo htmlspecialchars($currentLive['title']); ?></h2><p><?php echo htmlspecialchars($currentLive['access_type']==='paid' ? 'Premium live episode — account and payment required.' : 'Free live episode — create an account to join.'); ?></p></div><a class="btn btn-primary" href="/TMZ%20PODCAST/live.php?live_id=<?php echo (int)$currentLive['id']; ?>">Watch Now</a></section>
+<section class="home-live-alert"><div><span class="live-pill">● LIVE NOW</span><h2><?php echo htmlspecialchars($currentLive['title']); ?></h2><p><?php echo htmlspecialchars($currentLive['access_type']==='paid' ? 'Premium live episode — account and payment required.' : 'Free live episode — create an account to join.'); ?></p></div><a class="btn btn-primary" href="/live.php?live_id=<?php echo (int)$currentLive['id']; ?>">Watch Now</a></section>
 <?php endif; ?>
 
 <!-- Statistics -->
@@ -119,7 +119,7 @@
 <section class="featured-episode">
     <div class="section-header">
         <h2>Featured Episode</h2>
-        <a href="/TMZ%20PODCAST/episodes.php" class="btn btn-outline">View All Episodes</a>
+        <a href="/episodes.php" class="btn btn-outline">View All Episodes</a>
     </div>
     <div class="featured-episode-card">
         <?php $episode = $featuredEpisodes[0]; ?>
@@ -141,7 +141,7 @@
                 <?php endif; ?>
             </p>
             <p class="episode-description"><?php echo htmlspecialchars(substr($episode['description'] ?? '', 0, 200)); ?>...</p>
-            <a href="/TMZ%20PODCAST/episodes.php?slug=<?php echo urlencode($episode['slug']); ?>" class="btn btn-primary">Listen Now</a>
+            <a href="/episodes.php?slug=<?php echo urlencode($episode['slug']); ?>" class="btn btn-primary">Listen Now</a>
         </div>
     </div>
 </section>
@@ -151,7 +151,7 @@
 <section class="latest-episodes">
     <div class="section-header">
         <h2>Latest Episodes</h2>
-        <a href="/TMZ%20PODCAST/episodes.php" class="btn btn-outline">View All</a>
+        <a href="/episodes.php" class="btn btn-outline">View All</a>
     </div>
     <div class="episodes-grid">
         <?php foreach ($latestEpisodes as $episode): ?>
@@ -170,7 +170,7 @@
                             <span class="category"><?php echo htmlspecialchars($episode['category_name']); ?></span>
                         <?php endif; ?>
                     </p>
-                    <a href="/TMZ%20PODCAST/episodes.php?slug=<?php echo urlencode($episode['slug']); ?>" class="btn btn-small">Listen</a>
+                    <a href="/episodes.php?slug=<?php echo urlencode($episode['slug']); ?>" class="btn btn-small">Listen</a>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -181,7 +181,7 @@
 <section class="featured-articles">
     <div class="section-header">
         <h2>Entertainment News</h2>
-        <a href="/TMZ%20PODCAST/news.php" class="btn btn-outline">View All News</a>
+        <a href="/news.php" class="btn btn-outline">View All News</a>
     </div>
     <div class="articles-grid">
         <?php foreach ($featuredArticles as $article): ?>
@@ -204,7 +204,7 @@
                         <?php endif; ?>
                     </p>
                     <p class="article-excerpt"><?php echo htmlspecialchars(substr($article['excerpt'] ?? '', 0, 150)); ?>...</p>
-                    <a href="/TMZ%20PODCAST/news.php?slug=<?php echo urlencode($article['slug']); ?>" class="btn btn-small">Read More</a>
+                    <a href="/news.php?slug=<?php echo urlencode($article['slug']); ?>" class="btn btn-small">Read More</a>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -215,14 +215,14 @@
 <section class="latest-movies">
     <div class="section-header">
         <h2>Latest Movies</h2>
-        <a href="/TMZ%20PODCAST/movies.php" class="btn btn-outline">View All Movies</a>
+        <a href="/movies.php" class="btn btn-outline">View All Movies</a>
     </div>
     <div class="movies-grid">
         <?php foreach ($latestMovies as $movie): ?>
             <div class="movie-card">
                 <div class="movie-poster">
                     <?php if ($movie['poster_path']): ?>
-                        <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
+                        <img src="<?php echo htmlspecialchars('/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
                     <?php else: ?>
                         <div class="placeholder-image">Movie Poster</div>
                     <?php endif; ?>
@@ -237,7 +237,7 @@
                             <span class="director">Dir: <?php echo htmlspecialchars($movie['director']); ?></span>
                         <?php endif; ?>
                     </p>
-                    <a href="/TMZ%20PODCAST/movies.php?slug=<?php echo urlencode($movie['slug']); ?>" class="btn btn-small">View Details</a>
+                    <a href="/movies.php?slug=<?php echo urlencode($movie['slug']); ?>" class="btn btn-small">View Details</a>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -251,14 +251,14 @@
 <section class="upcoming-events">
     <div class="section-header">
         <h2>Upcoming Events</h2>
-        <a href="/TMZ%20PODCAST/events.php" class="btn btn-outline">View All Events</a>
+        <a href="/events.php" class="btn btn-outline">View All Events</a>
     </div>
     <div class="events-grid">
         <?php foreach ($upcomingEvents as $event): ?>
             <div class="event-card">
                 <div class="event-image">
                     <?php if (!empty($event['poster_path'])): ?>
-                        <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($event['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                        <img src="<?php echo htmlspecialchars('/' . ltrim($event['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
                     <?php else: ?>
                         <div class="placeholder-image">Event</div>
                     <?php endif; ?>
@@ -274,7 +274,7 @@
                         <?php endif; ?>
                     </p>
                     <?php if (isset($event['min_price']) && $event['min_price'] !== null): ?><p class="event-from-price">Tickets from <strong><?php echo htmlspecialchars(Event::money($event['price_currency'], $event['min_price'])); ?></strong><?php if (!empty($event['active_discounts'])): ?> <span class="discount-pill">Discount available</span><?php endif; ?></p><?php endif; ?>
-                    <a href="/TMZ%20PODCAST/events.php?slug=<?php echo urlencode($event['slug']); ?>" class="btn btn-small btn-primary">Tickets &amp; details</a>
+                    <a href="/events.php?slug=<?php echo urlencode($event['slug']); ?>" class="btn btn-small btn-primary">Tickets &amp; details</a>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -286,14 +286,14 @@
 <section class="hosts-guests">
     <div class="section-header">
         <h2>Meet Our Team</h2>
-        <a href="/TMZ%20PODCAST/hosts.php" class="btn btn-outline">View All</a>
+        <a href="/hosts.php" class="btn btn-outline">View All</a>
     </div>
     <div class="hosts-grid">
         <?php foreach (array_slice($hosts, 0, 4) as $host): ?>
             <div class="host-card">
                 <div class="host-image">
                     <?php if ($host['profile_image_path']): ?>
-                        <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($host['profile_image_path'], '/')); ?>" alt="<?php echo htmlspecialchars($host['name']); ?>">
+                        <img src="<?php echo htmlspecialchars('/' . ltrim($host['profile_image_path'], '/')); ?>" alt="<?php echo htmlspecialchars($host['name']); ?>">
                     <?php else: ?>
                         <div class="placeholder-image">Host</div>
                     <?php endif; ?>
@@ -303,7 +303,7 @@
                     <?php if ($host['role']): ?>
                         <p class="host-role"><?php echo htmlspecialchars($host['role']); ?></p>
                     <?php endif; ?>
-                    <a href="/TMZ%20PODCAST/hosts.php?slug=<?php echo urlencode($host['slug']); ?>" class="btn btn-small">View Profile</a>
+                    <a href="/hosts.php?slug=<?php echo urlencode($host['slug']); ?>" class="btn btn-small">View Profile</a>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -314,12 +314,12 @@
 <section class="video-showcase">
     <div class="section-header">
         <div><span class="eyebrow">DAK WATCH</span><h2>Latest Videos</h2></div>
-        <a href="/TMZ%20PODCAST/videos.php" class="btn btn-outline">View Video Centre</a>
+        <a href="/videos.php" class="btn btn-outline">View Video Centre</a>
     </div>
     <div class="video-grid">
         <?php foreach ($featuredVideos as $video): ?>
             <article class="video-card">
-                <video controls preload="metadata" playsinline src="/TMZ%20PODCAST/video-stream.php?media_id=<?php echo (int)$video['id']; ?>"></video>
+                <video controls preload="metadata" playsinline src="/video-stream.php?media_id=<?php echo (int)$video['id']; ?>"></video>
                 <div class="video-card-body">
                     <span class="video-kicker">VIDEO</span>
                     <h3><?php echo htmlspecialchars($video['alt_text'] ?: pathinfo($video['original_filename'], PATHINFO_FILENAME)); ?></h3>
@@ -343,7 +343,7 @@
             <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['newsletter_error']); ?></div>
             <?php unset($_SESSION['newsletter_error']); ?>
         <?php endif; ?>
-        <form method="POST" action="/TMZ%20PODCAST/subscribe.php" class="newsletter-form">
+        <form method="POST" action="/subscribe.php" class="newsletter-form">
             <?php echo CSRF::getField(); ?>
             <input type="email" name="email" placeholder="Enter your email" required>
             <button type="submit" class="btn btn-primary">Subscribe</button>
@@ -363,10 +363,10 @@
             </div>
             <div class="home-rail-list">
                 <?php foreach (array_slice($latestMovies, 0, 4) as $movie): ?>
-                    <a class="home-mini-item" href="/TMZ%20PODCAST/movies.php?slug=<?php echo urlencode($movie['slug']); ?>">
+                    <a class="home-mini-item" href="/movies.php?slug=<?php echo urlencode($movie['slug']); ?>">
                         <div class="home-mini-poster">
                             <?php if (!empty($movie['poster_path'])): ?>
-                                <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
+                                <img src="<?php echo htmlspecialchars('/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
                             <?php else: ?>
                                 <span>DAK</span>
                             <?php endif; ?>
@@ -387,7 +387,7 @@
             </div>
             <div class="home-rail-list">
                 <?php foreach (array_slice($upcomingEvents, 0, 3) as $event): ?>
-                    <a class="home-mini-item event-mini" href="/TMZ%20PODCAST/events.php?slug=<?php echo urlencode($event['slug']); ?>">
+                    <a class="home-mini-item event-mini" href="/events.php?slug=<?php echo urlencode($event['slug']); ?>">
                         <div class="home-mini-copy">
                             <strong><?php echo htmlspecialchars($event['title']); ?></strong>
                             <small><?php echo htmlspecialchars(!empty($event['event_date']) ? date('M d, Y', strtotime($event['event_date'])) : 'Coming soon'); ?><?php echo !empty($event['location']) ? ' · ' . htmlspecialchars($event['location']) : ''; ?></small>
@@ -408,10 +408,10 @@
             </div>
             <div class="home-rail-list">
                 <?php foreach ($sideStars as $ss): ?>
-                    <a class="home-mini-item" href="/TMZ%20PODCAST/stars.php?slug=<?php echo urlencode($ss['slug']); ?>">
+                    <a class="home-mini-item" href="/stars.php?slug=<?php echo urlencode($ss['slug']); ?>">
                         <div class="home-mini-poster">
                             <?php if (!empty($ss['photo_path'])): ?>
-                                <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($ss['photo_path'], '/')); ?>" alt="<?php echo htmlspecialchars($ss['name']); ?>" loading="lazy">
+                                <img src="<?php echo htmlspecialchars('/' . ltrim($ss['photo_path'], '/')); ?>" alt="<?php echo htmlspecialchars($ss['name']); ?>" loading="lazy">
                             <?php else: ?><span>DAK</span><?php endif; ?>
                         </div>
                         <div class="home-mini-copy">

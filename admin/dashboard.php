@@ -5,5 +5,5 @@
  */
 
 // Redirect to the admin router
-header('Location: /TMZ%20PODCAST/admin/index.php');
+header('Location: /admin/index.php');
 exit;

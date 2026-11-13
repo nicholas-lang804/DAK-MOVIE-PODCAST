@@ -5,7 +5,7 @@
  */
 ?>
 <div id="mzPlayer" class="mz-player" hidden
-     data-api="/TMZ%20PODCAST/api/music.php"
+     data-api="/api/music.php"
      data-csrf="<?php echo htmlspecialchars(CSRF::generateToken(), ENT_QUOTES, 'UTF-8'); ?>"
      data-logged-in="<?php echo !empty($_SESSION['user_id']) ? '1' : '0'; ?>">
     <audio id="mzAudio" preload="metadata"></audio>

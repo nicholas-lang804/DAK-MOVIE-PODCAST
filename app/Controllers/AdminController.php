@@ -142,7 +142,7 @@ class AdminController extends Controller {
                 $this->liveModel->setStatus($live['id'],$newStatus);
                 if($newStatus==='live'&&$live['status']!=='live'){
                     try{
-                        (new SiteNotification())->create('all',null,'live_started','A live show just started',$live['title'],'/TMZ%20PODCAST/live.php?live_id='.(int)$live['id']);
+                        (new SiteNotification())->create('all',null,'live_started','A live show just started',$live['title'],'/live.php?live_id='.(int)$live['id']);
                     }catch(Throwable $error){
                         error_log('Live-start notification could not be saved: '.$error->getMessage());
                     }
@@ -160,7 +160,7 @@ class AdminController extends Controller {
                     error_log('Live speaker requests could not be deleted: '.$error->getMessage());
                     $_SESSION['error']='Live requests could not be deleted. Please try again.';
                 }
-                $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=live&live_id='.(int)$live['id']);
+                $this->redirect('/admin/dashboard.php?tab=live&live_id='.(int)$live['id']);
             }
             if ($action==='delete_all_live_comments' && $live) {
                 try {
@@ -172,7 +172,7 @@ class AdminController extends Controller {
                     error_log('Live comments could not be deleted: '.$error->getMessage());
                     $_SESSION['error']='Live comments could not be deleted. Please try again.';
                 }
-                $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=live&live_id='.(int)$live['id']);
+                $this->redirect('/admin/dashboard.php?tab=live&live_id='.(int)$live['id']);
             }
             if ($action==='delete_live') {
                 $targetId=(int)($_POST['past_live_id']??0);
@@ -194,7 +194,7 @@ class AdminController extends Controller {
             if ($action==='speaker') { $this->liveModel->updateRequest($_POST['request_id']??0, in_array($_POST['speaker_status']??'', ['approved','denied','ended'], true) ? $_POST['speaker_status'] : 'denied'); $_SESSION['success']='Speaker request moderated.'; }
             if ($action==='comment_reply' && $live) { $this->liveModel->addComment($live['id'], $_SESSION['admin_id'], $_POST['comment']??'', $_POST['parent_id']??null); $_SESSION['success']='Reply sent to the live room.'; }
             if ($action==='comment_hide') { $this->liveModel->updateComment($_POST['comment_id']??0,'hidden'); $_SESSION['success']='Comment hidden.'; }
-            $redirect='/TMZ%20PODCAST/admin/dashboard.php?tab=live';
+            $redirect='/admin/dashboard.php?tab=live';
             if ($action==='update_share' && $live) $redirect.='&live_id='.(int)$live['id'];
             if ($action==='status' && $live && ($_POST['status']??'')==='ended') $redirect.='&live_id='.(int)$live['id'];
             $this->redirect($redirect);
@@ -358,7 +358,7 @@ class AdminController extends Controller {
                 }
                 $_SESSION['success'] = $saved . ' exchange rate' . ($saved === 1 ? '' : 's') . ' saved.';
             }
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=gifts');
+            $this->redirect('/admin/dashboard.php?tab=gifts');
         }
         $data['title'] = 'Live Gifts';
         $data['activeTab'] = 'gifts';
@@ -393,7 +393,7 @@ class AdminController extends Controller {
                     if ($base !== '') {
                         $p = parse_url($base);
                         if (!is_array($p) || !in_array(strtolower($p['scheme'] ?? ''), ['http','https'], true) || empty($p['host'])) {
-                            throw new RuntimeException('Public base URL must be a full http(s) URL, e.g. https://pay.example.com/TMZ%20PODCAST');
+                            throw new RuntimeException('Public base URL must be a full http(s) URL, e.g. https://pay.example.com/');
                         }
                         $settings->set('pesapal_public_base_url', rtrim($base, '/'));
                     } else { $settings->set('pesapal_public_base_url', ''); }
@@ -452,7 +452,7 @@ class AdminController extends Controller {
             } catch (Throwable $e) {
                 $_SESSION['error'] = 'Payment action failed: ' . $e->getMessage();
             }
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=payments');
+            $this->redirect('/admin/dashboard.php?tab=payments');
         }
 
         $this->renderAdmin('payments', [
@@ -539,12 +539,12 @@ class AdminController extends Controller {
         if ($uploadedAudio) $audioMediaId = $uploadedAudio;
         if (!$audioMediaId && !$uploadedVideo && empty($existingEpisode['video_url'])) {
             $_SESSION['error'] = 'An episode needs podcast audio or video. Upload a file or choose existing media.';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=episodes&action=' . ($id ? 'edit&id=' . $id : 'create'));
+            $this->redirect('/admin/dashboard.php?tab=episodes&action=' . ($id ? 'edit&id=' . $id : 'create'));
         }
 
         if (empty($title)) {
             $_SESSION['error'] = 'Title is required';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=episodes');
+            $this->redirect('/admin/dashboard.php?tab=episodes');
         }
 
         $data = [
@@ -570,7 +570,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=episodes');
+        $this->redirect('/admin/dashboard.php?tab=episodes');
     }
 
     /**
@@ -620,7 +620,7 @@ class AdminController extends Controller {
 
         if (empty($title)) {
             $_SESSION['error'] = 'Title is required';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=articles');
+            $this->redirect('/admin/dashboard.php?tab=articles');
         }
 
         $data = [
@@ -645,7 +645,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=articles');
+        $this->redirect('/admin/dashboard.php?tab=articles');
     }
 
     /**
@@ -715,12 +715,12 @@ class AdminController extends Controller {
         if ($uploadedVideoId) { $videoMediaId = $uploadedVideoId; }
         if (!$posterPath || !$videoMediaId) {
             $_SESSION['error'] = 'A movie cover and movie video are required. Upload a movie cover and choose a valid video file.';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies&action=' . ($id ? 'edit&id=' . $id : 'create'));
+            $this->redirect('/admin/dashboard.php?tab=movies&action=' . ($id ? 'edit&id=' . $id : 'create'));
         }
 
         if (empty($title)) {
             $_SESSION['error'] = 'Title is required';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies');
+            $this->redirect('/admin/dashboard.php?tab=movies');
         }
 
         if ($videoMediaId) {
@@ -728,7 +728,7 @@ class AdminController extends Controller {
             $videoCheck->execute([$videoMediaId]);
             if (!$videoCheck->fetchColumn()) {
                 $_SESSION['error'] = 'Please select a valid video from the media library.';
-                $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies');
+                $this->redirect('/admin/dashboard.php?tab=movies');
             }
         }
 
@@ -737,7 +737,7 @@ class AdminController extends Controller {
             $genreCheck->execute([$genreId]);
             if (!$genreCheck->fetchColumn()) {
                 $_SESSION['error'] = 'Please select a valid movie genre.';
-                $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies');
+                $this->redirect('/admin/dashboard.php?tab=movies');
             }
         }
 
@@ -769,7 +769,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies');
+        $this->redirect('/admin/dashboard.php?tab=movies');
     }
 
     /** Delete a movie plus its video file (when unused elsewhere) and poster file. */
@@ -777,13 +777,13 @@ class AdminController extends Controller {
         $movie = $id ? $this->movieModel->findById($id) : null;
         if (!$movie) {
             $_SESSION['error'] = 'Movie not found.';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies');
+            $this->redirect('/admin/dashboard.php?tab=movies');
         }
         $videoMediaId = $movie['video_media_id'] ?? null;
         $posterPath = (string)($movie['poster_path'] ?? '');
         if (!$this->movieModel->delete($id)) {
             $_SESSION['error'] = 'Failed to delete the movie.';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies');
+            $this->redirect('/admin/dashboard.php?tab=movies');
         }
         $this->removeStoredFile($posterPath);
         if ($videoMediaId) {
@@ -794,7 +794,7 @@ class AdminController extends Controller {
             }
         }
         $_SESSION['success'] = 'Movie deleted.';
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies');
+        $this->redirect('/admin/dashboard.php?tab=movies');
     }
 
     /** Delete a file only when it lives inside the project storage folders. */
@@ -818,7 +818,7 @@ class AdminController extends Controller {
         $result = $this->handleFileUpload('movie_cover_file', $uploadDir, $allowed, 15728640);
         if (!$result[0]) {
             $_SESSION['error'] = 'Movie cover upload failed: ' . $result[2];
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies&action=' . (($_POST['id'] ?? 0) ? 'edit&id=' . (int)$_POST['id'] : 'create'));
+            $this->redirect('/admin/dashboard.php?tab=movies&action=' . (($_POST['id'] ?? 0) ? 'edit&id=' . (int)$_POST['id'] : 'create'));
         }
 
         return 'storage/uploads/movies/' . basename($result[1]);
@@ -840,7 +840,7 @@ class AdminController extends Controller {
         $result = $this->handleFileUpload($field, __DIR__ . '/../../storage/uploads/', $allowed, $maxSize);
         if (!$result[0]) {
             $_SESSION['error'] = ucfirst($type) . ' upload failed: ' . $result[2];
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies&action=create');
+            $this->redirect('/admin/dashboard.php?tab=movies&action=create');
         }
         $filePath = $result[1];
         $mimeType = mime_content_type($filePath);
@@ -859,7 +859,7 @@ class AdminController extends Controller {
         ]);
         if (!$id) {
             $_SESSION['error'] = 'The ' . $type . ' uploaded but could not be registered in Media Library.';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=movies&action=create');
+            $this->redirect('/admin/dashboard.php?tab=movies&action=create');
         }
         if ($type === 'video') { RenditionBuilder::enqueue((int)$id, $filePath); }
         return (int)$id;
@@ -905,7 +905,7 @@ class AdminController extends Controller {
 
         if (empty($reviewContent) || empty($movieId)) {
             $_SESSION['error'] = 'Movie and review content are required';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=reviews');
+            $this->redirect('/admin/dashboard.php?tab=reviews');
         }
 
         $data = [
@@ -927,7 +927,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=reviews');
+        $this->redirect('/admin/dashboard.php?tab=reviews');
     }
 
     /**
@@ -969,7 +969,7 @@ class AdminController extends Controller {
 
         if (empty($name)) {
             $_SESSION['error'] = 'Name is required';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=hosts');
+            $this->redirect('/admin/dashboard.php?tab=hosts');
         }
 
         $data = [
@@ -989,7 +989,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=hosts');
+        $this->redirect('/admin/dashboard.php?tab=hosts');
     }
 
     /**
@@ -1029,7 +1029,7 @@ class AdminController extends Controller {
 
         if (empty($name)) {
             $_SESSION['error'] = 'Name is required';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=guests');
+            $this->redirect('/admin/dashboard.php?tab=guests');
         }
 
         $data = [
@@ -1047,7 +1047,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=guests');
+        $this->redirect('/admin/dashboard.php?tab=guests');
     }
 
     /**
@@ -1080,7 +1080,7 @@ class AdminController extends Controller {
     }
 
     private function handleMusicPost(Music $music) {
-        $back = '/TMZ%20PODCAST/admin/dashboard.php?tab=music';
+        $back = '/admin/dashboard.php?tab=music';
         $id = intval($_POST['id'] ?? 0);
         $formAction = $_POST['form_action'] ?? 'save';
 
@@ -1293,7 +1293,7 @@ class AdminController extends Controller {
     }
 
     private function handleStarPost() {
-        $back = '/TMZ%20PODCAST/admin/dashboard.php?tab=stars';
+        $back = '/admin/dashboard.php?tab=stars';
         $id = intval($_POST['id'] ?? 0);
 
         if (($_POST['form_action'] ?? 'save') === 'delete') {
@@ -1433,7 +1433,7 @@ class AdminController extends Controller {
         $event = $id ? $this->eventModel->findById($id) : null;
         if (($action === 'edit') && !$event) {
             $_SESSION['error'] = 'Event not found.';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=events');
+            $this->redirect('/admin/dashboard.php?tab=events');
         }
 
         $data = [
@@ -1462,8 +1462,8 @@ class AdminController extends Controller {
     private function handleEventPost() {
         $formAction = $_POST['form_action'] ?? 'save_event';
         $id = intval($_POST['id'] ?? 0);
-        $editUrl = '/TMZ%20PODCAST/admin/dashboard.php?tab=events&action=edit&id=' . $id;
-        $listUrl = '/TMZ%20PODCAST/admin/dashboard.php?tab=events';
+        $editUrl = '/admin/dashboard.php?tab=events&action=edit&id=' . $id;
+        $listUrl = '/admin/dashboard.php?tab=events';
 
         if ($formAction === 'delete_event') {
             if ($id && $this->eventModel->hasPaidOrders($id)) {
@@ -1606,7 +1606,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect($eventId ? '/TMZ%20PODCAST/admin/dashboard.php?tab=events&action=edit&id=' . $eventId : $listUrl);
+        $this->redirect($eventId ? '/admin/dashboard.php?tab=events&action=edit&id=' . $eventId : $listUrl);
     }
 
     /**
@@ -1647,7 +1647,7 @@ class AdminController extends Controller {
 
         if (empty($name)) {
             $_SESSION['error'] = 'Name is required';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=categories');
+            $this->redirect('/admin/dashboard.php?tab=categories');
         }
 
         $data = [
@@ -1666,7 +1666,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=categories');
+        $this->redirect('/admin/dashboard.php?tab=categories');
     }
 
     /**
@@ -1712,7 +1712,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=comments');
+        $this->redirect('/admin/dashboard.php?tab=comments');
     }
 
     /**
@@ -1758,7 +1758,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=contacts');
+        $this->redirect('/admin/dashboard.php?tab=contacts');
     }
 
     /**
@@ -1809,7 +1809,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=newsletter');
+        $this->redirect('/admin/dashboard.php?tab=newsletter');
     }
 
     /**
@@ -1852,7 +1852,7 @@ class AdminController extends Controller {
 
         if (empty($companyName)) {
             $_SESSION['error'] = 'Company name is required';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=sponsors');
+            $this->redirect('/admin/dashboard.php?tab=sponsors');
         }
 
         $data = [
@@ -1873,7 +1873,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=sponsors');
+        $this->redirect('/admin/dashboard.php?tab=sponsors');
     }
 
     /**
@@ -1923,7 +1923,7 @@ class AdminController extends Controller {
 
         if (empty($startDate) || empty($endDate)) {
             $_SESSION['error'] = 'Start and end dates are required';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=advertisements');
+            $this->redirect('/admin/dashboard.php?tab=advertisements');
         }
 
         $data = [
@@ -1946,7 +1946,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=advertisements');
+        $this->redirect('/admin/dashboard.php?tab=advertisements');
     }
 
     /**
@@ -2001,7 +2001,7 @@ class AdminController extends Controller {
             } else {
                 $_SESSION['error'] = 'Job not found or not a rendition job.';
             }
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=media');
+            $this->redirect('/admin/dashboard.php?tab=media');
         } elseif ($action === 'download_backup') {
             CSRF::requireValidToken();
             $name = basename((string)($_POST['bundle'] ?? ''));
@@ -2016,7 +2016,7 @@ class AdminController extends Controller {
                 readfile($file);
                 exit;
             }
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=media');
+            $this->redirect('/admin/dashboard.php?tab=media');
         } elseif ($action === 'run_backup') {
             CSRF::requireValidToken();
             require_once __DIR__ . '/../Services/BackupManager.php';
@@ -2027,7 +2027,7 @@ class AdminController extends Controller {
             } else {
                 $_SESSION['error'] = 'Backup failed: ' . ($r['error'] ?? 'unknown');
             }
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=media');
+            $this->redirect('/admin/dashboard.php?tab=media');
         } elseif ($action === 'bulk_renditions') {
             CSRF::requireValidToken();
             $queued = 0; $skipped = 0;
@@ -2041,7 +2041,7 @@ class AdminController extends Controller {
                 if (!empty($r['ok'])) $queued++; else $skipped++;
             }
             $_SESSION['success'] = "Rendition jobs queued: {$queued}. Skipped (already ready/missing): {$skipped}. Originals are never modified.";
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=media');
+            $this->redirect('/admin/dashboard.php?tab=media');
         } elseif ($action === 'cancel_job') {
             CSRF::requireValidToken();
             $jobId = (int)($_POST['job_id'] ?? 0);
@@ -2050,7 +2050,7 @@ class AdminController extends Controller {
                 (new UploadJob())->update($jobId, ['status' => 'cancelled']);
                 $_SESSION['success'] = 'Job cancelled.';
             }
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=media');
+            $this->redirect('/admin/dashboard.php?tab=media');
         }
     }
 
@@ -2071,7 +2071,7 @@ class AdminController extends Controller {
 
         if (!$result[0]) {
             $_SESSION['error'] = $result[2];
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=media');
+            $this->redirect('/admin/dashboard.php?tab=media');
         }
 
         $filePath = $result[1];
@@ -2122,7 +2122,7 @@ class AdminController extends Controller {
             $_SESSION['error'] = 'Failed to save media information';
         }
 
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=media');
+        $this->redirect('/admin/dashboard.php?tab=media');
     }
 
     /** Queue a non-destructive 720p rendition for an uploaded video. Returns a status suffix for the flash message. */
@@ -2147,7 +2147,7 @@ class AdminController extends Controller {
                 // Check if media is used anywhere
                 if (!$force && $inUse) {
                     $_SESSION['error'] = 'Cannot delete media that is in use. Edit the pages using it first, or use "Delete anyway".';
-                    $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=media');
+                    $this->redirect('/admin/dashboard.php?tab=media');
                 }
 
                 // Delete file
@@ -2164,7 +2164,7 @@ class AdminController extends Controller {
             }
         }
 
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=media');
+        $this->redirect('/admin/dashboard.php?tab=media');
     }
 
     /**
@@ -2207,7 +2207,7 @@ class AdminController extends Controller {
 
         if (empty($username) || empty($email)) {
             $_SESSION['error'] = 'Username and email are required';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=users');
+            $this->redirect('/admin/dashboard.php?tab=users');
         }
 
         $data = [
@@ -2228,7 +2228,7 @@ class AdminController extends Controller {
         } else {
             if (empty($password)) {
                 $_SESSION['error'] = 'Password is required for new users';
-                $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=users');
+                $this->redirect('/admin/dashboard.php?tab=users');
             }
             $data['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
             $result = $this->userModel->create($data);
@@ -2236,7 +2236,7 @@ class AdminController extends Controller {
         }
 
         $_SESSION[$result ? 'success' : 'error'] = $message;
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=users');
+        $this->redirect('/admin/dashboard.php?tab=users');
     }
 
     /**
@@ -2277,7 +2277,7 @@ class AdminController extends Controller {
         $contactEmail = trim((string) ($postedSettings['contact_email'] ?? ''));
         if ($contactEmail !== '' && !Validation::validateEmail($contactEmail)) {
             $_SESSION['error'] = 'Please enter a valid contact email address';
-            $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=settings');
+            $this->redirect('/admin/dashboard.php?tab=settings');
         }
 
         $allowedKeys = ['site_name','site_description','contact_email','contact_phone','site_location','social_twitter','social_instagram','social_youtube','pesapal_consumer_key','pesapal_consumer_secret','pesapal_environment','pesapal_ipn_url','pesapal_notification_id','pesapal_callback_url','livekit_url','livekit_api_key','livekit_api_secret','livekit_recording_s3_access_key','livekit_recording_s3_secret','livekit_recording_s3_region','livekit_recording_s3_bucket','livekit_recording_s3_endpoint','livekit_recording_s3_force_path_style','downloads_enabled','video_compression_enabled','ffmpeg_path'];
@@ -2309,7 +2309,7 @@ class AdminController extends Controller {
             $_SESSION['error'] = 'Failed to update settings';
         }
 
-        $this->redirect('/TMZ%20PODCAST/admin/dashboard.php?tab=settings');
+        $this->redirect('/admin/dashboard.php?tab=settings');
     }
 
     /**

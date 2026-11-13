@@ -3,11 +3,11 @@
 if (!function_exists('tmz_star_card')) {
     function tmz_star_card($s) {
         $h = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); };
-        $photo = !empty($s['photo_path']) ? '/TMZ%20PODCAST/' . ltrim($s['photo_path'], '/') : '';
+        $photo = !empty($s['photo_path']) ? '/' . ltrim($s['photo_path'], '/') : '';
         $hasVideo = !empty($s['video_path']) || !empty($s['video_url']);
         $initial = function_exists('mb_substr') ? mb_strtoupper(mb_substr($s['name'], 0, 1)) : strtoupper(substr($s['name'], 0, 1));
         ?>
-        <a class="star-card" href="/TMZ%20PODCAST/stars.php?slug=<?php echo urlencode($s['slug']); ?>">
+        <a class="star-card" href="/stars.php?slug=<?php echo urlencode($s['slug']); ?>">
             <span class="star-card-photo">
                 <?php if ($photo): ?>
                     <img src="<?php echo $h($photo); ?>" alt="<?php echo $h($s['name']); ?>" loading="lazy">

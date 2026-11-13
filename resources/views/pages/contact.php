@@ -36,7 +36,7 @@
                 <?php endif; ?>
             </div>
         </div>
-        <a class="contact-about-link" href="/TMZ%20PODCAST/about.php">More about THE DAK FILM PODCAST MEDIA <span aria-hidden="true">&rarr;</span></a>
+        <a class="contact-about-link" href="/about.php">More about THE DAK FILM PODCAST MEDIA <span aria-hidden="true">&rarr;</span></a>
     </div>
 
     <div class="contact-form-container contact-panel">
@@ -52,7 +52,7 @@
             <?php unset($_SESSION['contact_error']); ?>
         <?php endif; ?>
         
-        <form method="POST" action="/TMZ%20PODCAST/contact.php" class="contact-form">
+        <form method="POST" action="/contact.php" class="contact-form">
             <?php echo CSRF::getField(); ?>
             <div class="form-group">
                 <label for="name">Name *</label>

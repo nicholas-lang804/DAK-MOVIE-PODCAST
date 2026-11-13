@@ -58,7 +58,7 @@ switch ($action) {
         $q = trim((string)($_GET['q'] ?? ''));
         if (strlen($q) < 2) mz_out(['items' => []]);
         $items = [];
-        foreach ($music->search($q, 6) as $t) $items[] = ['title' => $t['title'], 'artist' => $t['artist_name'], 'url' => '/TMZ%20PODCAST/music.php?track=' . rawurlencode($t['slug'])];
+        foreach ($music->search($q, 6) as $t) $items[] = ['title' => $t['title'], 'artist' => $t['artist_name'], 'url' => '/music.php?track=' . rawurlencode($t['slug'])];
         mz_out(['items' => $items]);
 
     case 'like':

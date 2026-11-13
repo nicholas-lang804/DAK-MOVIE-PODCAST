@@ -53,7 +53,7 @@ Visitors ──► yourdomain.com (DNS)
 3. Open ports 80/443 in the Security List; attach/expand block storage to ~200 GB.
 4. Install: `sudo apt install apache2 php libapache2-mod-php mysql-server ffmpeg`
    (or use the "Oracle Cloud Free Tier LAMP" marketplace image).
-5. Upload the site to `/var/www/html/TMZ PODCAST/` (or set the docroot), import the database
+5. Upload the site to `/var/www/html/` (or set the docroot), import the database
    (export from local phpMyAdmin → import in server MySQL), update `config/database.php`.
 6. Install SSL: `sudo apt install certbot python3-certbot-apache && sudo certbot --apache`.
 7. DNS: point your domain's **A record** to the instance's public IP.

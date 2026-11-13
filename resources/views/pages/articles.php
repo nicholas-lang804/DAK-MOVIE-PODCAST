@@ -12,7 +12,7 @@
 
 <!-- Search and Filters -->
 <section class="filters">
-    <form method="GET" action="/TMZ%20PODCAST/news.php" class="filter-form">
+    <form method="GET" action="/news.php" class="filter-form">
         <div class="filter-group">
             <input type="text" name="q" placeholder="Search articles..." value="<?php echo htmlspecialchars($searchQuery ?? ''); ?>">
         </div>
@@ -58,7 +58,7 @@
                             <?php endif; ?>
                         </p>
                         <p class="article-excerpt"><?php echo htmlspecialchars(substr($article['excerpt'] ?? '', 0, 150)); ?>...</p>
-                        <a href="/TMZ%20PODCAST/news.php?slug=<?php echo urlencode($article['slug']); ?>" class="btn btn-primary">Read More</a>
+                        <a href="/news.php?slug=<?php echo urlencode($article['slug']); ?>" class="btn btn-primary">Read More</a>
                     </div>
                 </div>
             <?php endforeach; ?>

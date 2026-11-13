@@ -1,10 +1,10 @@
 (function () {
   'use strict';
-  const API = '/TMZ%20PODCAST/media-upload.php';
+  const API = '/media-upload.php';
   const CHUNK = 8388608; // 8 MB — must match UploadSession::CHUNK_SIZE
   const stateKey = 'tmz_uploads_v1';
 
-  const root = document.getElementById('resumableUpload');
+  const root = document.getElementById('resumableUpload') || document.querySelector('[data-ru-upload]');
   if (!root) return;
   const fileInput = root.querySelector('input[type=file]');
   const list = root.querySelector('.ru-list');
@@ -122,7 +122,25 @@
       job.statusText = 'Done ✓ media #' + done.media_id;
       job.done = true;
       clearPersist(job);
-      setActions(job, `<a class="btn btn-small btn-primary" href="/TMZ%20PODCAST/admin/dashboard.php?tab=media" target="_blank">Open Media Library</a>`);
+      const targetSel = root.dataset.targetSelect;
+      if (targetSel) {
+        const sel = document.getElementById(targetSel);
+        if (sel) {
+          let opt = sel.querySelector('option[value="' + done.media_id + '"]');
+          if (!opt) {
+            opt = document.createElement('option');
+            opt.value = done.media_id;
+            opt.textContent = job.file.name + ' (just uploaded)';
+            sel.appendChild(opt);
+          }
+          sel.value = String(done.media_id);
+          sel.dispatchEvent(new Event('change', { bubbles: true }));
+          job.statusText = 'Done ✓ selected as movie video';
+        }
+        setActions(job, '');
+      } else {
+        setActions(job, `<a class="btn btn-small btn-primary" href="/admin/dashboard.php?tab=media" target="_blank">Open Media Library</a>`);
+      }
       updateRow(job);
     } catch (e) {
       job.statusText = 'Failed: ' + e.message;

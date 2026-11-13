@@ -34,7 +34,7 @@ if ($maintenanceMode && !$isAdmin) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Maintenance Mode - THE DAK FILM PODCAST MEDIA</title>
-        <link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/modern.css">
+        <link rel="stylesheet" href="/assets/css/modern.css">
     </head>
     <body>
         <div class="maintenance-page">
@@ -47,8 +47,8 @@ if ($maintenanceMode && !$isAdmin) {
                     <p>We apologize for any inconvenience.</p>
                 </div>
                 <div class="maintenance-actions">
-                    <a href="/TMZ%20PODCAST/" class="btn btn-primary">Refresh Page</a>
-                    <a href="/TMZ%20PODCAST/contact.php" class="btn btn-outline">Contact Support</a>
+                    <a href="/" class="btn btn-primary">Refresh Page</a>
+                    <a href="/contact.php" class="btn btn-outline">Contact Support</a>
                 </div>
             </div>
         </div>
@@ -59,5 +59,5 @@ if ($maintenanceMode && !$isAdmin) {
 }
 
 // If maintenance mode is disabled or user is admin, redirect to main site
-header('Location: /TMZ%20PODCAST/');
+header('Location: /');
 exit;

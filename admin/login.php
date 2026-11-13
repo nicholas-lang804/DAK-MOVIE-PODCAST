@@ -26,7 +26,7 @@ try {
 
 // Check if already logged in
 if (isset($_SESSION['admin_id'])) {
-    header('Location: /TMZ%20PODCAST/admin/index.php');
+    header('Location: /admin/index.php');
     exit;
 }
 
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'ip_address' => $_SERVER['REMOTE_ADDR'] ?? null
                 ]);
                 
-                header('Location: /TMZ%20PODCAST/admin/index.php');
+                header('Location: /admin/index.php');
                 exit;
             } else {
                 $error = 'Access denied. Admin privileges required.';
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - THE MOVIE ZONE PODCAST 256</title>
-    <link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/modern.css">
+    <link rel="stylesheet" href="/assets/css/modern.css">
 </head>
 <body>
     <div class="admin-layout">
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
                 
                 <div style="margin-top: 1rem; text-align: center;">
-                    <a href="/TMZ%20PODCAST/" class="btn btn-outline btn-small">Back to Website</a>
+                    <a href="/" class="btn btn-outline btn-small">Back to Website</a>
                 </div>
             </div>
         </div>

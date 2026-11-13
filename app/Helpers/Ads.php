@@ -21,10 +21,10 @@ if (!function_exists('tmz_safe_ad_url')) {
 if (!function_exists('tmz_house_promos')) {
     function tmz_house_promos() {
         return [
-            ['kicker' => 'All Access', 'title' => 'Unlimited movies from UGX 500', 'cta' => 'See plans', 'url' => '/TMZ%20PODCAST/membership.php', 'tone' => 'blue'],
-            ['kicker' => 'Live events', 'title' => 'Get your tickets before they sell out', 'cta' => 'Book now', 'url' => '/TMZ%20PODCAST/events.php', 'tone' => 'red'],
-            ['kicker' => 'Advertise', 'title' => 'Put your brand in front of movie lovers', 'cta' => 'Talk to us', 'url' => '/TMZ%20PODCAST/contact.php', 'tone' => 'blue'],
-            ['kicker' => 'New this week', 'title' => 'Fresh movies added to the Zone', 'cta' => 'Watch now', 'url' => '/TMZ%20PODCAST/movies.php', 'tone' => 'red'],
+            ['kicker' => 'All Access', 'title' => 'Unlimited movies from UGX 500', 'cta' => 'See plans', 'url' => '/membership.php', 'tone' => 'blue'],
+            ['kicker' => 'Live events', 'title' => 'Get your tickets before they sell out', 'cta' => 'Book now', 'url' => '/events.php', 'tone' => 'red'],
+            ['kicker' => 'Advertise', 'title' => 'Put your brand in front of movie lovers', 'cta' => 'Talk to us', 'url' => '/contact.php', 'tone' => 'blue'],
+            ['kicker' => 'New this week', 'title' => 'Fresh movies added to the Zone', 'cta' => 'Watch now', 'url' => '/movies.php', 'tone' => 'red'],
         ];
     }
 }
@@ -56,7 +56,7 @@ if (!function_exists('tmz_ad_slot')) {
                     <?php if ($item['real']):
                         $ad = $item['ad'];
                         $url = tmz_safe_ad_url($ad['target_url'] ?? '');
-                        $img = !empty($ad['image_path']) ? '/TMZ%20PODCAST/' . ltrim($ad['image_path'], '/') : '';
+                        $img = !empty($ad['image_path']) ? '/' . ltrim($ad['image_path'], '/') : '';
                         $title = $ad['title'] ?: ($ad['sponsor_name'] ?? 'Advertisement'); ?>
                         <<?php echo $url ? 'a href="' . $h($url) . '" target="_blank" rel="sponsored noopener"' : 'div'; ?> class="tmz-ad tmz-ad--real<?php echo $img ? ' has-image' : ''; ?>">
                             <?php if ($img): ?>

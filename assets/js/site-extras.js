@@ -16,12 +16,12 @@
   /* ---- watchlist buttons ---- */
   document.querySelectorAll('[data-watchlist]').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      if (btn.getAttribute('data-logged-in') !== '1') { window.location.href = '/TMZ%20PODCAST/login.php'; return; }
+      if (btn.getAttribute('data-logged-in') !== '1') { window.location.href = '/login.php'; return; }
       var body = new URLSearchParams();
       body.set('movie_id', btn.getAttribute('data-watchlist'));
       body.set('csrf_token', btn.getAttribute('data-csrf'));
       btn.disabled = true;
-      fetch('/TMZ%20PODCAST/api/watchlist.php', { method: 'POST', body: body, credentials: 'same-origin', headers: { Accept: 'application/json' } })
+      fetch('/api/watchlist.php', { method: 'POST', body: body, credentials: 'same-origin', headers: { Accept: 'application/json' } })
         .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'Could not update your list.'); return j; }); })
         .then(function (j) {
           btn.setAttribute('aria-pressed', j.saved ? 'true' : 'false');
@@ -35,7 +35,7 @@
   /* ---- service worker (https or localhost only) ---- */
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
     window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/TMZ%20PODCAST/sw.js', { scope: '/TMZ%20PODCAST/' }).catch(function () {});
+      navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {});
     });
   }
 })();

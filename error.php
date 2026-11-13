@@ -87,7 +87,7 @@ function showErrorPage($title, $message, $code) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo htmlspecialchars($title); ?> - THE DAK FILM PODCAST MEDIA</title>
-        <link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/modern.css">
+        <link rel="stylesheet" href="/assets/css/modern.css">
     </head>
     <body>
         <div class="error-page">
@@ -96,8 +96,8 @@ function showErrorPage($title, $message, $code) {
                 <h1><?php echo htmlspecialchars($title); ?></h1>
                 <p><?php echo htmlspecialchars($message); ?></p>
                 <div class="error-actions">
-                    <a href="/TMZ%20PODCAST/" class="btn btn-primary">Go to Homepage</a>
-                    <a href="/TMZ%20PODCAST/contact.php" class="btn btn-outline">Contact Support</a>
+                    <a href="/" class="btn btn-primary">Go to Homepage</a>
+                    <a href="/contact.php" class="btn btn-outline">Contact Support</a>
                 </div>
             </div>
         </div>

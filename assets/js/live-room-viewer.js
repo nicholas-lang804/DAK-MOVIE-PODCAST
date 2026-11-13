@@ -246,7 +246,7 @@
       action,
       csrf_token: csrf
     });
-    const response = await fetch('/TMZ%20PODCAST/api/live-room-invitation.php', {
+    const response = await fetch('/api/live-room-invitation.php', {
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -277,7 +277,7 @@
   async function pollInvitations() {
     if (!room || room.state !== 'connected') return;
     try {
-      const response = await fetch('/TMZ%20PODCAST/api/live-room-invitation.php?live_id=' + encodeURIComponent(liveId), {
+      const response = await fetch('/api/live-room-invitation.php?live_id=' + encodeURIComponent(liveId), {
         credentials: 'same-origin',
         cache: 'no-store'
       });
@@ -805,7 +805,7 @@
     setStatus('Connecting to the live room… If the network is slow, LiveKit will retry automatically.', 'connecting');
     const body = new URLSearchParams({ live_id: liveId, role: 'viewer', csrf_token: csrf });
     try {
-      const response = await fetch('/TMZ%20PODCAST/api/livekit-token.php', {
+      const response = await fetch('/api/livekit-token.php', {
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

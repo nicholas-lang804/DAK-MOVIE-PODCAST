@@ -7,7 +7,7 @@
 <section class="admin-section">
     <div class="section-header">
         <h1>Manage Categories</h1>
-        <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=categories&action=create" class="btn btn-primary">Add Category</a>
+        <a href="/admin/dashboard.php?tab=categories&action=create" class="btn btn-primary">Add Category</a>
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -22,7 +22,7 @@
     <?php if ($action === 'create' || $action === 'edit'): ?>
         <div class="form-container">
             <h2><?php echo $action === 'create' ? 'Create Category' : 'Edit Category'; ?></h2>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=categories" class="admin-form">
+            <form method="POST" action="/admin/dashboard.php?tab=categories" class="admin-form">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="id" value="<?php echo $category['id'] ?? ''; ?>">
                 
@@ -53,7 +53,7 @@
                 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save Category</button>
-                    <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=categories" class="btn btn-outline">Cancel</a>
+                    <a href="/admin/dashboard.php?tab=categories" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </div>
@@ -75,8 +75,8 @@
                             <td><?php echo ucfirst($category['category_type'] ?? 'article'); ?></td>
                             <td><span class="status-badge status-active">Active</span></td>
                             <td>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=categories&action=edit&id=<?php echo $category['id']; ?>" class="btn btn-small">Edit</a>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=categories&action=delete&id=<?php echo $category['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                                <a href="/admin/dashboard.php?tab=categories&action=edit&id=<?php echo $category['id']; ?>" class="btn btn-small">Edit</a>
+                                <a href="/admin/dashboard.php?tab=categories&action=delete&id=<?php echo $category['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

@@ -107,7 +107,7 @@ class MovieController extends Controller {
      */
     public function addComment() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/TMZ%20PODCAST/movies.php');
+            $this->redirect('/movies.php');
         }
 
         $movieId = intval($_POST['movie_id'] ?? 0);
@@ -117,7 +117,7 @@ class MovieController extends Controller {
 
         if (empty($userName) || empty($comment)) {
             $_SESSION['comment_error'] = 'Please fill in all required fields';
-            $this->redirect('/TMZ%20PODCAST/movies.php');
+            $this->redirect('/movies.php');
         }
 
         $result = $this->commentModel->create([
@@ -134,7 +134,7 @@ class MovieController extends Controller {
             $_SESSION['comment_error'] = 'Failed to submit comment. Please try again.';
         }
 
-        $this->redirect('/TMZ%20PODCAST/movies.php');
+        $this->redirect('/movies.php');
     }
 }
 ?>

@@ -36,14 +36,14 @@
                         <td><?php echo date('M d, Y', strtotime($subscriber['subscribed_at'])); ?></td>
                         <td>
                             <?php if ($subscriber['status'] === 'active'): ?>
-                                <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=newsletter" style="display: inline;">
+                                <form method="POST" action="/admin/dashboard.php?tab=newsletter" style="display: inline;">
                                     <?php echo CSRF::getField(); ?>
                                     <input type="hidden" name="subscriber_id" value="<?php echo $subscriber['id']; ?>">
                                     <input type="hidden" name="action" value="unsubscribe">
                                     <button type="submit" class="btn btn-small">Unsubscribe</button>
                                 </form>
                             <?php endif; ?>
-                            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=newsletter" style="display: inline;">
+                            <form method="POST" action="/admin/dashboard.php?tab=newsletter" style="display: inline;">
                                 <?php echo CSRF::getField(); ?>
                                 <input type="hidden" name="subscriber_id" value="<?php echo $subscriber['id']; ?>">
                                 <input type="hidden" name="action" value="delete">

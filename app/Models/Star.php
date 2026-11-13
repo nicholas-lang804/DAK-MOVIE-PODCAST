@@ -151,7 +151,7 @@ class Star {
 
     /** Public URL for a stored path ("storage/uploads/stars/x.jpg"). */
     public static function url($path) {
-        return $path ? '/TMZ%20PODCAST/' . ltrim($path, '/') : '';
+        return $path ? '/' . ltrim($path, '/') : '';
     }
 
     /**

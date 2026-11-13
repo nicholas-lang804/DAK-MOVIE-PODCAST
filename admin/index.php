@@ -47,7 +47,7 @@ try {
 
 // Check if user is logged in as admin
 if (!isset($_SESSION['admin_id'])) {
-    header('Location: /TMZ%20PODCAST/admin/login.php');
+    header('Location: /admin/login.php');
     exit;
 }
 
@@ -56,7 +56,7 @@ $requestUri = $_SERVER['REQUEST_URI'];
 $path = parse_url($requestUri, PHP_URL_PATH);
 
 // Remove the base path
-$basePath = '/TMZ%20PODCAST/admin';
+$basePath = '/admin';
 $path = str_replace($basePath, '', $path);
 $path = trim($path, '/');
 
@@ -87,7 +87,7 @@ switch ($path) {
     case 'login.php':
         // Redirect to login if not logged in
         if (!isset($_SESSION['admin_id'])) {
-            header('Location: /TMZ%20PODCAST/admin/login.php');
+            header('Location: /admin/login.php');
             exit;
         }
         $controller = new AdminController();
@@ -97,7 +97,7 @@ switch ($path) {
     case 'logout.php':
         unset($_SESSION['admin_id']);
         unset($_SESSION['admin_username']);
-        header('Location: /TMZ%20PODCAST/admin/login.php');
+        header('Location: /admin/login.php');
         exit;
         break;
         

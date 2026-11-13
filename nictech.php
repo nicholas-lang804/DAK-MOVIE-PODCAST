@@ -10,8 +10,8 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NicTech Companies Uganda</title>
-    <link rel="icon" type="image/svg+xml" href="/TMZ%20PODCAST/assets/img/nictech-logo.svg">
-    <link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/modern.css">
+    <link rel="icon" type="image/svg+xml" href="/assets/img/nictech-logo.svg">
+    <link rel="stylesheet" href="/assets/css/modern.css">
     <style>
         .nictech-wrap{max-width:760px;margin:0 auto;padding:3rem 1.25rem 4rem;color:#1f2937}
         .nictech-hero{text-align:center;margin-bottom:2.5rem}
@@ -31,7 +31,7 @@ session_start();
     <div class="admin-main" style="margin-left:0;">
         <div class="nictech-wrap">
             <div class="nictech-hero">
-                <img class="nictech-logo" src="/TMZ%20PODCAST/assets/img/nictech-logo.svg" alt="NicTech Companies Uganda logo">
+                <img class="nictech-logo" src="/assets/img/nictech-logo.svg" alt="NicTech Companies Uganda logo">
                 <span class="eyebrow">ENGINEERED WITH CARE IN UGANDA</span>
                 <h1>NicTech Companies Uganda</h1>
                 <p style="color:#6b7280;max-width:560px;margin:.5rem auto 0">A young Ugandan technology company building platforms that matter — from streaming entertainment to school and hospital management for communities that need them most.</p>
@@ -61,7 +61,7 @@ session_start();
                 </p>
             </div>
 
-            <a class="btn btn-outline nictech-back" href="/TMZ%20PODCAST/">← Back to THE DAK FILM PODCAST MEDIA</a>
+            <a class="btn btn-outline nictech-back" href="/">← Back to THE DAK FILM PODCAST MEDIA</a>
         </div>
     </div>
 </div>

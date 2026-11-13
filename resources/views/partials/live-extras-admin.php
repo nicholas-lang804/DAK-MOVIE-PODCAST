@@ -8,7 +8,7 @@ $lxCsrf = htmlspecialchars(CSRF::generateToken(), ENT_QUOTES, 'UTF-8');
 ?>
 <section class="admin-section live-extras-admin" id="liveExtrasAdmin"
          data-live-id="<?php echo (int)$live['id']; ?>" data-csrf="<?php echo $lxCsrf; ?>"
-         data-api="/TMZ%20PODCAST/api/live-extras.php">
+         data-api="/api/live-extras.php">
   <div class="lxa-heading">
     <div><span class="eyebrow">SHOW TOOLS</span><h2>Audience engagement</h2>
       <p>Schedule the show, steer the conversation, run polls and answer viewer questions. Viewers see changes within a few seconds.</p></div>
@@ -65,10 +65,10 @@ $lxCsrf = htmlspecialchars(CSRF::generateToken(), ENT_QUOTES, 'UTF-8');
       <div id="lxaReport" class="lxa-report"><p class="form-help">Loading…</p></div>
       <div class="lxa-row">
         <button type="button" class="btn btn-outline" id="lxaRefreshReport">Refresh</button>
-        <a class="btn btn-outline" id="lxaCsv" href="/TMZ%20PODCAST/api/live-extras.php?action=report_csv&amp;live_id=<?php echo (int)$live['id']; ?>">Download attendance (CSV)</a>
+        <a class="btn btn-outline" id="lxaCsv" href="/api/live-extras.php?action=report_csv&amp;live_id=<?php echo (int)$live['id']; ?>">Download attendance (CSV)</a>
       </div>
     </div>
   </div>
 </section>
-<link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/live-extras.css?v=lx-1">
-<script src="/TMZ%20PODCAST/assets/js/live-extras-admin.js?v=lx-1"></script>
+<link rel="stylesheet" href="/assets/css/live-extras.css?v=lx-1">
+<script src="/assets/js/live-extras-admin.js?v=lx-1"></script>

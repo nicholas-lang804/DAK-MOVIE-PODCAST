@@ -12,5 +12,5 @@ echo '<!DOCTYPE html><meta charset="utf-8"><meta name="viewport" content="width=
    . '<body style="font-family:system-ui,sans-serif;background:#050a1a;color:#eef3ff;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center;padding:1rem">'
    . '<main><h1>Downloads are only available for music</h1>'
    . '<p>Movies, videos and episodes can be streamed but not downloaded.</p>'
-   . '<p><a style="color:#8fb8ff" href="/TMZ%20PODCAST/music.php">Go to Music</a></p></main>';
+   . '<p><a style="color:#8fb8ff" href="/music.php">Go to Music</a></p></main>';
 exit;

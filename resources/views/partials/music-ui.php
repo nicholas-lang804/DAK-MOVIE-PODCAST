@@ -32,15 +32,15 @@ if (!function_exists('tmz_mz_h')) {
             </button>
             <?php echo tmz_mz_cover($t['cover'], $t['title'], 'mz-row-cover'); ?>
             <span class="mz-row-main">
-                <a class="mz-row-title" href="/TMZ%20PODCAST/music.php?track=<?php echo rawurlencode($t['slug']); ?>"><?php echo tmz_mz_h($t['title']); ?></a>
+                <a class="mz-row-title" href="/music.php?track=<?php echo rawurlencode($t['slug']); ?>"><?php echo tmz_mz_h($t['title']); ?></a>
                 <span class="mz-row-sub">
                     <?php if ($t['explicit']): ?><span class="mz-badge" title="Explicit">E</span><?php endif; ?>
                     <?php if ($t['video']): ?><span class="mz-badge mz-badge-video" title="Has music video">VIDEO</span><?php endif; ?>
-                    <a href="/TMZ%20PODCAST/music.php?artist=<?php echo rawurlencode($t['artist_slug']); ?>"><?php echo tmz_mz_h($t['artist']); ?></a>
+                    <a href="/music.php?artist=<?php echo rawurlencode($t['artist_slug']); ?>"><?php echo tmz_mz_h($t['artist']); ?></a>
                 </span>
             </span>
             <?php if ($showAlbum): ?>
-                <span class="mz-row-album"><?php if ($t['album']): ?><a href="/TMZ%20PODCAST/music.php?album=<?php echo rawurlencode($t['album_slug']); ?>"><?php echo tmz_mz_h($t['album']); ?></a><?php endif; ?></span>
+                <span class="mz-row-album"><?php if ($t['album']): ?><a href="/music.php?album=<?php echo rawurlencode($t['album_slug']); ?>"><?php echo tmz_mz_h($t['album']); ?></a><?php endif; ?></span>
             <?php endif; ?>
             <button type="button" class="mz-like<?php echo $t['liked'] ? ' is-on' : ''; ?>" data-act="like" aria-pressed="<?php echo $t['liked'] ? 'true' : 'false'; ?>" aria-label="Like <?php echo tmz_mz_h($t['title']); ?>">♥</button>
             <span class="mz-row-time"><?php echo tmz_mz_fmt($t['duration']); ?></span>
@@ -57,8 +57,8 @@ if (!function_exists('tmz_mz_h')) {
                 <?php echo tmz_mz_cover($t['cover'], $t['title']); ?>
                 <button type="button" class="mz-tile-play" data-act="play" aria-label="Play <?php echo tmz_mz_h($t['title']); ?>">▶</button>
             </div>
-            <a class="mz-tile-title" href="/TMZ%20PODCAST/music.php?track=<?php echo rawurlencode($t['slug']); ?>"><?php echo tmz_mz_h($t['title']); ?></a>
-            <a class="mz-tile-sub" href="/TMZ%20PODCAST/music.php?artist=<?php echo rawurlencode($t['artist_slug']); ?>"><?php echo tmz_mz_h($t['artist']); ?></a>
+            <a class="mz-tile-title" href="/music.php?track=<?php echo rawurlencode($t['slug']); ?>"><?php echo tmz_mz_h($t['title']); ?></a>
+            <a class="mz-tile-sub" href="/music.php?artist=<?php echo rawurlencode($t['artist_slug']); ?>"><?php echo tmz_mz_h($t['artist']); ?></a>
         </div>
         <?php
     }
@@ -72,7 +72,7 @@ if (!function_exists('tmz_mz_h')) {
                 <span class="mz-vtile-play" aria-hidden="true">▶</span>
                 <span class="mz-vtile-time"><?php echo tmz_mz_fmt($t['duration']); ?></span>
             </button>
-            <a class="mz-tile-title" href="/TMZ%20PODCAST/music.php?track=<?php echo rawurlencode($t['slug']); ?>"><?php echo tmz_mz_h($t['title']); ?></a>
+            <a class="mz-tile-title" href="/music.php?track=<?php echo rawurlencode($t['slug']); ?>"><?php echo tmz_mz_h($t['title']); ?></a>
             <span class="mz-tile-sub"><?php echo tmz_mz_h($t['artist']); ?> · <?php echo number_format((int)$t['plays']); ?> plays</span>
         </div>
         <?php
@@ -81,7 +81,7 @@ if (!function_exists('tmz_mz_h')) {
     function tmz_mz_artist(array $a) {
         $img = !empty($a['photo_path']) ? Music::url($a['photo_path']) : (!empty($a['cover']) ? Music::url($a['cover']) : '');
         ?>
-        <a class="mz-artist" href="/TMZ%20PODCAST/music.php?artist=<?php echo rawurlencode($a['slug']); ?>">
+        <a class="mz-artist" href="/music.php?artist=<?php echo rawurlencode($a['slug']); ?>">
             <?php echo tmz_mz_cover($img, $a['name'], 'mz-artist-pic'); ?>
             <strong><?php echo tmz_mz_h($a['name']); ?></strong>
             <small>Artist<?php echo isset($a['tracks']) ? ' · ' . (int)$a['tracks'] . ' tracks' : ''; ?></small>
@@ -91,7 +91,7 @@ if (!function_exists('tmz_mz_h')) {
 
     function tmz_mz_album(array $al) {
         ?>
-        <a class="mz-album" href="/TMZ%20PODCAST/music.php?album=<?php echo rawurlencode($al['slug']); ?>">
+        <a class="mz-album" href="/music.php?album=<?php echo rawurlencode($al['slug']); ?>">
             <?php echo tmz_mz_cover(Music::url($al['cover_path'] ?? ''), $al['title'], 'mz-album-art'); ?>
             <strong><?php echo tmz_mz_h($al['title']); ?></strong>
             <small><?php echo !empty($al['release_year']) ? (int)$al['release_year'] . ' · ' : ''; ?><?php echo tmz_mz_h($al['artist_name']); ?></small>

@@ -44,7 +44,7 @@ try {
 header('Content-Type: application/rss+xml; charset=utf-8');
 
 // Base URL
-$baseUrl = 'http://localhost/TMZ%20PODCAST';
+$baseUrl = 'http://localhost';
 
 // Get feed type
 $type = $_GET['type'] ?? 'episodes';

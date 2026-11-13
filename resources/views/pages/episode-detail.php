@@ -47,9 +47,9 @@
                     $evSrc = $evUrl;
                     if (strpos($evUrl, '/storage/') !== false) {
                         $evPath = substr($evUrl, strpos($evUrl, 'storage/'));
-                        $evSrc = '/TMZ%20PODCAST/media-play.php?path=' . rawurlencode($evPath);
+                        $evSrc = '/media-play.php?path=' . rawurlencode($evPath);
                     } elseif (strpos($evUrl, 'media-play.php') === false && strpos($evUrl, 'http') !== 0) {
-                        $evSrc = '/TMZ%20PODCAST/' . ltrim($evUrl, '/');
+                        $evSrc = '/' . ltrim($evUrl, '/');
                     }
                     ?>
                     <iframe src="<?php echo htmlspecialchars($evSrc); ?>" frameborder="0" allowfullscreen></iframe>
@@ -87,7 +87,7 @@
             <p>No comments yet. Be the first to comment!</p>
         <?php endif; ?>
         
-        <form method="POST" action="/TMZ%20PODCAST/episodes.php" class="comment-form">
+        <form method="POST" action="/episodes.php" class="comment-form">
             <?php echo CSRF::getField(); ?>
             <input type="hidden" name="episode_id" value="<?php echo $episode['id']; ?>">
             <div class="form-group">
@@ -122,7 +122,7 @@
                         </div>
                         <div class="episode-content">
                             <h3><?php echo htmlspecialchars($related['title']); ?></h3>
-                            <a href="/TMZ%20PODCAST/episodes.php?slug=<?php echo urlencode($related['slug']); ?>" class="btn btn-small">Listen</a>
+                            <a href="/episodes.php?slug=<?php echo urlencode($related['slug']); ?>" class="btn btn-small">Listen</a>
                         </div>
                     </div>
                 <?php endforeach; ?>

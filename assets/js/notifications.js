@@ -4,7 +4,7 @@
   const root = document.getElementById('tmzNotifications');
   if (!root) return;
 
-  const api = '/TMZ%20PODCAST/api/notifications.php';
+  const api = '/api/notifications.php';
   const toggle = document.getElementById('tmzNotificationToggle');
   const panel = document.getElementById('tmzNotificationPanel');
   const closeButton = document.getElementById('tmzNotificationClose');
@@ -26,7 +26,7 @@
     if (status) status.textContent = message || '';
   }
 
-  const LOGO_URL = '/TMZ%20PODCAST/assets/img/dak-mark.png';
+  const LOGO_URL = '/assets/img/dak-mark.png';
 
   function brandAvatar(className) {
     const img = document.createElement('img');

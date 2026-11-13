@@ -108,7 +108,7 @@
       }
     });
     if (open && !loggedIn) {
-      var a = node('a', 'lx-login', 'Sign in to vote'); a.href = '/TMZ%20PODCAST/login.php';
+      var a = node('a', 'lx-login', 'Sign in to vote'); a.href = '/login.php';
       pollEl.appendChild(a);
     }
   }

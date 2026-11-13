@@ -15,9 +15,9 @@ $updated = 'November 2026';
         <p>Last updated: <?php echo $updated; ?></p>
     </header>
     <nav class="cine-pills legal-nav" aria-label="Legal pages">
-        <a href="/TMZ%20PODCAST/privacy.php" class="<?php echo $legalDoc === 'privacy' ? 'is-active' : ''; ?>">Privacy</a>
-        <a href="/TMZ%20PODCAST/terms.php" class="<?php echo $legalDoc === 'terms' ? 'is-active' : ''; ?>">Terms</a>
-        <a href="/TMZ%20PODCAST/cookies.php" class="<?php echo $legalDoc === 'cookies' ? 'is-active' : ''; ?>">Cookies</a>
+        <a href="/privacy.php" class="<?php echo $legalDoc === 'privacy' ? 'is-active' : ''; ?>">Privacy</a>
+        <a href="/terms.php" class="<?php echo $legalDoc === 'terms' ? 'is-active' : ''; ?>">Terms</a>
+        <a href="/cookies.php" class="<?php echo $legalDoc === 'cookies' ? 'is-active' : ''; ?>">Cookies</a>
     </nav>
 
     <div class="legal-body">
@@ -31,7 +31,7 @@ $updated = 'November 2026';
         <h2>Who we share it with</h2>
         <p>Only with service providers that help us run the site, such as payment processing, live video delivery, email and hosting, and where the law requires it. Videos from YouTube or Vimeo may set their own cookies when you play them.</p>
         <h2>Your choices</h2>
-        <p>You can view and update your profile in your dashboard, ask us to correct or delete your account and personal data, and unsubscribe from the newsletter at any time. Contact us through the <a href="/TMZ%20PODCAST/contact.php">contact page</a>.</p>
+        <p>You can view and update your profile in your dashboard, ask us to correct or delete your account and personal data, and unsubscribe from the newsletter at any time. Contact us through the <a href="/contact.php">contact page</a>.</p>
         <h2>Keeping data safe and how long we keep it</h2>
         <p>We use access controls and encryption in transit where available. We keep account data while your account is active and payment records for as long as the law requires.</p>
         <h2>Children</h2>
@@ -55,7 +55,7 @@ $updated = 'November 2026';
         <h2>Ending access</h2>
         <p>We may suspend accounts that break these terms. You can stop using the service at any time.</p>
         <h2>Contact</h2>
-        <p>Questions about these terms: use our <a href="/TMZ%20PODCAST/contact.php">contact page</a>.</p>
+        <p>Questions about these terms: use our <a href="/contact.php">contact page</a>.</p>
 
     <?php else: ?>
         <h2>What are cookies?</h2>
@@ -69,7 +69,7 @@ $updated = 'November 2026';
         <p>We do not use advertising-tracking cookies from third-party ad networks. Adverts on this site are placed by us.</p>
         <h2>Your choices</h2>
         <p>You can block or delete cookies in your browser settings, but sign-in will stop working if you block the essential cookie.</p>
-        <p>More detail is in our <a href="/TMZ%20PODCAST/privacy.php">Privacy Policy</a>.</p>
+        <p>More detail is in our <a href="/privacy.php">Privacy Policy</a>.</p>
     <?php endif; ?>
     </div>
 </article>

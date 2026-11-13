@@ -93,7 +93,7 @@ class MusicController extends Controller {
             ]));
         }
         if (!empty($_GET['playlist'])) {
-            if (!$v['user_id']) $this->redirect('/TMZ%20PODCAST/login.php');
+            if (!$v['user_id']) $this->redirect('/login.php');
             $pl = $this->music->playlist((int)$_GET['playlist'], $v['user_id']);
             if (!$pl) return $this->missing();
             return $this->render('music', array_merge($data, [
@@ -102,7 +102,7 @@ class MusicController extends Controller {
             ]));
         }
         if (($_GET['view'] ?? '') === 'library') {
-            if (!$v['user_id']) $this->redirect('/TMZ%20PODCAST/login.php');
+            if (!$v['user_id']) $this->redirect('/login.php');
             return $this->render('music', array_merge($data, [
                 'musicView' => 'library', 'title' => 'Your Library',
                 'playlists' => $this->music->playlists($v['user_id']),

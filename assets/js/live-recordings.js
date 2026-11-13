@@ -7,7 +7,7 @@
   if (!panel) return;
 
   const liveId = panel.dataset.liveId;
-  const api = panel.dataset.api || '/TMZ%20PODCAST/api/live-recordings.php';
+  const api = panel.dataset.api || '/api/live-recordings.php';
   const list = panel.querySelector('.live-recordings-list');
   const status = panel.querySelector('.live-recordings-status');
   const startVideo = document.getElementById('startVideoRecording');

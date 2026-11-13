@@ -23,7 +23,7 @@
                 <div class="host-card">
                     <div class="host-image">
                         <?php if ($host['profile_image_path']): ?>
-                            <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($host['profile_image_path'], '/')); ?>" alt="<?php echo htmlspecialchars($host['name']); ?>">
+                            <img src="<?php echo htmlspecialchars('/' . ltrim($host['profile_image_path'], '/')); ?>" alt="<?php echo htmlspecialchars($host['name']); ?>">
                         <?php else: ?>
                             <div class="placeholder-image">Host</div>
                         <?php endif; ?>
@@ -34,7 +34,7 @@
                             <p class="host-role"><?php echo htmlspecialchars($host['role']); ?></p>
                         <?php endif; ?>
                         <p class="host-bio"><?php echo htmlspecialchars(substr($host['biography'] ?? '', 0, 200)); ?>...</p>
-                        <a href="/TMZ%20PODCAST/hosts.php?slug=<?php echo urlencode($host['slug']); ?>" class="btn btn-primary">View Profile</a>
+                        <a href="/hosts.php?slug=<?php echo urlencode($host['slug']); ?>" class="btn btn-primary">View Profile</a>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -55,7 +55,7 @@
                 <div class="guest-card">
                     <div class="guest-image">
                         <?php if ($guest['profile_image_path']): ?>
-                            <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($guest['profile_image_path'], '/')); ?>" alt="<?php echo htmlspecialchars($guest['name']); ?>">
+                            <img src="<?php echo htmlspecialchars('/' . ltrim($guest['profile_image_path'], '/')); ?>" alt="<?php echo htmlspecialchars($guest['name']); ?>">
                         <?php else: ?>
                             <div class="placeholder-image">Guest</div>
                         <?php endif; ?>

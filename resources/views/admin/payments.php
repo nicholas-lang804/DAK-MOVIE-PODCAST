@@ -37,7 +37,7 @@ $ipnUrl = $g->ipnUrl();
         <label>Consumer Key<input name="pesapal_consumer_key" value="<?php echo $h($s['pesapal_consumer_key'] ?? ''); ?>" autocomplete="off"></label>
         <label>Consumer Secret<?php if ($hasSecret): ?><small style="display:block;color:#888">Saved — leave blank to keep it</small><?php endif; ?><input type="password" name="pesapal_consumer_secret" value="" placeholder="<?php echo $hasSecret ? '•••••••• (saved)' : 'Enter secret'; ?>" autocomplete="new-password"></label>
         <label>Environment<select name="pesapal_environment"><option value="sandbox" <?php echo $env === 'sandbox' ? 'selected' : ''; ?>>Sandbox / testing</option><option value="live" <?php echo $env === 'live' ? 'selected' : ''; ?>>Live / production</option></select></label>
-        <label>Public base URL <small style="display:block;color:#888">Optional override — auto-detected otherwise</small><input name="pesapal_public_base_url" value="<?php echo $h($s['pesapal_public_base_url'] ?? ''); ?>" placeholder="https://your-domain/TMZ%20PODCAST"></label>
+        <label>Public base URL <small style="display:block;color:#888">Optional override — auto-detected otherwise</small><input name="pesapal_public_base_url" value="<?php echo $h($s['pesapal_public_base_url'] ?? ''); ?>" placeholder="https://your-domain/"></label>
         <div><button class="btn btn-primary" type="submit">Save settings</button></div>
     </form>
 

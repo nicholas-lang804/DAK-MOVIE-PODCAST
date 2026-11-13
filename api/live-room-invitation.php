@@ -62,7 +62,7 @@ if ($isRoomAdmin) {
                 'speaker_request',
                 'Speaker request update',
                 'Your request to speak during ' . $live['title'] . ' was not approved.',
-                '/TMZ%20PODCAST/live.php?live_id=' . (int)$liveId
+                '/live.php?live_id=' . (int)$liveId
             );
         } catch (Throwable $error) {
             error_log('Speaker-request notification could not be saved: ' . $error->getMessage());
@@ -105,7 +105,7 @@ if ($isRoomAdmin) {
             'speaker_invitation',
             'You have been invited to speak',
             $live['title'] . ' · ' . ucfirst($request['request_type']),
-            '/TMZ%20PODCAST/live.php?live_id=' . (int)$liveId
+            '/live.php?live_id=' . (int)$liveId
         );
     } catch (Throwable $error) {
         error_log('Speaker invitation notification could not be saved: ' . $error->getMessage());
@@ -134,7 +134,7 @@ if ($action === 'decline') {
             'speaker_declined',
             'A speaker declined an invitation',
             $model->participantName($userId) . ' declined an invitation for ' . $live['title'] . '.',
-            '/TMZ%20PODCAST/admin/dashboard.php?tab=live&live_id=' . (int)$liveId
+            '/admin/dashboard.php?tab=live&live_id=' . (int)$liveId
         );
     } catch (Throwable $notificationError) {
         error_log('Speaker-declined notification could not be saved: ' . $notificationError->getMessage());
@@ -191,7 +191,7 @@ try {
                 'speaker_accepted',
                 'A speaker accepted an invitation',
                 $model->participantName($userId) . ' accepted an invitation for ' . $live['title'] . '.',
-                '/TMZ%20PODCAST/admin/dashboard.php?tab=live&live_id=' . (int)$liveId
+                '/admin/dashboard.php?tab=live&live_id=' . (int)$liveId
             );
         } catch (Throwable $notificationError) {
             error_log('Speaker acceptance notification could not be saved: ' . $notificationError->getMessage());

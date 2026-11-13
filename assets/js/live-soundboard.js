@@ -5,7 +5,7 @@
   if (!board) return;
 
   var liveId = Number(board.dataset.liveId || 0);
-  var api = '/TMZ%20PODCAST/api/live-extras.php';
+  var api = '/api/live-extras.php';
   var csrf = (document.querySelector('#liveStudioCsrf input[name="csrf_token"]') || {}).value || '';
   var ctx = null;
 

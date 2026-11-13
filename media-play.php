@@ -71,7 +71,7 @@ if (isset($_GET['hls'])) {
         exit;
     }
     // Serve the playlist, rewriting segment URIs through this signed endpoint.
-    $base = '/TMZ%20PODCAST/media-play.php?hls=' . $mid . '&tok=' . urlencode($tok) . '&exp=' . $exp . '&q=' . urlencode($q) . '&seg=';
+    $base = '/media-play.php?hls=' . $mid . '&tok=' . urlencode($tok) . '&exp=' . $exp . '&q=' . urlencode($q) . '&seg=';
     $body = file_get_contents($file);
     $body = preg_replace_callback('/^(?!#)(\S+\.ts)(\?.*)?$/m', function ($m) use ($base) { return $base . rawurlencode($m[1]); }, (string)$body);
     header('Content-Type: application/vnd.apple.mpegurl');

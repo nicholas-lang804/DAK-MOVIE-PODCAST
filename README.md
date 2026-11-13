@@ -62,7 +62,7 @@ A comprehensive entertainment platform featuring podcasts, movies, articles, and
    - Ensure the `storage/uploads/` and `storage/logs/` directories have write permissions
 
 5. **Run Installation**
-   - Visit `http://localhost/TMZ%20PODCAST/install.php`
+   - Visit `http://localhost/install.php`
    - This will create the admin user and verify the database
 
 6. **Start Apache and MySQL**
@@ -191,20 +191,20 @@ TMZ PODCAST/
 ## Usage
 
 ### Public Website
-- Access at `http://localhost/TMZ%20PODCAST/`
+- Access at `http://localhost/`
 - Browse episodes, articles, movies, and events
 - Subscribe to newsletter
 - Submit contact forms
 
 ### User Dashboard
-- Login at `http://localhost/TMZ%20PODCAST/login.php`
-- Access dashboard at `http://localhost/TMZ%20PODCAST/user/index.php`
+- Login at `http://localhost/login.php`
+- Access dashboard at `http://localhost/user/index.php`
 - Manage profile and settings
 - View personalized content
 
 ### Admin Dashboard
-- Login at `http://localhost/TMZ%20PODCAST/admin/login.php`
-- Access dashboard at `http://localhost/TMZ%20PODCAST/admin/index.php`
+- Login at `http://localhost/admin/login.php`
+- Access dashboard at `http://localhost/admin/index.php`
 - Manage all content types
 - Moderate comments and messages
 - View analytics and logs

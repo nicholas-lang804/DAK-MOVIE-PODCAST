@@ -105,7 +105,7 @@
           language,
           csrf_token: csrf
         });
-        const response = await fetch('/TMZ%20PODCAST/api/live-captions.php', {
+        const response = await fetch('/api/live-captions.php', {
           method: 'POST',
           credentials: 'same-origin',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -211,7 +211,7 @@
     const params = new URLSearchParams({ live_id: liveId });
     if (query) params.set('q', query);
     try {
-      const response = await fetch('/TMZ%20PODCAST/api/live-captions.php?' + params.toString(), {
+      const response = await fetch('/api/live-captions.php?' + params.toString(), {
         credentials: 'same-origin',
         cache: 'no-store'
       });
@@ -253,7 +253,7 @@
                 text: input.value.trim(),
                 csrf_token: csrf
               });
-              const update = await fetch('/TMZ%20PODCAST/api/live-captions.php', {
+              const update = await fetch('/api/live-captions.php', {
                 method: 'POST',
                 credentials: 'same-origin',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

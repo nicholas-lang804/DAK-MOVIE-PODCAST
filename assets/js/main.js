@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 description.textContent = synopsis;
                 action.textContent = label;
                 action.href = link;
-                secondaryAction.href = '/TMZ%20PODCAST/membership.php';
+                secondaryAction.href = '/membership.php';
                 secondaryAction.textContent = 'Plans from UGX 500';
             };
 

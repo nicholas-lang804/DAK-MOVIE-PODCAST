@@ -8,7 +8,7 @@ $h = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
     <header class="cine-page-hero">
         <span class="cine-eyebrow">Find anything</span>
         <h1>Search</h1>
-        <form class="cine-search search-page-form" method="GET" action="/TMZ%20PODCAST/search.php" role="search">
+        <form class="cine-search search-page-form" method="GET" action="/search.php" role="search">
             <input type="search" name="q" value="<?php echo $h($query); ?>" placeholder="Movies, actors, episodes, news, live shows…" aria-label="Search the site" autofocus>
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
@@ -38,7 +38,7 @@ $h = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
                 <section class="search-group"><h2><?php echo $g[1]; ?></h2>
                     <ul class="search-list">
                         <?php foreach ($results[$g[0]] as $r): ?>
-                            <li><a href="/TMZ%20PODCAST/<?php echo $g[2]; ?>?slug=<?php echo urlencode($r['slug']); ?>"><?php echo $h($r['title']); ?></a></li>
+                            <li><a href="/<?php echo $g[2]; ?>?slug=<?php echo urlencode($r['slug']); ?>"><?php echo $h($r['title']); ?></a></li>
                         <?php endforeach; ?>
                     </ul>
                 </section>
@@ -49,7 +49,7 @@ $h = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
             <section class="search-group"><h2>Live shows</h2>
                 <ul class="search-list">
                     <?php foreach ($results['live'] as $r): ?>
-                        <li><a href="/TMZ%20PODCAST/live.php?live_id=<?php echo (int)$r['id']; ?>"><?php echo $h($r['title']); ?></a>
+                        <li><a href="/live.php?live_id=<?php echo (int)$r['id']; ?>"><?php echo $h($r['title']); ?></a>
                             <small><?php echo $r['status'] === 'live' ? '● live now' : ($r['status'] === 'ended' ? 'replay' : 'upcoming'); ?></small></li>
                     <?php endforeach; ?>
                 </ul>

@@ -3,7 +3,7 @@
  * live rooms, uploads of video/audio or range requests. Bump VERSION to refresh the cache. */
 const VERSION = 'tmz-sw-3';
 const STATIC_CACHE = VERSION + '-static';
-const OFFLINE_URL = '/TMZ%20PODCAST/offline.html';
+const OFFLINE_URL = '/offline.html';
 
 self.addEventListener('install', function (event) {
   event.waitUntil(caches.open(STATIC_CACHE).then(function (c) { return c.add(OFFLINE_URL); }).then(function () { return self.skipWaiting(); }));
@@ -18,7 +18,7 @@ self.addEventListener('activate', function (event) {
 });
 
 function isStaticAsset(url, request) {
-  if (url.pathname.indexOf('/TMZ%20PODCAST/assets/') === -1 && url.pathname.indexOf('/TMZ PODCAST/assets/') === -1) return false;
+  if (url.pathname.indexOf('/assets/') === -1 && url.pathname.indexOf('/assets/') === -1) return false;
   return ['style', 'script', 'font', 'image'].indexOf(request.destination) !== -1;
 }
 

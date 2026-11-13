@@ -19,7 +19,7 @@
     <?php endif; ?>
 
     <div class="form-container">
-        <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=settings" class="admin-form">
+        <form method="POST" action="/admin/dashboard.php?tab=settings" class="admin-form">
             <?php echo CSRF::getField(); ?>
 
             <div class="settings-subsection">
@@ -192,7 +192,7 @@
 <script>
 document.getElementById('testLivekit')?.addEventListener('click', async function(){
   const result=document.getElementById('livekitTestResult'); result.textContent='Testing…'; this.disabled=true;
-  try { const response=await fetch('/TMZ%20PODCAST/api/livekit-test.php',{headers:{'Accept':'application/json'}}); const data=await response.json(); result.textContent=data.message; result.dataset.state=data.ok?'success':'error'; }
+  try { const response=await fetch('/api/livekit-test.php',{headers:{'Accept':'application/json'}}); const data=await response.json(); result.textContent=data.message; result.dataset.state=data.ok?'success':'error'; }
   catch(e) { result.textContent='Could not run the connection test.'; result.dataset.state='error'; }
   this.disabled=false;
 });

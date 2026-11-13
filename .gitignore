@@ -55,3 +55,6 @@ analytics.php
 
 # FFmpeg binaries — too large for git, not needed on shared hosting
 bin/
+
+# Deployment archives — too large for git
+*.zip

@@ -9,7 +9,7 @@
     <div class="movie-header">
         <div class="movie-poster">
             <?php if ($movie['poster_path']): ?>
-                <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
+                <img src="<?php echo htmlspecialchars('/' . ltrim($movie['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?>">
             <?php else: ?>
                 <div class="movie-cover-fallback">
                     <span>DAK</span>
@@ -84,16 +84,16 @@
                     if (!$sec) { $sec = 'tmz-media'; } // media-play.php auto-creates the real secret on first hit
                     $hexp = time() + 6 * 3600;
                     $htok = hash_hmac('sha256', $vidMediaId . '|' . $hexp . '|hls', $sec);
-                    $hlsSrc = '/TMZ%20PODCAST/media-play.php?hls=' . $vidMediaId . '&tok=' . urlencode($htok) . '&exp=' . $hexp . '&q=hls';
+                    $hlsSrc = '/media-play.php?hls=' . $vidMediaId . '&tok=' . urlencode($htok) . '&exp=' . $hexp . '&q=hls';
                 }
             }
             ?>
             <video id="moviePlayer" controls preload="metadata" playsinline>
-                <source src="/TMZ%20PODCAST/media-play.php?movie_id=<?php echo (int)$movie['id']; ?>" type="<?php echo htmlspecialchars($movie['video_mime_type'] ?? 'video/mp4'); ?>">
+                <source src="/media-play.php?movie_id=<?php echo (int)$movie['id']; ?>" type="<?php echo htmlspecialchars($movie['video_mime_type'] ?? 'video/mp4'); ?>">
                 Your browser does not support this video format.
             </video>
             <?php if ($hlsSrc): ?>
-            <script src="/TMZ%20PODCAST/assets/js/hls.min.js"></script>
+            <script src="/assets/js/hls.min.js"></script>
             <script>
             (function(){
                 var v = document.getElementById('moviePlayer');
@@ -116,7 +116,7 @@
             <h2 id="access-heading">Unlock <?php echo htmlspecialchars($movie['title']); ?></h2>
             <p>This movie is available after payment. Watch access is granted to your account after Pesapal confirms payment.</p>
             <strong><?php echo htmlspecialchars($movie['price_currency']); ?> <?php echo number_format((float)$movie['price'], 2); ?></strong>
-            <a class="btn btn-primary" href="/TMZ%20PODCAST/payment.php?movie_id=<?php echo (int)$movie['id']; ?>">Continue to Pesapal payment</a>
+            <a class="btn btn-primary" href="/payment.php?movie_id=<?php echo (int)$movie['id']; ?>">Continue to Pesapal payment</a>
         </section>
     <?php endif; ?>
 
@@ -188,7 +188,7 @@
             <p>No comments yet. Be the first to comment!</p>
         <?php endif; ?>
         
-        <form method="POST" action="/TMZ%20PODCAST/movies.php" class="comment-form">
+        <form method="POST" action="/movies.php" class="comment-form">
             <?php echo CSRF::getField(); ?>
             <input type="hidden" name="movie_id" value="<?php echo $movie['id']; ?>">
             <div class="form-group">

@@ -30,8 +30,8 @@ function tmzRenderPage($title, $content, $description = null) {
 /** Send a logged-out visitor to login and bring them back afterwards. */
 function tmzRequireCustomerLogin() {
     if (empty($_SESSION['user_id'])) {
-        $_SESSION['after_login'] = $_SERVER['REQUEST_URI'] ?? '/TMZ%20PODCAST/';
-        header('Location: /TMZ%20PODCAST/login.php');
+        $_SESSION['after_login'] = $_SERVER['REQUEST_URI'] ?? '/';
+        header('Location: /login.php');
         exit;
     }
 }

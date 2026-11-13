@@ -49,8 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="nav-menu">
                 <span>Admin: <?php echo htmlspecialchars($_SESSION['admin_username']); ?></span>
-                <a href="/TMZ%20PODCAST/admin/dashboard.php" class="btn btn-outline">Dashboard</a>
-                <a href="/TMZ%20PODCAST/admin/logout.php" class="btn btn-outline">Logout</a>
+                <a href="/admin/dashboard.php" class="btn btn-outline">Dashboard</a>
+                <a href="/admin/logout.php" class="btn btn-outline">Logout</a>
             </div>
         </div>
     </nav>
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <?php if ($messageType === 'success'): ?>
                     <p class="info-text">Your session has been invalidated. Please login with your new password.</p>
-                    <a href="/TMZ%20PODCAST/admin/login.php" class="btn btn-primary">Login Again</a>
+                    <a href="/admin/login.php" class="btn btn-primary">Login Again</a>
                 <?php else: ?>
                     <form method="POST" action="change_password.php" class="admin-form">
                         <div class="form-group">

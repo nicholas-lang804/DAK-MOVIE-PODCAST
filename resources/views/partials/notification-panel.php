@@ -13,11 +13,11 @@ if ($notificationRole === 'guest' && $notificationRecipient === '') {
 ?>
 <aside class="tmz-notifications" id="tmzNotifications" data-role="<?php echo htmlspecialchars($notificationRole, ENT_QUOTES, 'UTF-8'); ?>" data-recipient="<?php echo htmlspecialchars($notificationRecipient, ENT_QUOTES, 'UTF-8'); ?>" aria-label="Notifications and messages">
     <button class="tmz-notification-toggle" type="button" id="tmzNotificationToggle" aria-expanded="false" aria-controls="tmzNotificationPanel">
-        <img class="tmz-notif-avatar" src="/TMZ%20PODCAST/assets/img/dak-mark.png" alt="" aria-hidden="true"><span aria-hidden="true">♢</span> Notifications <b id="tmzNotificationCount" hidden>0</b>
+        <img class="tmz-notif-avatar" src="/assets/img/dak-mark.png" alt="" aria-hidden="true"><span aria-hidden="true">♢</span> Notifications <b id="tmzNotificationCount" hidden>0</b>
     </button>
     <section class="tmz-notification-panel" id="tmzNotificationPanel" hidden aria-labelledby="tmzNotificationHeading">
         <header class="tmz-notification-header">
-            <img class="tmz-notif-avatar tmz-notif-avatar-lg" src="/TMZ%20PODCAST/assets/img/dak-mark.png" alt="THE DAK FILM PODCAST MEDIA">
+            <img class="tmz-notif-avatar tmz-notif-avatar-lg" src="/assets/img/dak-mark.png" alt="THE DAK FILM PODCAST MEDIA">
             <div><h2 id="tmzNotificationHeading">Notifications</h2><p id="tmzNotificationSummary">Updates and conversations</p></div>
             <button type="button" id="tmzNotificationClose" class="tmz-notification-close" aria-label="Close notifications">×</button>
         </header>

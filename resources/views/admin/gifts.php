@@ -23,7 +23,7 @@ $h = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
         <label>Sort order<input type="number" name="sort_order" value="<?php echo (int)($ge['sort_order'] ?? 0); ?>"></label>
         <label style="font-weight:normal"><input type="checkbox" name="is_active" value="1" <?php echo empty($ge) || !empty($ge['is_active']) ? 'checked' : ''; ?>> Active</label>
         <div><button class="btn btn-primary" type="submit"><?php echo $ge ? 'Save changes' : 'Add gift'; ?></button>
-        <?php if ($ge): ?><a class="btn btn-outline" href="/TMZ%20PODCAST/admin/dashboard.php?tab=gifts">Cancel</a><?php endif; ?></div>
+        <?php if ($ge): ?><a class="btn btn-outline" href="/admin/dashboard.php?tab=gifts">Cancel</a><?php endif; ?></div>
     </form>
 
     <h2 style="margin-top:2rem">Gift catalog (<?php echo count($gifts); ?>)</h2>
@@ -39,7 +39,7 @@ $h = function ($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
                     <td><?php echo $h($g['category']); ?></td>
                     <td><span class="status-badge status-<?php echo $g['is_active'] ? 'published' : 'draft'; ?>"><?php echo $g['is_active'] ? 'Active' : 'Hidden'; ?></span></td>
                     <td style="white-space:nowrap">
-                        <a class="btn btn-small btn-outline" href="/TMZ%20PODCAST/admin/dashboard.php?tab=gifts&amp;edit=<?php echo (int)$g['id']; ?>">Edit</a>
+                        <a class="btn btn-small btn-outline" href="/admin/dashboard.php?tab=gifts&amp;edit=<?php echo (int)$g['id']; ?>">Edit</a>
                         <form method="post" style="display:inline" onsubmit="return confirm('Delete this gift?');">
                             <?php echo CSRF::getField(); ?>
                             <input type="hidden" name="gift_action" value="delete_gift">

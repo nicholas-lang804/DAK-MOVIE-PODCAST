@@ -9,8 +9,8 @@ require_once __DIR__ . '/app/Models/Payment.php';
 require_once __DIR__ . '/app/Models/User.php';
 require_once __DIR__ . '/app/Services/PesapalGateway.php';
 
-if (!isLoggedIn() || empty($_SESSION['user_id'])) { header('Location: /TMZ%20PODCAST/login.php'); exit; }
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: /TMZ%20PODCAST/'); exit; }
+if (!isLoggedIn() || empty($_SESSION['user_id'])) { header('Location: /login.php'); exit; }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: /'); exit; }
 CSRF::requireValidToken();
 
 $liveId = (int)($_POST['live_id'] ?? 0);
@@ -21,7 +21,7 @@ $recipientUserId = (int)($_POST['recipient_user_id'] ?? 0);
 $recipientName = trim((string)($_POST['recipient_name'] ?? ''));
 $message = trim((string)($_POST['message'] ?? ''));
 
-$back = '/TMZ%20PODCAST/gift.php?live_id=' . $liveId . '&gift_id=' . $giftId . '&currency=' . urlencode($currency);
+$back = '/gift.php?live_id=' . $liveId . '&gift_id=' . $giftId . '&currency=' . urlencode($currency);
 
 $giftModel = new Gift();
 $gift = $giftModel->giftById($giftId);

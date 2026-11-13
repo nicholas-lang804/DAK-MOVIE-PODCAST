@@ -7,8 +7,8 @@ $access = ['everyone' => 'Everyone', 'members' => 'Signed-in members', 'subscrib
     <div class="section-header">
         <h1>Manage Music</h1>
         <div>
-            <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=music&amp;action=artists" class="btn btn-outline">Artist profiles</a>
-            <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=music&amp;action=create" class="btn btn-primary">Upload a song</a>
+            <a href="/admin/dashboard.php?tab=music&amp;action=artists" class="btn btn-outline">Artist profiles</a>
+            <a href="/admin/dashboard.php?tab=music&amp;action=create" class="btn btn-primary">Upload a song</a>
         </div>
     </div>
 
@@ -18,7 +18,7 @@ $access = ['everyone' => 'Everyone', 'members' => 'Signed-in members', 'subscrib
 <?php if ($action === 'create' || $action === 'edit'): $track = $track ?: []; ?>
     <div class="form-container">
         <h2><?php echo $action === 'create' ? 'Upload a song' : 'Edit ' . $e($track['title'] ?? 'song'); ?></h2>
-        <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=music" class="admin-form" enctype="multipart/form-data" id="musicForm">
+        <form method="POST" action="/admin/dashboard.php?tab=music" class="admin-form" enctype="multipart/form-data" id="musicForm">
             <?php echo CSRF::getField(); ?>
             <input type="hidden" name="id" value="<?php echo (int)($track['id'] ?? 0); ?>">
             <input type="hidden" name="form_action" value="save">
@@ -46,7 +46,7 @@ $access = ['everyone' => 'Everyone', 'members' => 'Signed-in members', 'subscrib
                 <input type="number" id="track_no" name="track_no" min="0" value="<?php echo (int)($track['track_no'] ?? 0); ?>"></div>
 
             <div class="form-group"><label for="audio_file">Audio file (MP3, M4A, AAC, OGG, WAV, FLAC, up to 300 MB)</label>
-                <?php if (!empty($track['audio_path'])): ?><p><audio controls preload="none" src="/TMZ%20PODCAST/music-stream.php?id=<?php echo (int)$track['id']; ?>" style="width:100%;max-width:420px"></audio></p><?php endif; ?>
+                <?php if (!empty($track['audio_path'])): ?><p><audio controls preload="none" src="/music-stream.php?id=<?php echo (int)$track['id']; ?>" style="width:100%;max-width:420px"></audio></p><?php endif; ?>
                 <input type="file" id="audio_file" name="audio_file" accept="audio/*,.mp3,.m4a,.aac,.ogg,.wav,.flac">
                 <small id="durationNote"><?php echo !empty($track['duration_seconds']) ? 'Length: ' . floor($track['duration_seconds'] / 60) . ':' . str_pad((string)($track['duration_seconds'] % 60), 2, '0', STR_PAD_LEFT) : 'Length is read automatically from the file.'; ?></small>
                 <small>Optional when a music video is uploaded below — the song's audio is extracted from the video automatically.</small></div>
@@ -82,7 +82,7 @@ $access = ['everyone' => 'Everyone', 'members' => 'Signed-in members', 'subscrib
 
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Save song</button>
-                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=music" class="btn btn-outline">Cancel</a>
+                <a href="/admin/dashboard.php?tab=music" class="btn btn-outline">Cancel</a>
             </div>
         </form>
     </div>
@@ -132,7 +132,7 @@ $access = ['everyone' => 'Everyone', 'members' => 'Signed-in members', 'subscrib
     <div class="form-container">
         <h2>Artist profile</h2>
         <p class="form-help">Add a short bio and a photo. The artist page shows them.</p>
-        <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=music" class="admin-form" enctype="multipart/form-data">
+        <form method="POST" action="/admin/dashboard.php?tab=music" class="admin-form" enctype="multipart/form-data">
             <?php echo CSRF::getField(); ?>
             <input type="hidden" name="form_action" value="artist">
             <div class="form-group"><label for="artist_pick">Artist *</label>
@@ -141,7 +141,7 @@ $access = ['everyone' => 'Everyone', 'members' => 'Signed-in members', 'subscrib
             <div class="form-group"><label for="artist_bio">Bio</label><textarea id="artist_bio" name="artist_bio" rows="6"></textarea></div>
             <div class="form-group"><label for="artist_photo">Photo (JPG, PNG or WebP)</label><input type="file" id="artist_photo" name="artist_photo" accept="image/jpeg,image/png,image/webp"></div>
             <div class="form-actions"><button type="submit" class="btn btn-primary">Save profile</button>
-                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=music" class="btn btn-outline">Back</a></div>
+                <a href="/admin/dashboard.php?tab=music" class="btn btn-outline">Back</a></div>
         </form>
     </div>
 
@@ -163,9 +163,9 @@ $access = ['everyone' => 'Everyone', 'members' => 'Signed-in members', 'subscrib
                     <td><small>Listen: <?php echo $e($t['play_access']); ?><br>Download: <?php echo $e($t['download_access']); ?></small></td>
                     <td><span class="status-badge status-<?php echo $t['status'] === 'published' ? 'active' : 'inactive'; ?>"><?php echo $t['status'] === 'published' ? 'Published' : 'Hidden'; ?></span></td>
                     <td>
-                        <a class="btn btn-small" target="_blank" rel="noopener" href="/TMZ%20PODCAST/music.php?track=<?php echo urlencode($t['slug']); ?>">View</a>
-                        <a class="btn btn-small" href="/TMZ%20PODCAST/admin/dashboard.php?tab=music&amp;action=edit&amp;id=<?php echo (int)$t['id']; ?>">Edit</a>
-                        <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=music" style="display:inline" onsubmit="return confirm('Delete this song and its files?')">
+                        <a class="btn btn-small" target="_blank" rel="noopener" href="/music.php?track=<?php echo urlencode($t['slug']); ?>">View</a>
+                        <a class="btn btn-small" href="/admin/dashboard.php?tab=music&amp;action=edit&amp;id=<?php echo (int)$t['id']; ?>">Edit</a>
+                        <form method="POST" action="/admin/dashboard.php?tab=music" style="display:inline" onsubmit="return confirm('Delete this song and its files?')">
                             <?php echo CSRF::getField(); ?><input type="hidden" name="form_action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id']; ?>">
                             <button type="submit" class="btn btn-small btn-danger">Delete</button></form>
                     </td>

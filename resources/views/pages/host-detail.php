@@ -9,7 +9,7 @@
     <div class="host-header">
         <div class="host-image">
             <?php if ($host['profile_image_path']): ?>
-                <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($host['profile_image_path'], '/')); ?>" alt="<?php echo htmlspecialchars($host['name']); ?>">
+                <img src="<?php echo htmlspecialchars('/' . ltrim($host['profile_image_path'], '/')); ?>" alt="<?php echo htmlspecialchars($host['name']); ?>">
             <?php else: ?>
                 <div class="placeholder-image">Host Image</div>
             <?php endif; ?>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="episode-content">
                             <h3><?php echo htmlspecialchars($episode['title']); ?></h3>
-                            <a href="/TMZ%20PODCAST/episodes.php?slug=<?php echo urlencode($episode['slug']); ?>" class="btn btn-small">Listen</a>
+                            <a href="/episodes.php?slug=<?php echo urlencode($episode['slug']); ?>" class="btn btn-small">Listen</a>
                         </div>
                     </div>
                 <?php endforeach; ?>

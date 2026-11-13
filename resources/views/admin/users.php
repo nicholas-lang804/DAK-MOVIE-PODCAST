@@ -7,7 +7,7 @@
 <section class="admin-section">
     <div class="section-header">
         <h1>Manage Users</h1>
-        <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=users&action=create" class="btn btn-primary">Add User</a>
+        <a href="/admin/dashboard.php?tab=users&action=create" class="btn btn-primary">Add User</a>
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -22,7 +22,7 @@
     <?php if ($action === 'create' || $action === 'edit'): ?>
         <div class="form-container">
             <h2><?php echo $action === 'create' ? 'Create User' : 'Edit User'; ?></h2>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=users" class="admin-form">
+            <form method="POST" action="/admin/dashboard.php?tab=users" class="admin-form">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="id" value="<?php echo $user['id'] ?? ''; ?>">
                 
@@ -63,7 +63,7 @@
                 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save User</button>
-                    <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=users" class="btn btn-outline">Cancel</a>
+                    <a href="/admin/dashboard.php?tab=users" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </div>
@@ -89,8 +89,8 @@
                             <td><span class="status-badge status-<?php echo $user['status']; ?>"><?php echo ucfirst($user['status']); ?></span></td>
                             <td><?php echo $user['last_login_at'] ? date('M d, Y H:i', strtotime($user['last_login_at'])) : 'Never'; ?></td>
                             <td>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=users&action=edit&id=<?php echo $user['id']; ?>" class="btn btn-small">Edit</a>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=users&action=delete&id=<?php echo $user['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                                <a href="/admin/dashboard.php?tab=users&action=edit&id=<?php echo $user['id']; ?>" class="btn btn-small">Edit</a>
+                                <a href="/admin/dashboard.php?tab=users&action=delete&id=<?php echo $user['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

@@ -277,7 +277,7 @@
         role: 'publisher',
         csrf_token: csrf
       });
-      const response = await fetch('/TMZ%20PODCAST/api/livekit-token.php', {
+      const response = await fetch('/api/livekit-token.php', {
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

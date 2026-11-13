@@ -15,7 +15,7 @@ function music_dl_page($status, $message, $linkHref = '', $linkText = '') {
        . '<body style="font-family:system-ui,sans-serif;background:#050a1a;color:#eef3ff;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center;padding:1rem">'
        . '<main><h1>' . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . '</h1>';
     if ($linkHref) echo '<p><a style="color:#fff;background:#e11d2e;padding:.7rem 1.4rem;border-radius:99px;text-decoration:none;font-weight:700" href="' . htmlspecialchars($linkHref, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($linkText, ENT_QUOTES, 'UTF-8') . '</a></p>';
-    echo '<p><a style="color:#8fb8ff" href="/TMZ%20PODCAST/music.php">Back to Music</a></p></main>';
+    echo '<p><a style="color:#8fb8ff" href="/music.php">Back to Music</a></p></main>';
     exit;
 }
 
@@ -36,12 +36,12 @@ if ($userId && $track['download_access'] === 'subscribers') {
     try { $viewer['sub'] = (new Payment())->hasActiveSubscription($userId); } catch (Throwable $e) { $viewer['sub'] = false; }
 }
 if (!Music::allowed($track['download_access'], $viewer)) {
-    if ($track['download_access'] === 'members') music_dl_page(403, 'Sign in to download this track.', '/TMZ%20PODCAST/login.php', 'Sign in');
-    if ($track['download_access'] === 'subscribers') music_dl_page(403, 'Downloads are included with All Access.', '/TMZ%20PODCAST/membership.php', 'See plans');
+    if ($track['download_access'] === 'members') music_dl_page(403, 'Sign in to download this track.', '/login.php', 'Sign in');
+    if ($track['download_access'] === 'subscribers') music_dl_page(403, 'Downloads are included with All Access.', '/membership.php', 'See plans');
     music_dl_page(403, 'Downloads are not available for this track.');
 }
 // A listener must also be allowed to play it.
-if (!Music::allowed($track['play_access'], $viewer)) music_dl_page(403, 'You do not have access to this track.', '/TMZ%20PODCAST/membership.php', 'See plans');
+if (!Music::allowed($track['play_access'], $viewer)) music_dl_page(403, 'You do not have access to this track.', '/membership.php', 'See plans');
 
 $relative = (string)($track[$type . '_path'] ?? '');
 $root = realpath(__DIR__ . '/storage/music');

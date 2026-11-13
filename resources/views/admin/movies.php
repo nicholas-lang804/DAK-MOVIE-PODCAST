@@ -7,7 +7,7 @@
 <section class="admin-section">
     <div class="section-header">
         <h1>Manage Movies</h1>
-        <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=movies&action=create" class="btn btn-primary">Add Movie</a>
+        <a href="/admin/dashboard.php?tab=movies&action=create" class="btn btn-primary">Add Movie</a>
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -22,7 +22,7 @@
     <?php if ($action === 'create' || $action === 'edit'): ?>
         <div class="form-container">
             <h2><?php echo $action === 'create' ? 'Create Movie' : 'Edit Movie'; ?></h2>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=movies" class="admin-form" enctype="multipart/form-data">
+            <form method="POST" action="/admin/dashboard.php?tab=movies" class="admin-form" enctype="multipart/form-data">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="id" value="<?php echo $movie['id'] ?? ''; ?>">
                 
@@ -41,7 +41,7 @@
                     <input type="file" id="movie_cover_file" name="movie_cover_file" accept="image/jpeg,image/png,image/webp,image/gif">
                     <small>Movie posters stay with the movie and are not added to the shared media library.</small>
                     <?php if (!empty($movie['poster_path'])): ?>
-                        <img class="admin-cover-preview" src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($movie['poster_path'], '/')); ?>" alt="Current movie cover">
+                        <img class="admin-cover-preview" src="<?php echo htmlspecialchars('/' . ltrim($movie['poster_path'], '/')); ?>" alt="Current movie cover">
                     <?php endif; ?>
                 </div>
                 
@@ -74,8 +74,12 @@
                 </div>
 
                 <div class="form-group movie-video-select">
-                    <label for="movie_video_file">Movie video</label>
-                    <input type="file" id="movie_video_file" name="movie_video_file" accept="video/mp4,video/webm,video/ogg,video/quicktime">
+                    <label for="video_media_id">Movie video</label>
+                    <div id="ruMovieVideo" class="ru-upload" data-ru-upload data-target-select="video_media_id">
+                        <p class="form-help"><b>Upload a new movie video</b> — sent in 8 MB chunks with a live progress bar and automatic resume. When it finishes, the video is selected automatically below. Keep this page open until it reaches 100%.</p>
+                        <div class="ru-picker"><input type="file" id="movie_video_file_pick" accept="video/*,.mp4,.webm,.mov,.mkv,.avi,.ogv,.3gp"></div>
+                        <div class="ru-list"></div>
+                    </div>
                     <label for="video_media_id" class="form-help">Or choose an existing video from Media Library</label>
                     <select id="video_media_id" name="video_media_id">
                         <option value="">Choose existing video</option>
@@ -83,11 +87,12 @@
                             <option value="<?php echo (int)$video['id']; ?>" <?php echo ((int)($movie['video_media_id'] ?? 0) === (int)$video['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($video['original_filename']); ?></option>
                         <?php endforeach; ?>
                     </select>
-                    <small>Upload a new full movie or select an existing video. Large movie files up to 5 GB are supported. A new upload takes priority.</small>
+                    <small>Upload a new full movie (chunked, up to 5 GB) or select an existing video. The upload must reach 100% before you save the movie.</small>
                     <?php if (!empty($movie['video_path'])): ?>
-                        <video class="admin-video-preview" controls preload="metadata" src="/TMZ%20PODCAST/video-stream.php?movie_id=<?php echo (int)($movie['id'] ?? 0); ?>"></video>
+                        <video class="admin-video-preview" controls preload="metadata" src="/video-stream.php?movie_id=<?php echo (int)($movie['id'] ?? 0); ?>"></video>
                     <?php endif; ?>
                 </div>
+                <script src="/assets/js/resumable-upload.js?v=ru-2"></script>
                 
                 <div class="form-group">
                     <label for="status">Status</label>
@@ -139,7 +144,7 @@
                 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save Movie</button>
-                    <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=movies" class="btn btn-outline">Cancel</a>
+                    <a href="/admin/dashboard.php?tab=movies" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </div>
@@ -167,8 +172,8 @@
                             <td><span class="status-badge <?php echo !empty($movie['video_media_id']) ? 'status-published' : 'status-draft'; ?>"><?php echo !empty($movie['video_media_id']) ? 'Attached' : 'Not attached'; ?></span></td>
                             <td><span class="status-badge status-<?php echo $movie['status']; ?>"><?php echo ucfirst($movie['status']); ?></span></td>
                             <td>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=movies&action=edit&id=<?php echo $movie['id']; ?>" class="btn btn-small">Edit</a>
-                                <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=movies" style="display:inline" onsubmit="return confirm('Delete this movie, its video file and poster? This cannot be undone.')">
+                                <a href="/admin/dashboard.php?tab=movies&action=edit&id=<?php echo $movie['id']; ?>" class="btn btn-small">Edit</a>
+                                <form method="POST" action="/admin/dashboard.php?tab=movies" style="display:inline" onsubmit="return confirm('Delete this movie, its video file and poster? This cannot be undone.')">
                                     <?php echo CSRF::getField(); ?>
                                     <input type="hidden" name="delete_id" value="<?php echo (int)$movie['id']; ?>">
                                     <button type="submit" class="btn btn-small btn-danger">Delete</button>

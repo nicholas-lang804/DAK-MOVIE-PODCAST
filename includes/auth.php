@@ -33,7 +33,7 @@ function isAdmin() {
  */
 function requireLogin() {
     if (!isLoggedIn()) {
-        header('Location: /TMZ%20PODCAST/login.php');
+        header('Location: /login.php');
         exit();
     }
 }
@@ -44,7 +44,7 @@ function requireLogin() {
  */
 function requireAdmin() {
     if (!isAdmin()) {
-        header('Location: /TMZ%20PODCAST/admin/login.php');
+        header('Location: /admin/login.php');
         exit();
     }
 }
@@ -256,7 +256,7 @@ function loginAdmin($username, $password) {
 function logout() {
     session_unset();
     session_destroy();
-    header('Location: /TMZ%20PODCAST/login.php');
+    header('Location: /login.php');
     exit();
 }
 
@@ -266,7 +266,7 @@ function logout() {
 function adminLogout() {
     session_unset();
     session_destroy();
-    header('Location: /TMZ%20PODCAST/admin/login.php');
+    header('Location: /admin/login.php');
     exit();
 }
 

@@ -9,7 +9,7 @@ $lxLoggedIn = !empty($_SESSION['user_id']);
 <section class="live-extras" id="liveExtras" aria-label="Live show extras"
          data-live-id="<?php echo (int)$live['id']; ?>"
          data-csrf="<?php echo htmlspecialchars(CSRF::generateToken(), ENT_QUOTES, 'UTF-8'); ?>"
-         data-api="/TMZ%20PODCAST/api/live-extras.php"
+         data-api="/api/live-extras.php"
          data-logged-in="<?php echo $lxLoggedIn ? '1' : '0'; ?>">
   <div class="lx-topline">
     <span class="lx-viewers" id="lxViewers" hidden></span>
@@ -34,11 +34,11 @@ $lxLoggedIn = !empty($_SESSION['user_id']);
           <button class="btn btn-primary" type="submit">Ask</button>
         </form>
       <?php else: ?>
-        <p class="lx-muted"><a class="lx-login" href="/TMZ%20PODCAST/login.php">Sign in</a> to ask questions and vote.</p>
+        <p class="lx-muted"><a class="lx-login" href="/login.php">Sign in</a> to ask questions and vote.</p>
       <?php endif; ?>
       <p class="lx-message" id="lxAskMessage" role="status" aria-live="polite" hidden></p>
       <ul class="lx-questions" id="lxQuestions" aria-live="polite"><li class="lx-empty">Loading questions…</li></ul>
     </div>
   </div>
 </section>
-<link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/live-extras.css?v=lx-1">
+<link rel="stylesheet" href="/assets/css/live-extras.css?v=lx-1">

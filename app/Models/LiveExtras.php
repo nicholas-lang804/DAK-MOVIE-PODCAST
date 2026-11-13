@@ -225,7 +225,7 @@ class LiveExtras {
             foreach ($rows as $r) {
                 try {
                     $notes->create('user', (int)$r['user_id'], 'live', 'Starting soon: ' . $r['title'],
-                        'Your reminder: this live show is about to start. Tap to join.', '/TMZ%20PODCAST/live.php?live_id=' . (int)$r['live_id']);
+                        'Your reminder: this live show is about to start. Tap to join.', '/live.php?live_id=' . (int)$r['live_id']);
                     $mark->execute([(int)$r['live_id'], (int)$r['user_id']]);
                     $sent++;
                 } catch (Throwable $e) {

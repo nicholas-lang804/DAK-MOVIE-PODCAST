@@ -7,7 +7,7 @@
 <section class="admin-section">
     <div class="section-header">
         <h1>Manage Reviews</h1>
-        <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=reviews&action=create" class="btn btn-primary">Add Review</a>
+        <a href="/admin/dashboard.php?tab=reviews&action=create" class="btn btn-primary">Add Review</a>
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -22,7 +22,7 @@
     <?php if ($action === 'create' || $action === 'edit'): ?>
         <div class="form-container">
             <h2><?php echo $action === 'create' ? 'Create Review' : 'Edit Review'; ?></h2>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=reviews" class="admin-form">
+            <form method="POST" action="/admin/dashboard.php?tab=reviews" class="admin-form">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="id" value="<?php echo $review['id'] ?? ''; ?>">
                 
@@ -63,7 +63,7 @@
                 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save Review</button>
-                    <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=reviews" class="btn btn-outline">Cancel</a>
+                    <a href="/admin/dashboard.php?tab=reviews" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </div>
@@ -87,8 +87,8 @@
                             <td><?php echo $review['rating'] ? number_format($review['rating'], 1) : 'N/A'; ?></td>
                             <td><span class="status-badge status-<?php echo $review['status']; ?>"><?php echo ucfirst($review['status']); ?></span></td>
                             <td>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=reviews&action=edit&id=<?php echo $review['id']; ?>" class="btn btn-small">Edit</a>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=reviews&action=delete&id=<?php echo $review['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                                <a href="/admin/dashboard.php?tab=reviews&action=edit&id=<?php echo $review['id']; ?>" class="btn btn-small">Edit</a>
+                                <a href="/admin/dashboard.php?tab=reviews&action=delete&id=<?php echo $review['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

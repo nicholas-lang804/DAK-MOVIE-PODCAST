@@ -37,14 +37,14 @@ class PesapalGateway {
         return TmzPublicUrl::base();
     }
 
-    /** Base URL guaranteed to end with the app's /TMZ%20PODCAST path segment. */
+    /** Base URL guaranteed to end with the app's / path segment. */
     private function appBaseUrl() {
         $base = $this->publicBaseUrl();
         $path = (string)(parse_url($base, PHP_URL_PATH) ?? '');
         $segments = array_values(array_filter(explode('/', rawurldecode($path)), 'strlen'));
         $last = strtolower((string)end($segments));
         if ($last !== 'tmz podcast') {
-            $base = rtrim($base, '/') . '/TMZ%20PODCAST';
+            $base = rtrim($base, '/') . '/';
         }
         return rtrim($base, '/');
     }

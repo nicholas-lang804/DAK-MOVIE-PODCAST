@@ -20,7 +20,7 @@
     <?php endif; ?>
 
     <div class="form-container">
-        <form method="POST" action="/TMZ%20PODCAST/user/profile.php" class="admin-form" enctype="multipart/form-data">
+        <form method="POST" action="/user/profile.php" class="admin-form" enctype="multipart/form-data">
             <?php echo CSRF::getField(); ?>
             
             <div class="form-group">
@@ -40,7 +40,7 @@
 
             <div class="form-group profile-photo-field">
                 <label for="profile_image">Profile picture</label>
-                <?php if (!empty($user['profile_image_path'])): ?><img class="profile-photo-preview" src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($user['profile_image_path'], '/')); ?>" alt="Your profile picture"><?php endif; ?>
+                <?php if (!empty($user['profile_image_path'])): ?><img class="profile-photo-preview" src="<?php echo htmlspecialchars('/' . ltrim($user['profile_image_path'], '/')); ?>" alt="Your profile picture"><?php endif; ?>
                 <input type="file" id="profile_image" name="profile_image" accept="image/jpeg,image/png,image/webp">
                 <small class="form-help">Use a clear JPG, PNG or WebP image up to 5 MB. This picture appears beside your live messages.</small>
             </div>
@@ -62,7 +62,7 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Update Profile</button>
-                <a href="/TMZ%20PODCAST/user/dashboard.php" class="btn btn-outline">Cancel</a>
+                <a href="/user/dashboard.php" class="btn btn-outline">Cancel</a>
             </div>
         </form>
     </div>

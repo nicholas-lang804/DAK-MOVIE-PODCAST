@@ -1,5 +1,5 @@
 (function () {
-  const assetBase = '/TMZ%20PODCAST/assets/js/';
+  const assetBase = '/assets/js/';
   const equalizerFrequencies = [60, 120, 250, 500, 1000, 2000, 4000, 8000, 12000];
   const equalizerLabels = ['60 Hz', '120 Hz', '250 Hz', '500 Hz', '1 kHz', '2 kHz', '4 kHz', '8 kHz', '12 kHz'];
   const equalizerPresets = {

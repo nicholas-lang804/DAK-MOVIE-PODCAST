@@ -13,6 +13,6 @@ unset($_SESSION['admin_username']);
 unset($_SESSION['admin_role']);
 
 // Redirect to admin login
-header('Location: /TMZ%20PODCAST/admin/login.php');
+header('Location: /admin/login.php');
 exit;
 

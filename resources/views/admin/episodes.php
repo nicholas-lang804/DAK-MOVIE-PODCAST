@@ -7,7 +7,7 @@
 <section class="admin-section">
     <div class="section-header">
         <h1>Manage Episodes</h1>
-        <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=episodes&action=create" class="btn btn-primary">Add Episode</a>
+        <a href="/admin/dashboard.php?tab=episodes&action=create" class="btn btn-primary">Add Episode</a>
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -23,7 +23,7 @@
         <!-- Episode Form -->
         <div class="form-container">
             <h2><?php echo $action === 'create' ? 'Create Episode' : 'Edit Episode'; ?></h2>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=episodes" class="admin-form" enctype="multipart/form-data">
+            <form method="POST" action="/admin/dashboard.php?tab=episodes" class="admin-form" enctype="multipart/form-data">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="id" value="<?php echo $episode['id'] ?? ''; ?>">
                 
@@ -82,7 +82,7 @@
                 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save Episode</button>
-                    <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=episodes" class="btn btn-outline">Cancel</a>
+                    <a href="/admin/dashboard.php?tab=episodes" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </div>
@@ -109,8 +109,8 @@
                             <td><?php echo $episode['is_featured'] ? 'Yes' : 'No'; ?></td>
                             <td><?php echo $episode['published_at'] ? date('M d, Y', strtotime($episode['published_at'])) : 'N/A'; ?></td>
                             <td>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=episodes&action=edit&id=<?php echo $episode['id']; ?>" class="btn btn-small">Edit</a>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=episodes&action=delete&id=<?php echo $episode['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                                <a href="/admin/dashboard.php?tab=episodes&action=edit&id=<?php echo $episode['id']; ?>" class="btn btn-small">Edit</a>
+                                <a href="/admin/dashboard.php?tab=episodes&action=delete&id=<?php echo $episode['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

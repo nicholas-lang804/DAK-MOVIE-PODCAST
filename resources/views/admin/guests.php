@@ -7,7 +7,7 @@
 <section class="admin-section">
     <div class="section-header">
         <h1>Manage Guests</h1>
-        <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=guests&action=create" class="btn btn-primary">Add Guest</a>
+        <a href="/admin/dashboard.php?tab=guests&action=create" class="btn btn-primary">Add Guest</a>
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -22,7 +22,7 @@
     <?php if ($action === 'create' || $action === 'edit'): ?>
         <div class="form-container">
             <h2><?php echo $action === 'create' ? 'Create Guest' : 'Edit Guest'; ?></h2>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=guests" class="admin-form">
+            <form method="POST" action="/admin/dashboard.php?tab=guests" class="admin-form">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="id" value="<?php echo $guest['id'] ?? ''; ?>">
                 
@@ -51,7 +51,7 @@
                 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save Guest</button>
-                    <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=guests" class="btn btn-outline">Cancel</a>
+                    <a href="/admin/dashboard.php?tab=guests" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </div>
@@ -73,8 +73,8 @@
                             <td><?php echo htmlspecialchars($guest['profession'] ?? 'N/A'); ?></td>
                             <td><span class="status-badge status-<?php echo $guest['status']; ?>"><?php echo ucfirst($guest['status']); ?></span></td>
                             <td>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=guests&action=edit&id=<?php echo $guest['id']; ?>" class="btn btn-small">Edit</a>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=guests&action=delete&id=<?php echo $guest['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                                <a href="/admin/dashboard.php?tab=guests&action=edit&id=<?php echo $guest['id']; ?>" class="btn btn-small">Edit</a>
+                                <a href="/admin/dashboard.php?tab=guests&action=delete&id=<?php echo $guest['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

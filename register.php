@@ -28,7 +28,7 @@ try {
 
 // Check if already logged in
 if (isset($_SESSION['user_id'])) {
-    header('Location: /TMZ%20PODCAST/dashboard.php');
+    header('Location: /dashboard.php');
     exit;
 }
 
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($result['success']) {
                 $next = $_SESSION['after_login'] ?? '';
                 unset($_SESSION['after_login']);
-                header('Location: ' . ($next && strpos($next, '/TMZ%20PODCAST/') === 0 ? $next : '/TMZ%20PODCAST/dashboard.php'));
+                header('Location: ' . ($next && strpos($next, '/') === 0 ? $next : '/dashboard.php'));
                 exit;
             }
             $error = $result['message'];
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($result) {
                     $success = 'Registration successful! Please login.';
                     // Redirect to login after 2 seconds
-                    header('refresh:2;url=/TMZ%20PODCAST/login.php');
+                    header('refresh:2;url=/login.php');
                 } else {
                     $error = 'Registration failed. Please try again.';
                 }
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - THE DAK FILM PODCAST MEDIA</title>
-    <link rel="stylesheet" href="/TMZ%20PODCAST/assets/css/modern.css">
+    <link rel="stylesheet" href="/assets/css/modern.css">
 </head>
 <body>
     <div class="admin-layout">
@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <span style="flex:1; height:1px; background: #dfe3ea;"></span>
                         </div>
 
-                        <a href="/TMZ%20PODCAST/auth/google.php" style="display:flex; align-items:center; justify-content:center; gap:.7rem; width:100%; padding:.8rem 1rem; border:1px solid #dfe3ea; border-radius: 10px; background:#ffffff; color:#111827; font-weight:600; text-decoration:none;">
+                        <a href="/auth/google.php" style="display:flex; align-items:center; justify-content:center; gap:.7rem; width:100%; padding:.8rem 1rem; border:1px solid #dfe3ea; border-radius: 10px; background:#ffffff; color:#111827; font-weight:600; text-decoration:none;">
                             <span aria-hidden="true" style="display:inline-flex; width:1.8rem; height:1.8rem; align-items:center; justify-content:center; border-radius:999px; background:#fff; border:1px solid #e5e7eb; overflow:hidden; flex-shrink:0;">
                                 <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path fill="#EA4335" d="M24 9.5c3.54 0 6.76 1.22 9.29 3.62l6.94-6.94C35.92 2.36 30.58 0 24 0 14.64 0 6.6 5.38 2.57 13.22l8.09 6.27C12.31 14.13 17.7 9.5 24 9.5z"/>
@@ -183,9 +183,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
                 
                 <div style="margin-top: 1rem; text-align: center;">
-                    <p>Already have an account? <a href="/TMZ%20PODCAST/login.php">Login here</a></p>
-                    <p><a href="/TMZ%20PODCAST/" class="btn btn-outline btn-small">Back to Website</a></p>
-                    <p style="margin-top:.75rem;font-size:.8rem;color:#8a94a6">Built by <a href="/TMZ%20PODCAST/nictech.php" style="color:#e11d2e;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:.35rem"><img src="/TMZ%20PODCAST/assets/img/nictech-logo.svg" alt="" width="18" height="18" style="border-radius:4px;vertical-align:-3px">NicTech Companies Uganda</a></p>
+                    <p>Already have an account? <a href="/login.php">Login here</a></p>
+                    <p><a href="/" class="btn btn-outline btn-small">Back to Website</a></p>
+                    <p style="margin-top:.75rem;font-size:.8rem;color:#8a94a6">Built by <a href="/nictech.php" style="color:#e11d2e;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:.35rem"><img src="/assets/img/nictech-logo.svg" alt="" width="18" height="18" style="border-radius:4px;vertical-align:-3px">NicTech Companies Uganda</a></p>
                 </div>
             </div>
         </div>

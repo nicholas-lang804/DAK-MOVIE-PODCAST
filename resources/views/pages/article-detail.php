@@ -66,7 +66,7 @@
             <p>No comments yet. Be the first to comment!</p>
         <?php endif; ?>
         
-        <form method="POST" action="/TMZ%20PODCAST/news.php" class="comment-form">
+        <form method="POST" action="/news.php" class="comment-form">
             <?php echo CSRF::getField(); ?>
             <input type="hidden" name="article_id" value="<?php echo $article['id']; ?>">
             <div class="form-group">
@@ -101,7 +101,7 @@
                         </div>
                         <div class="article-content">
                             <h3><?php echo htmlspecialchars($related['title']); ?></h3>
-                            <a href="/TMZ%20PODCAST/news.php?slug=<?php echo urlencode($related['slug']); ?>" class="btn btn-small">Read More</a>
+                            <a href="/news.php?slug=<?php echo urlencode($related['slug']); ?>" class="btn btn-small">Read More</a>
                         </div>
                     </div>
                 <?php endforeach; ?>

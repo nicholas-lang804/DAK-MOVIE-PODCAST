@@ -7,7 +7,7 @@
 <section class="admin-section">
     <div class="section-header">
         <h1>Manage Sponsors</h1>
-        <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=sponsors&action=create" class="btn btn-primary">Add Sponsor</a>
+        <a href="/admin/dashboard.php?tab=sponsors&action=create" class="btn btn-primary">Add Sponsor</a>
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -22,7 +22,7 @@
     <?php if ($action === 'create' || $action === 'edit'): ?>
         <div class="form-container">
             <h2><?php echo $action === 'create' ? 'Create Sponsor' : 'Edit Sponsor'; ?></h2>
-            <form method="POST" action="/TMZ%20PODCAST/admin/dashboard.php?tab=sponsors" class="admin-form">
+            <form method="POST" action="/admin/dashboard.php?tab=sponsors" class="admin-form">
                 <?php echo CSRF::getField(); ?>
                 <input type="hidden" name="id" value="<?php echo $sponsor['id'] ?? ''; ?>">
                 
@@ -51,7 +51,7 @@
                 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save Sponsor</button>
-                    <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=sponsors" class="btn btn-outline">Cancel</a>
+                    <a href="/admin/dashboard.php?tab=sponsors" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
         </div>
@@ -73,8 +73,8 @@
                             <td><?php echo htmlspecialchars($sponsor['website'] ?? 'N/A'); ?></td>
                             <td><span class="status-badge status-<?php echo $sponsor['status']; ?>"><?php echo ucfirst($sponsor['status']); ?></span></td>
                             <td>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=sponsors&action=edit&id=<?php echo $sponsor['id']; ?>" class="btn btn-small">Edit</a>
-                                <a href="/TMZ%20PODCAST/admin/dashboard.php?tab=sponsors&action=delete&id=<?php echo $sponsor['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                                <a href="/admin/dashboard.php?tab=sponsors&action=edit&id=<?php echo $sponsor['id']; ?>" class="btn btn-small">Edit</a>
+                                <a href="/admin/dashboard.php?tab=sponsors&action=delete&id=<?php echo $sponsor['id']; ?>" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

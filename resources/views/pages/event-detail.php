@@ -9,7 +9,7 @@
     <div class="event-header">
         <div class="event-image">
             <?php if (!empty($event['poster_path'])): ?>
-                <img src="<?php echo htmlspecialchars('/TMZ%20PODCAST/' . ltrim($event['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                <img src="<?php echo htmlspecialchars('/' . ltrim($event['poster_path'], '/')); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
             <?php else: ?>
                 <div class="placeholder-image">Event Image</div>
             <?php endif; ?>
@@ -25,7 +25,7 @@
                 <?php endif; ?>
             </p>
             <p class="event-description"><?php echo nl2br(htmlspecialchars($event['description'] ?? '')); ?></p>
-            <p><a href="/TMZ%20PODCAST/sell-tickets.php" class="btn btn-outline btn-small">🎟 Sale Tickets With Us — host your own event</a></p>
+            <p><a href="/sell-tickets.php" class="btn btn-outline btn-small">🎟 Sale Tickets With Us — host your own event</a></p>
             <?php if (!empty($event['contact_name']) || !empty($event['contact_phone'])): ?>
                 <div class="event-contact-card">
                     <strong>Event contact</strong>
@@ -44,7 +44,7 @@
             <span class="eyebrow">SECURE EVENT ACCESS</span>
             <h2>Choose your ticket level</h2>
             <p>Pick Ordinary, VIP or VVIP and pay securely online with Pesapal. Your ticket appears in <strong>My Tickets</strong> straight after payment.
-            <?php if (empty($isCustomer)): ?><a href="/TMZ%20PODCAST/login.php">Log in</a> or <a href="/TMZ%20PODCAST/register.php">register</a> to buy.<?php endif; ?></p>
+            <?php if (empty($isCustomer)): ?><a href="/login.php">Log in</a> or <a href="/register.php">register</a> to buy.<?php endif; ?></p>
         </div>
 
         <?php if (!empty($isPast)): ?>
@@ -65,7 +65,7 @@
                     <?php if ($left === 0): ?>
                         <span class="btn btn-outline disabled">Sold out</span>
                     <?php else: ?>
-                        <a class="btn btn-primary" href="/TMZ%20PODCAST/event-ticket.php?event_id=<?php echo (int)$event['id']; ?>&amp;ticket_type_id=<?php echo (int)$ticket['id']; ?>">Buy <?php echo htmlspecialchars($ticket['name']); ?></a>
+                        <a class="btn btn-primary" href="/event-ticket.php?event_id=<?php echo (int)$event['id']; ?>&amp;ticket_type_id=<?php echo (int)$ticket['id']; ?>">Buy <?php echo htmlspecialchars($ticket['name']); ?></a>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
@@ -99,7 +99,7 @@
             <?php unset($_SESSION['event_contact_error']); ?>
         <?php endif; ?>
         <?php if (!empty($eventEnquiryAvailable)): ?>
-            <form method="post" action="/TMZ%20PODCAST/events.php?slug=<?php echo rawurlencode($event['slug']); ?>#event-contact" class="event-enquiry-form">
+            <form method="post" action="/events.php?slug=<?php echo rawurlencode($event['slug']); ?>#event-contact" class="event-enquiry-form">
                 <?php echo CSRF::getField(); ?>
                 <div class="event-enquiry-fields">
                     <div class="form-group">
@@ -118,7 +118,7 @@
                 <button type="submit" class="btn btn-primary">Send enquiry</button>
             </form>
         <?php else: ?>
-            <p class="event-enquiry-unavailable">Event enquiries are temporarily unavailable. Please contact us through the <a href="/TMZ%20PODCAST/contact.php">Contact Us page</a>.</p>
+            <p class="event-enquiry-unavailable">Event enquiries are temporarily unavailable. Please contact us through the <a href="/contact.php">Contact Us page</a>.</p>
         <?php endif; ?>
     </section>
 </article>

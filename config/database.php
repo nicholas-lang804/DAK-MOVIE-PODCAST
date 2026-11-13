@@ -43,7 +43,7 @@ function mediaUrl($mediaId) {
         $stmt = getDB()->prepare('SELECT storage_path FROM media_assets WHERE id = ? LIMIT 1');
         $stmt->execute([$mediaId]);
         $path = $stmt->fetchColumn();
-        $cache[$mediaId] = $path ? '/TMZ%20PODCAST/' . ltrim($path, '/') : '';
+        $cache[$mediaId] = $path ? '/' . ltrim($path, '/') : '';
     }
     return $cache[$mediaId];
 }

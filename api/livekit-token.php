@@ -106,7 +106,7 @@ try {
                 'live_started',
                 'A live show just started',
                 $live['title'],
-                '/TMZ%20PODCAST/live.php?live_id=' . (int)$liveId
+                '/live.php?live_id=' . (int)$liveId
             );
         } catch (Throwable $error) {
             error_log('Live-start notification could not be saved: ' . $error->getMessage());

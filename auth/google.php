@@ -10,7 +10,7 @@ function tmzBase64UrlEncode($value) {
 $config = tmzOAuthConfig()['google'] ?? [];
 if (empty($config['client_id']) || empty($config['client_secret'])) {
     $_SESSION['oauth_error'] = 'Google sign-in is not configured yet. Add TMZ_GOOGLE_CLIENT_ID and TMZ_GOOGLE_CLIENT_SECRET.';
-    header('Location: /TMZ%20PODCAST/login.php');
+    header('Location: /login.php');
     exit;
 }
 
