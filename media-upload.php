@@ -72,6 +72,7 @@ if ($action === 'start') {
             $uploadId = $s3->createMultipartUpload($key, $mime ?: 'video/mp4');
             $s = $sessions->create((int)($_SESSION['user_id'] ?? $_SESSION['admin_id']), $kind, $filename, $mime, $size);
             $sessions->setStatus($s['id'], 'active', ['part_path' => json_encode(['mode' => 'r2', 'key' => $key, 'uploadId' => $uploadId])]);
+            @file_put_contents(__DIR__ . '/storage/logs/r2-debug.log', json_encode(['ev' => 'start', 'sess' => (int)$s['id'], 'key' => $key, 'uid' => substr($uploadId, 0, 24), 'ts' => date('c')]) . "\n", FILE_APPEND);
             out(['upload_id' => $s['id'], 'token' => $s['token'], 'mode' => 'r2',
                  'part_size' => 67108864, 'expires_in' => UploadSession::TTL_SECONDS]);
         } catch (Throwable $e) {
@@ -130,6 +131,7 @@ if ($action === 'parturl') {
     if ($pn < 1 || $pn > $total) out(['error' => 'Invalid part number'], 400);
     try {
         $s3 = S3Client::fromSettings((new SiteSetting())->getAllKeyed());
+        @file_put_contents(__DIR__ . '/storage/logs/r2-debug.log', json_encode(['ev' => 'parturl', 'sess' => (int)$sess['id'], 'pn' => $pn, 'uid' => substr($meta['uploadId'], 0, 24), 'ts' => date('c')]) . "\n", FILE_APPEND);
         out(['url' => $s3->presignedUploadPartUrl($meta['key'], $meta['uploadId'], $pn)]);
     } catch (Throwable $e) { out(['error' => 'Could not sign part URL: ' . $e->getMessage()], 502); }
 }
@@ -174,6 +176,7 @@ if ($action === 'complete') {
             }
             // Server-side truth: merge client etags with R2's own part list.
             // R2's ListParts can lag a moment behind the final PUT — retry briefly.
+            @file_put_contents(__DIR__ . '/storage/logs/r2-debug.log', json_encode(['ev' => 'complete', 'sess' => (int)$sess['id'], 'uid' => substr($meta['uploadId'], 0, 24), 'ts' => date('c')]) . "\n", FILE_APPEND);
             $expected = (int)ceil((int)$sess['size_bytes'] / 67108864);
             $serverParts = [];
             $totalBytes = 0;
@@ -316,6 +319,7 @@ if ($action === 'abort') {
     if ($sess) {
         $meta = json_decode((string)$sess['part_path'], true);
         if (is_array($meta) && ($meta['mode'] ?? '') === 'r2') {
+            @file_put_contents(__DIR__ . '/storage/logs/r2-debug.log', json_encode(['ev' => 'abort', 'sess' => (int)$sess['id'], 'uid' => isset($meta['uploadId']) ? substr($meta['uploadId'], 0, 24) : null, 'ts' => date('c')]) . "\n", FILE_APPEND);
             try {
                 S3Client::fromSettings((new SiteSetting())->getAllKeyed())
                     ->abortMultipartUpload($meta['key'], $meta['uploadId']);
