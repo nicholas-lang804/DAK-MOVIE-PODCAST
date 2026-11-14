@@ -173,12 +173,18 @@ if ($action === 'complete') {
                 $pn = (int)$pn; if ($pn > 0 && $etag) $parts[$pn] = (string)$etag;
             }
             // Server-side truth: merge client etags with R2's own part list.
-            $serverParts = $s3->listParts($meta['key'], $meta['uploadId']);
+            // R2's ListParts can lag a moment behind the final PUT — retry briefly.
             $expected = (int)ceil((int)$sess['size_bytes'] / 67108864);
-            $totalBytes = 0;
-            foreach ($serverParts as $p) $totalBytes += (int)$p['size'];
+            $serverParts = [];
+            for ($try = 0; $try < 6; $try++) {
+                $serverParts = $s3->listParts($meta['key'], $meta['uploadId']);
+                $totalBytes = 0;
+                foreach ($serverParts as $p) $totalBytes += (int)$p['size'];
+                if (count($serverParts) >= $expected && $totalBytes === (int)$sess['size_bytes']) break;
+                if ($try < 5) sleep(2);
+            }
             if (count($serverParts) < $expected || $totalBytes !== (int)$sess['size_bytes']) {
-                out(['error' => 'Not all parts have reached cloud storage yet', 'parts' => count($serverParts), 'bytes' => $totalBytes], 409);
+                out(['error' => 'Not all parts have reached cloud storage yet', 'parts' => count($serverParts), 'of' => $expected, 'bytes' => $totalBytes], 409);
             }
             $finalParts = [];
             foreach ($serverParts as $pn => $p) { $finalParts[$pn] = $parts[$pn] ?? $p['etag']; }
