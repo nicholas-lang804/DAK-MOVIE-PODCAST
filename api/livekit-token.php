@@ -54,7 +54,7 @@ try {
         $identityKey = 'host_' . (int)$_SESSION['admin_id'];
         $role = 'host';
         $canChat = true;
-        $displayName = 'THE MOVIE ZONE PODCAST 256 Host';
+        $displayName = 'DAK FILM PODCAST MEDIA Host';
     } elseif ($userId) {
         $identityKey = 'member_' . $userId;
         $role = 'participant';
@@ -135,6 +135,7 @@ try {
     $token['canChat'] = $host || !empty($participant['can_chat']);
     liveTokenResponse($token);
 } catch (Throwable $error) {
-    error_log('LiveKit token issue failed: ' . $error->getMessage());
-    liveTokenResponse(['error' => 'Unable to join the live room right now. Please try again.'], 503);
+    error_log('LiveKit token issue failed: ' . $error->getMessage() . ' @ ' . $error->getFile() . ':' . $error->getLine());
+    // TEMP debug: surface the real error while we diagnose the live-room failure.
+    liveTokenResponse(['error' => 'Unable to join the live room right now. Please try again.', 'debug' => $error->getMessage()], 503);
 }
