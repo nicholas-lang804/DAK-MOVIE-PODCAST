@@ -234,7 +234,7 @@ class S3Client {
                 preg_match('/<ETag>([^<]+)<\/ETag>/', $b, $et);
                 preg_match('/<Size>(\d+)<\/Size>/', $b, $sz);
                 if (!empty($pn[1])) $parts[(int)$pn[1]] = [
-                    'etag' => isset($et[1]) ? trim($et[1], '"') : '',
+                    'etag' => isset($et[1]) ? trim(html_entity_decode($et[1]), '"') : '',
                     'size' => isset($sz[1]) ? (int)$sz[1] : 0,
                 ];
             }

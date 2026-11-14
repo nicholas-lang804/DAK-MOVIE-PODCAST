@@ -94,6 +94,7 @@
         // Re-validate session still alive; resume offset from server truth.
         const st = await api('status', { upload_id: job.uploadId, token: job.token });
         job.mode = st.mode || job.mode;
+        if (st.part_size) job.partSize = st.part_size;
         if (st.parts) { job.parts = {}; for (const pn in st.parts) job.parts[pn] = st.parts[pn].etag; }
         job.received = st.received || 0;
       }
@@ -136,7 +137,7 @@
       job.speedText = '';
       updateRow(job);
       setActions(job, `<button class="btn btn-small btn-outline ru-retry" type="button">Retry</button><button class="btn btn-small ru-abort" type="button">Discard</button>`);
-      job.retryFn = () => { clearPersist(job); uploadFile(job.file, { uploadId: job.uploadId, token: job.token, received: job.received }); };
+      job.retryFn = () => { clearPersist(job); uploadFile(job.file, { uploadId: job.uploadId, token: job.token, received: job.received, mode: job.mode, partSize: job.partSize, parts: job.parts }); };
     }
   }
 

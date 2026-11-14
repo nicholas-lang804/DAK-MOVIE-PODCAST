@@ -145,7 +145,7 @@ if ($action === 'status') {
             $s3 = S3Client::fromSettings((new SiteSetting())->getAllKeyed());
             $parts = $s3->listParts($meta['key'], $meta['uploadId']);
             $received = 0; foreach ($parts as $p) $received += $p['size'];
-            out(['received' => $received, 'size' => (int)$sess['size_bytes'], 'status' => $sess['status'], 'mode' => 'r2', 'parts' => $parts]);
+            out(['received' => $received, 'size' => (int)$sess['size_bytes'], 'status' => $sess['status'], 'mode' => 'r2', 'part_size' => 67108864, 'parts' => $parts]);
         } catch (Throwable $e) { out(['error' => 'Could not query R2 upload: ' . $e->getMessage()], 502); }
     }
     out(['received' => (int)$sess['received_bytes'], 'size' => (int)$sess['size_bytes'], 'status' => $sess['status']]);
@@ -185,7 +185,7 @@ if ($action === 'complete') {
                 if ($try < 5) sleep(2);
             }
             if (count($serverParts) < $expected || $totalBytes !== (int)$sess['size_bytes']) {
-                out(['error' => 'Not all parts have reached cloud storage yet', 'parts' => count($serverParts), 'of' => $expected, 'bytes' => $totalBytes], 409);
+                out(['error' => 'Not all parts have reached cloud storage yet (' . count($serverParts) . '/' . $expected . ' parts, ' . $totalBytes . '/' . (int)$sess['size_bytes'] . ' bytes)'], 409);
             }
             $finalParts = [];
             foreach ($serverParts as $pn => $p) { $finalParts[$pn] = $parts[$pn] ?? $p['etag']; }
