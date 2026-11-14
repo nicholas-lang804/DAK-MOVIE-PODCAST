@@ -26,7 +26,7 @@
         <div class="ru-picker"><input type="file" accept="video/*,.mp4,.webm,.mov,.mkv,.avi,.ogv,.3gp" multiple></div>
         <div class="ru-list"></div>
     </div>
-    <script src="/assets/js/resumable-upload.js?v=ru-1"></script>
+    <script src="/assets/js/resumable-upload.js?v=ru-3"></script>
 
     <?php if ($action === 'upload'): ?>
         <div class="form-container">

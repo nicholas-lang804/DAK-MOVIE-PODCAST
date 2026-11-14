@@ -92,6 +92,11 @@ if ($action === 'chunk') {
     $sess = $sessions->find($id, $token);
     if (!$sess) out(['error' => 'Invalid or expired upload session'], 403);
     if ($sess['user_id'] != (int)($_SESSION['user_id'] ?? $_SESSION['admin_id'])) out(['error' => 'Session belongs to another user'], 403);
+    // R2 sessions must use parturl+direct PUT — never accept local chunks for them.
+    $metaChunk = json_decode((string)$sess['part_path'], true);
+    if (is_array($metaChunk) && ($metaChunk['mode'] ?? '') === 'r2') {
+        out(['error' => 'This upload goes direct to cloud storage — reload the page and retry'], 400);
+    }
     if ($offset < 0) out(['error' => 'Missing chunk offset'], 400);
 
     $received = (int)$sess['received_bytes'];

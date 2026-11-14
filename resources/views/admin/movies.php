@@ -92,7 +92,7 @@
                         <video class="admin-video-preview" controls preload="metadata" src="/video-stream.php?movie_id=<?php echo (int)($movie['id'] ?? 0); ?>"></video>
                     <?php endif; ?>
                 </div>
-                <script src="/assets/js/resumable-upload.js?v=ru-2"></script>
+                <script src="/assets/js/resumable-upload.js?v=ru-4"></script>
                 
                 <div class="form-group">
                     <label for="status">Status</label>
