@@ -185,6 +185,13 @@ if ($action === 'complete') {
                 if ($try < 5) sleep(2);
             }
             if (count($serverParts) < $expected || $totalBytes !== (int)$sess['size_bytes']) {
+                $dbg = json_encode([
+                    'ts' => date('c'), 'sess' => (int)$sess['id'], 'key' => $meta['key'] ?? null,
+                    'uploadId' => $meta['uploadId'] ?? null, 'part_path_raw' => $sess['part_path'],
+                    'expected' => $expected, 'got' => count($serverParts), 'bytes' => $totalBytes,
+                    'size_bytes' => (int)$sess['size_bytes'],
+                ]);
+                @file_put_contents(__DIR__ . '/storage/logs/r2-debug.log', $dbg . "\n", FILE_APPEND);
                 out(['error' => 'Not all parts have reached cloud storage yet (' . count($serverParts) . '/' . $expected . ' parts, ' . $totalBytes . '/' . (int)$sess['size_bytes'] . ' bytes)'], 409);
             }
             $finalParts = [];
