@@ -137,5 +137,5 @@ try {
 } catch (Throwable $error) {
     error_log('LiveKit token issue failed: ' . $error->getMessage() . ' @ ' . $error->getFile() . ':' . $error->getLine());
     // TEMP debug: surface the real error while we diagnose the live-room failure.
-    liveTokenResponse(['error' => 'Unable to join the live room right now. Please try again.', 'debug' => $error->getMessage()], 503);
+    liveTokenResponse(['error' => 'Unable to join the live room right now. [' . $error->getMessage() . ']'], 503);
 }
