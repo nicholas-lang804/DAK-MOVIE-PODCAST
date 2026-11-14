@@ -12,6 +12,7 @@
  */
 require_once __DIR__ . '/../Models/SiteSetting.php';
 require_once __DIR__ . '/RemoteMediaClient.php';
+require_once __DIR__ . '/S3Client.php';
 
 class MediaStorage {
     private static $instance = null;
@@ -21,7 +22,8 @@ class MediaStorage {
 
     private function __construct() {
         $this->settings = (new SiteSetting())->getAllKeyed();
-        $this->driver = ($this->settings['media_driver'] ?? 'local') === 'remote' ? 'remote' : 'local';
+        $d = (string)($this->settings['media_driver'] ?? 'local');
+        $this->driver = in_array($d, ['remote', 'r2'], true) ? $d : 'local';
         $this->localRoot = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage';
     }
 
@@ -44,6 +46,40 @@ class MediaStorage {
             && trim((string)($this->settings['media_remote_token'] ?? '')) !== '';
     }
 
+    public function r2Configured() {
+        return $this->driver === 'r2'
+            && trim((string)($this->settings['r2_account_id'] ?? '')) !== ''
+            && trim((string)($this->settings['r2_access_key'] ?? '')) !== ''
+            && trim((string)($this->settings['r2_secret_key'] ?? '')) !== ''
+            && trim((string)($this->settings['r2_bucket'] ?? '')) !== '';
+    }
+
+    private function s3() {
+        return S3Client::fromSettings($this->settings);
+    }
+
+    /** Presigned R2 URL for a storage-relative path ('storage/uploads/x.mp4'), or null. */
+    public function r2UrlForPath($storageRelativePath, $ttl = 900, $downloadName = null) {
+        if (!$this->r2Configured()) return null;
+        $key = $this->normalizeKey($storageRelativePath);
+        if ($key === '') return null;
+        try {
+            return $this->s3()->presignedGetUrl($key, $ttl, $downloadName);
+        } catch (Throwable $e) { error_log('MediaStorage::r2UrlForPath: ' . $e->getMessage()); return null; }
+    }
+
+    /** Upload a local file to R2 under a storage-relative path. */
+    public function r2PutFile($localPath, $storageRelativePath) {
+        if (!$this->r2Configured()) return ['ok' => false, 'error' => 'R2 storage is not configured.'];
+        try {
+            $this->s3()->putFile($localPath, $this->normalizeKey($storageRelativePath),
+                mime_content_type($localPath) ?: 'application/octet-stream');
+            return ['ok' => true];
+        } catch (Throwable $e) {
+            return ['ok' => false, 'error' => $e->getMessage()];
+        }
+    }
+
     /* ---------------- write path ---------------- */
 
     /** Store a local file under a storage key. Returns ['ok'=>bool,'key'=>,'error'=>]. */
@@ -52,6 +88,13 @@ class MediaStorage {
         if ($this->driver === 'remote') {
             if (!$this->remoteConfigured()) return ['ok' => false, 'key' => $key, 'error' => 'Remote media storage is not configured.'];
             return (new RemoteMediaClient($this->settings))->putFile($localPath, $key, $isOriginal);
+        }
+        if ($this->driver === 'r2') {
+            if (!$this->r2Configured()) return ['ok' => false, 'key' => $key, 'error' => 'R2 storage is not configured.'];
+            try {
+                $this->s3()->putFile($localPath, $key, mime_content_type($localPath) ?: 'application/octet-stream');
+                return ['ok' => true, 'key' => $key];
+            } catch (Throwable $e) { return ['ok' => false, 'key' => $key, 'error' => $e->getMessage()]; }
         }
         $dest = $this->localRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $key);
         $dir = dirname($dest);
@@ -81,6 +124,11 @@ class MediaStorage {
             if (!$this->remoteConfigured()) return '';
             return (new RemoteMediaClient($this->settings))->signedUrl($key);
         }
+        if ($this->driver === 'r2') {
+            if (!$this->r2Configured()) return '';
+            try { return $this->s3()->presignedGetUrl($key, 900); }
+            catch (Throwable $e) { return ''; }
+        }
         // Local: web path relative to app base (same convention as mediaUrl()).
         return '/storage/' . str_replace('%2F', '/', rawurlencode($key));
     }
@@ -101,6 +149,10 @@ class MediaStorage {
             if (!$this->remoteConfigured()) return false;
             return (new RemoteMediaClient($this->settings))->exists($key);
         }
+        if ($this->driver === 'r2') {
+            if (!$this->r2Configured()) return false;
+            try { return $this->s3()->head($key); } catch (Throwable $e) { return false; }
+        }
         return is_file($this->localRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $this->normalizeKey($key)));
     }
 
@@ -108,6 +160,10 @@ class MediaStorage {
         if ($this->driver === 'remote') {
             if (!$this->remoteConfigured()) return false;
             return (new RemoteMediaClient($this->settings))->delete($key);
+        }
+        if ($this->driver === 'r2') {
+            if (!$this->r2Configured()) return false;
+            try { return $this->s3()->delete($key); } catch (Throwable $e) { return false; }
         }
         $path = $this->localRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $this->normalizeKey($key));
         return is_file($path) ? @unlink($path) : true; // missing file = already gone
@@ -128,6 +184,9 @@ class MediaStorage {
         if ($this->driver === 'remote') {
             if (!$this->remoteConfigured()) return 0;
             return (int)(new RemoteMediaClient($this->settings))->usageBytes();
+        }
+        if ($this->driver === 'r2') {
+            return 0; // R2 usage is visible in the Cloudflare dashboard; skip bucket listing.
         }
         $total = 0;
         $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->localRoot, FilesystemIterator::SKIP_DOTS));

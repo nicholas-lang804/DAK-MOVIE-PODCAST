@@ -23,6 +23,7 @@ require_once __DIR__ . '/app/Models/MediaAsset.php';
 require_once __DIR__ . '/app/Models/UploadJob.php';
 require_once __DIR__ . '/app/Models/SiteSetting.php';
 require_once __DIR__ . '/app/Services/RenditionBuilder.php';
+require_once __DIR__ . '/app/Services/MediaStorage.php';
 
 if (!isLoggedIn() || !isAdmin()) { http_response_code(403); echo json_encode(['error' => 'Admin access required']); exit; }
 @set_time_limit(600); // completion hashes + moves multi-GB files
@@ -162,16 +163,29 @@ if ($action === 'complete') {
         $ext = $VIDEO_MIME_EXT[$mime] ?? strtolower(pathinfo($sess['filename'], PATHINFO_EXTENSION)) ?: 'mp4';
         if (!in_array($ext, $VIDEO_EXTS, true)) $ext = 'mp4';
         $stored = 'uploads/' . bin2hex(random_bytes(8)) . '_' . time() . '.' . $ext;
-        $dest = __DIR__ . '/storage/' . $stored;
-        if (!@rename($part, $dest)) {
-            if (!@copy($part, $dest)) { @unlink($part); out(['error' => 'Could not finalize upload'], 500); }
+
+        // Cloudflare R2 driver: stream the assembled file straight to the bucket
+        // and keep NO local copy — this is what stops Hostinger storage filling up.
+        $store = MediaStorage::get();
+        if ($store->driver() === 'r2' && $store->r2Configured()) {
+            $up = $store->r2PutFile($part, $stored);
+            if (empty($up['ok'])) {
+                out(['error' => 'Cloud storage upload failed: ' . ($up['error'] ?? 'unknown')], 502);
+            }
             @unlink($part);
+            $dest = null;
+        } else {
+            $dest = __DIR__ . '/storage/' . $stored;
+            if (!@rename($part, $dest)) {
+                if (!@copy($part, $dest)) { @unlink($part); out(['error' => 'Could not finalize upload'], 500); }
+                @unlink($part);
+            }
         }
 
         $mediaId = (new MediaAsset())->create([
             'uploaded_by' => (int)($_SESSION['user_id'] ?? $_SESSION['admin_id']),
             'original_filename' => $sess['filename'],
-            'stored_filename' => basename($dest),
+            'stored_filename' => basename($stored),
             'storage_path' => 'storage/' . $stored,
             'media_type' => 'video',
             'mime_type' => $mime,
@@ -181,11 +195,12 @@ if ($action === 'complete') {
             // filenames never surface to viewers.
             'alt_text' => trim((string)preg_replace('/^\d+[-_\s]+/', '', pathinfo($sess['filename'], PATHINFO_FILENAME))) ?: 'Video',
         ]);
-        if (!$mediaId) { @unlink($dest); out(['error' => 'Upload verified but media registration failed'], 500); }
+        if (!$mediaId) { if ($dest) @unlink($dest); out(['error' => 'Upload verified but media registration failed'], 500); }
 
         $sessions->setStatus($sess['id'], 'complete', ['sha256' => $sha, 'media_id' => $mediaId]);
-        // Non-destructive 720p rendition (original preserved).
-        RenditionBuilder::enqueue((int)$mediaId, $dest);
+        // Non-destructive 720p rendition (original preserved) — local files only;
+        // R2 objects are served as-is until a remote rendition pipeline exists.
+        if ($dest) RenditionBuilder::enqueue((int)$mediaId, $dest);
         out(['media_id' => (int)$mediaId, 'sha256' => $sha, 'size' => (int)$sess['size_bytes'], 'mime' => $mime]);
     } catch (Throwable $e) {
         error_log('media-upload complete: ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());

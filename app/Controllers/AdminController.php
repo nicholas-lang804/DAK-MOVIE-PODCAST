@@ -2280,7 +2280,7 @@ class AdminController extends Controller {
             $this->redirect('/admin/dashboard.php?tab=settings');
         }
 
-        $allowedKeys = ['site_name','site_description','contact_email','contact_phone','site_location','social_twitter','social_instagram','social_youtube','pesapal_consumer_key','pesapal_consumer_secret','pesapal_environment','pesapal_ipn_url','pesapal_notification_id','pesapal_callback_url','livekit_url','livekit_api_key','livekit_api_secret','livekit_recording_s3_access_key','livekit_recording_s3_secret','livekit_recording_s3_region','livekit_recording_s3_bucket','livekit_recording_s3_endpoint','livekit_recording_s3_force_path_style','downloads_enabled','video_compression_enabled','ffmpeg_path'];
+        $allowedKeys = ['site_name','site_description','contact_email','contact_phone','site_location','social_twitter','social_instagram','social_youtube','pesapal_consumer_key','pesapal_consumer_secret','pesapal_environment','pesapal_ipn_url','pesapal_notification_id','pesapal_callback_url','livekit_url','livekit_api_key','livekit_api_secret','livekit_recording_s3_access_key','livekit_recording_s3_secret','livekit_recording_s3_region','livekit_recording_s3_bucket','livekit_recording_s3_endpoint','livekit_recording_s3_force_path_style','downloads_enabled','video_compression_enabled','ffmpeg_path','media_driver','r2_account_id','r2_access_key','r2_secret_key','r2_bucket'];
         foreach ($allowedKeys as $key) {
             if ($key === 'downloads_enabled' || $key === 'video_compression_enabled') {
                 $settings[$key] = !empty($postedSettings[$key]) ? '1' : '0';
@@ -2288,7 +2288,7 @@ class AdminController extends Controller {
             }
             if (array_key_exists($key, $postedSettings)) {
                 $value = trim((string) $postedSettings[$key]);
-                if (in_array($key, ['livekit_api_secret','livekit_recording_s3_access_key','livekit_recording_s3_secret'], true) && $value === '') continue;
+                if (in_array($key, ['livekit_api_secret','livekit_recording_s3_access_key','livekit_recording_s3_secret','r2_secret_key'], true) && $value === '') continue;
                 $settings[$key] = $value;
             }
         }

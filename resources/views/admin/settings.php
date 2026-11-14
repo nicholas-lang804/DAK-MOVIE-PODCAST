@@ -141,6 +141,34 @@
                 </div>
             </div>
 
+            <div class="settings-subsection">
+                <h2>Media storage — Cloudflare R2</h2>
+                <p class="form-help">Store uploaded videos in a Cloudflare R2 bucket instead of Hostinger disk — stops hosting storage filling up. Create a free R2 bucket at dash.cloudflare.com → R2, then an API token with Object Read &amp; Write. New chunked video uploads go straight to R2; older local files keep playing. Playback uses short-lived signed links.</p>
+                <div class="form-group">
+                    <label for="media_driver">Storage driver</label>
+                    <select id="media_driver" name="media_driver">
+                        <option value="local" <?php echo ($settings['media_driver'] ?? 'local') === 'local' ? 'selected' : ''; ?>>Local server storage (default)</option>
+                        <option value="r2" <?php echo ($settings['media_driver'] ?? 'local') === 'r2' ? 'selected' : ''; ?>>Cloudflare R2 object storage</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="r2_account_id">R2 Account ID</label>
+                    <input type="text" id="r2_account_id" name="r2_account_id" value="<?php echo htmlspecialchars($settings['r2_account_id'] ?? ''); ?>" placeholder="e.g. 0123456789abcdef0123456789abcdef" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="r2_access_key">R2 Access Key ID</label>
+                    <input type="text" id="r2_access_key" name="r2_access_key" value="<?php echo htmlspecialchars($settings['r2_access_key'] ?? ''); ?>" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="r2_secret_key">R2 Secret Access Key</label>
+                    <input type="password" id="r2_secret_key" name="r2_secret_key" value="" placeholder="<?php echo !empty($settings['r2_secret_key']) ? '•••••••• (saved — leave blank to keep)' : ''; ?>" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="r2_bucket">R2 Bucket name</label>
+                    <input type="text" id="r2_bucket" name="r2_bucket" value="<?php echo htmlspecialchars($settings['r2_bucket'] ?? ''); ?>" placeholder="e.g. dak-films" autocomplete="off">
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="site_name">Site Name</label>
                 <input type="text" id="site_name" name="site_name" value="<?php echo htmlspecialchars($settings['site_name'] ?? ''); ?>">

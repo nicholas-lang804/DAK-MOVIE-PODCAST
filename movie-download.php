@@ -44,6 +44,12 @@ if (!$isAdmin && $movie['access_type'] === 'paid' &&
 $storageRoot = realpath(__DIR__ . '/storage');
 $file = realpath(__DIR__ . '/' . ltrim($relativePath, '/\\'));
 if (!$storageRoot || !$file || strpos($file, $storageRoot . DIRECTORY_SEPARATOR) !== 0 || !is_file($file)) {
+    // Remote object: presigned URL with attachment disposition keeps the clean name.
+    require_once __DIR__ . '/app/Services/MediaStorage.php';
+    $ext = strtolower(pathinfo($relativePath, PATHINFO_EXTENSION)) ?: 'mp4';
+    $downloadName = trim((string)preg_replace('/[^\p{L}\p{N} ._\-]+/u', '', (string)$movie['title'])) . '.' . $ext;
+    $r2 = MediaStorage::get()->r2UrlForPath($relativePath, 900, $downloadName);
+    if ($r2) { header('Location: ' . $r2, true, 302); exit; }
     dlFail(404, 'Video file is unavailable.');
 }
 

@@ -64,6 +64,9 @@ if ($movieId) {
 $uploadsRoot = realpath(__DIR__ . '/storage/uploads');
 $file = realpath(__DIR__ . '/' . ltrim($relativePath, '/\\'));
 if (!$uploadsRoot || !$file || strpos($file, $uploadsRoot . DIRECTORY_SEPARATOR) !== 0 || !is_file($file)) {
+    require_once __DIR__ . '/app/Services/MediaStorage.php';
+    $r2 = MediaStorage::get()->r2UrlForPath($relativePath, 900);
+    if ($r2) { header('Location: ' . $r2, true, 302); exit; }
     http_response_code(404);
     exit('Video file is unavailable.');
 }

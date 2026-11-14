@@ -166,6 +166,9 @@ if ($store->driver() === 'remote') {
 $uploadsRoot = realpath(__DIR__ . '/storage');
 $file = realpath(__DIR__ . '/' . ltrim($relativePath, '/\\'));
 if (!$uploadsRoot || !$file || strpos($file, $uploadsRoot . DIRECTORY_SEPARATOR) !== 0 || !is_file($file)) {
+    // Not on local disk — try the R2 bucket (uploads stored remotely).
+    $r2 = $store->r2UrlForPath($relativePath, 900);
+    if ($r2) { header('Location: ' . $r2, true, 302); exit; }
     http_response_code(404); exit('Video file is unavailable.');
 }
 if (strpos($mime, 'video/') !== 0) {
