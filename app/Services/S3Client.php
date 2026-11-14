@@ -189,7 +189,12 @@ class S3Client {
     public function createMultipartUpload($key, $contentType = 'application/octet-stream') {
         [$code, $body] = $this->signedRequest('POST', $key, ['uploads' => ''], '',
             ['content-type' => $contentType], 60);
-        if ($code !== 200) throw new RuntimeException('R2 create multipart failed (HTTP ' . $code . ')');
+        if ($code !== 200) {
+            $msg = 'R2 create multipart failed (HTTP ' . $code . ')';
+            if (preg_match('/<Code>([^<]+)<\/Code>/', (string)$body, $cm)) $msg .= ' [' . $cm[1] . ']';
+            if (preg_match('/<Message>([^<]+)<\/Message>/', (string)$body, $mm)) $msg .= ': ' . $mm[1];
+            throw new RuntimeException($msg);
+        }
         $ids = $this->xmlList($body, 'UploadId');
         if (!$ids) throw new RuntimeException('R2 did not return an UploadId.');
         return $ids[0];
@@ -249,7 +254,10 @@ class S3Client {
         [$code, $body] = $this->signedRequest('POST', $key, ['uploadId' => (string)$uploadId], $xml,
             ['content-type' => 'application/xml'], 120);
         if ($code !== 200) {
-            throw new RuntimeException('R2 complete multipart failed (HTTP ' . $code . '): ' . substr((string)$body, 0, 300));
+            $msg = 'R2 complete multipart failed (HTTP ' . $code . ')';
+            if (preg_match('/<Code>([^<]+)<\/Code>/', (string)$body, $cm)) $msg .= ' [' . $cm[1] . ']';
+            if (preg_match('/<Message>([^<]+)<\/Message>/', (string)$body, $mm)) $msg .= ': ' . $mm[1];
+            throw new RuntimeException($msg . ' | ' . substr((string)$body, 0, 300));
         }
         return true;
     }
