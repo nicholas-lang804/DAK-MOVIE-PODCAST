@@ -36,6 +36,11 @@ class S3Client {
         return '/' . $this->enc($this->bucket) . '/' . implode('/', $parts);
     }
 
+    /** Bucket-level URL path: /<bucket> (no key) — for cors/lifecycle ops. */
+    private function bucketPath() {
+        return '/' . $this->enc($this->bucket);
+    }
+
     private function amzDate() {
         $t = time();
         return gmdate('Ymd\THis\Z', $t) . '|' . gmdate('Ymd', $t);
@@ -265,6 +270,68 @@ class S3Client {
     /** Abort an unfinished multipart upload (frees R2 storage). */
     public function abortMultipartUpload($key, $uploadId) {
         $this->signedRequest('DELETE', $key, ['uploadId' => (string)$uploadId], null, [], 60);
+        return true;
+    }
+
+    /* ---------------- bucket-level ops ---------------- */
+
+    /** Signed request against the bucket root (no object key). */
+    private function bucketRequest($method, array $query, $body = null, array $extraHeaders = [], $timeout = 60) {
+        [$amz, $dateStamp] = explode('|', $this->amzDate());
+        $path = $this->bucketPath();
+        $host = parse_url($this->endpoint, PHP_URL_HOST);
+        $payloadHash = 'UNSIGNED-PAYLOAD';
+        $headers = array_merge([
+            'host'                 => $host,
+            'x-amz-content-sha256' => $payloadHash,
+            'x-amz-date'           => $amz,
+        ], array_change_key_case($extraHeaders, CASE_LOWER));
+        ksort($headers);
+        $canonHeaders = '';
+        foreach ($headers as $k => $v) $canonHeaders .= $k . ':' . trim((string)$v) . "\n";
+        $signedHeaders = implode(';', array_keys($headers));
+        $canonQuery = $this->canonicalQuery($query);
+        $canonRequest = $method . "\n" . $path . "\n" . $canonQuery . "\n" . $canonHeaders . "\n" . $signedHeaders . "\n" . $payloadHash;
+        $scope = $dateStamp . '/auto/s3/aws4_request';
+        $stringToSign = 'AWS4-HMAC-SHA256' . "\n" . $amz . "\n" . $scope . "\n" . hash('sha256', $canonRequest);
+        $signature = hash_hmac('sha256', $stringToSign, $this->signingKey($dateStamp));
+        $auth = 'AWS4-HMAC-SHA256 Credential=' . $this->accessKey . '/' . $scope
+              . ', SignedHeaders=' . $signedHeaders . ', Signature=' . $signature;
+        $qs = $canonQuery !== '' ? '?' . $canonQuery : '';
+        $ch = curl_init($this->endpoint . $path . $qs);
+        $reqHeaders = [];
+        foreach ($headers as $k => $v) {
+            if ($k === 'host') continue;
+            $reqHeaders[] = $k . ': ' . $v;
+        }
+        $reqHeaders[] = 'Authorization: ' . $auth;
+        curl_setopt_array($ch, [
+            CURLOPT_CUSTOMREQUEST  => $method,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => $reqHeaders,
+            CURLOPT_TIMEOUT        => $timeout,
+            CURLOPT_CONNECTTIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+        ]);
+        if (is_string($body)) curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        $resp = curl_exec($ch);
+        $err  = curl_error($ch);
+        $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($err) throw new RuntimeException('R2 bucket request failed: ' . $err);
+        return [$code, $resp];
+    }
+
+    /** Allow browser PUTs (multipart parts) from the site origin. Exposes ETag. */
+    public function putBucketCors(array $origins) {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?><CORSConfiguration><CORSRule>';
+        foreach ($origins as $o) $xml .= '<AllowedOrigin>' . htmlspecialchars($o, ENT_XML1) . '</AllowedOrigin>';
+        $xml .= '<AllowedMethod>PUT</AllowedMethod><AllowedMethod>GET</AllowedMethod><AllowedMethod>HEAD</AllowedMethod>'
+              . '<AllowedHeader>*</AllowedHeader><ExposeHeader>ETag</ExposeHeader>'
+              . '<MaxAgeSeconds>3600</MaxAgeSeconds></CORSRule></CORSConfiguration>';
+        [$code, $body] = $this->bucketRequest('PUT', ['cors' => ''], $xml, ['content-type' => 'application/xml']);
+        if ($code !== 200) throw new RuntimeException('R2 putBucketCors failed (HTTP ' . $code . '): ' . substr((string)$body, 0, 300));
         return true;
     }
 }
