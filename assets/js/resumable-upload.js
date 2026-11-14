@@ -79,46 +79,35 @@
       file, uploadId: resume ? resume.uploadId : null, token: resume ? resume.token : null,
       received: resume ? resume.received : 0, size: file.size, speed: 0, speedText: '', leftText: '',
       statusText: resume ? 'Resuming…' : 'Starting…', done: false,
+      mode: (resume && resume.mode) || 'local', partSize: (resume && resume.partSize) || CHUNK,
+      parts: (resume && resume.parts) || {},
     };
     renderJob(job);
     try {
       if (!job.uploadId) {
         const s = await api('start', { filename: file.name, size: file.size, mime: file.type || 'video/mp4' });
         job.uploadId = s.upload_id; job.token = s.token;
+        job.mode = s.mode || 'local'; job.partSize = s.part_size || CHUNK;
         job.received = 0;
         persist(job);
       } else {
         // Re-validate session still alive; resume offset from server truth.
         const st = await api('status', { upload_id: job.uploadId, token: job.token });
+        job.mode = st.mode || job.mode;
+        if (st.parts) { job.parts = {}; for (const pn in st.parts) job.parts[pn] = st.parts[pn].etag; }
         job.received = st.received || 0;
       }
       job.statusText = 'Uploading…';
       setActions(job, '');
       updateRow(job);
 
-      const t0 = Date.now(); let lastBytes = job.received; let lastTime = t0;
-      while (job.received < job.size) {
-        const end = Math.min(job.received + CHUNK, job.size);
-        const blob = file.slice(job.received, end);
-        const r = await sendChunk(job, job.received, blob);
-        job.received = r.received;
-        persist(job);
-        // speed over last interval
-        const now = Date.now();
-        const dt = (now - lastTime) / 1000;
-        if (dt > 0.5) {
-          job.speed = (job.received - lastBytes) / dt;
-          job.speedText = fmtSpeed(job.speed);
-          const remain = job.size - job.received;
-          job.leftText = remain > 0 ? fmtBytes(remain) + ' left · ~' + Math.max(1, Math.round(remain / Math.max(1, job.speed))) + 's' : '';
-          lastBytes = job.received; lastTime = now;
-        }
-        updateRow(job);
-        if (r.duplicate) { /* server already had it — continue */ }
-      }
+      if (job.mode === 'r2') { await uploadR2Parts(job); }
+      else { await uploadLocalChunks(job); }
 
       job.statusText = 'Finalizing…'; updateRow(job);
-      const done = await api('complete', { upload_id: job.uploadId, token: job.token });
+      const done = await api('complete', job.mode === 'r2'
+        ? { upload_id: job.uploadId, token: job.token, parts: job.parts }
+        : { upload_id: job.uploadId, token: job.token });
       job.statusText = 'Done ✓ media #' + done.media_id;
       job.done = true;
       clearPersist(job);
@@ -151,9 +140,65 @@
     }
   }
 
+  async function uploadLocalChunks(job) {
+    const t0 = Date.now(); let lastBytes = job.received; let lastTime = t0;
+    while (job.received < job.size) {
+      const end = Math.min(job.received + CHUNK, job.size);
+      const blob = job.file.slice(job.received, end);
+      const r = await sendChunk(job, job.received, blob);
+      job.received = r.received;
+      persist(job);
+      const now = Date.now();
+      const dt = (now - lastTime) / 1000;
+      if (dt > 0.5) {
+        job.speed = (job.received - lastBytes) / dt;
+        job.speedText = fmtSpeed(job.speed);
+        const remain = job.size - job.received;
+        job.leftText = remain > 0 ? fmtBytes(remain) + ' left · ~' + Math.max(1, Math.round(remain / Math.max(1, job.speed))) + 's' : '';
+        lastBytes = job.received; lastTime = now;
+      }
+      updateRow(job);
+    }
+  }
+
+  // R2 mode: each part is PUT straight to Cloudflare via a presigned URL.
+  async function uploadR2Parts(job) {
+    const totalParts = Math.ceil(job.size / job.partSize);
+    const t0 = Date.now(); let lastBytes = job.received; let lastTime = t0;
+    for (let pn = 1; pn <= totalParts; pn++) {
+      if (job.parts[pn]) continue;
+      const start = (pn - 1) * job.partSize;
+      const end = Math.min(start + job.partSize, job.size);
+      const blob = job.file.slice(start, end);
+      const pu = await api('parturl', { upload_id: job.uploadId, token: job.token, part: pn });
+      const res = await fetch(pu.url, { method: 'PUT', body: blob });
+      if (!res.ok) throw new Error('Cloud upload failed for part ' + pn + ' (HTTP ' + res.status + ')');
+      const etag = (res.headers.get('ETag') || '').replace(/"/g, '');
+      if (!etag) throw new Error('Cloud did not return an ETag for part ' + pn);
+      job.parts[pn] = etag;
+      job.received = Math.min(job.size, job.received + (end - start));
+      persist(job);
+      const now = Date.now();
+      const dt = (now - lastTime) / 1000;
+      if (dt > 0.5) {
+        job.speed = ((end - start)) / dt;
+        job.speedText = fmtSpeed(job.speed);
+        const remain = job.size - job.received;
+        job.leftText = remain > 0 ? fmtBytes(remain) + ' left · ~' + Math.max(1, Math.round(remain / Math.max(1, job.speed))) + 's' : '';
+        lastBytes = job.received; lastTime = now;
+      }
+      updateRow(job);
+    }
+  }
+
+  function partSizeFor(job, pn) {
+    const start = (pn - 1) * job.partSize;
+    return Math.min(job.partSize, job.size - start);
+  }
+
   function persist(job) {
     const s = loadState();
-    s[job.uploadId] = { uploadId: job.uploadId, token: job.token, name: job.file.name, size: job.size, received: job.received, ts: Date.now() };
+    s[job.uploadId] = { uploadId: job.uploadId, token: job.token, name: job.file.name, size: job.size, received: job.received, mode: job.mode, partSize: job.partSize, parts: job.parts, ts: Date.now() };
     saveState(s);
   }
   function clearPersist(job) { const s = loadState(); delete s[job.uploadId]; saveState(s); }

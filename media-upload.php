@@ -63,8 +63,24 @@ if ($action === 'start') {
         }
     }
 
+    // R2 mode: browser PUTs parts straight to Cloudflare — Hostinger disk untouched.
+    $store = MediaStorage::get();
+    if ($store->driver() === 'r2' && $store->r2Configured()) {
+        try {
+            $s3 = S3Client::fromSettings((new SiteSetting())->getAllKeyed());
+            $key = 'uploads/' . bin2hex(random_bytes(8)) . '_' . time() . '.' . $ext;
+            $uploadId = $s3->createMultipartUpload($key, $mime ?: 'video/mp4');
+            $s = $sessions->create((int)($_SESSION['user_id'] ?? $_SESSION['admin_id']), $kind, $filename, $mime, $size);
+            $sessions->setStatus($s['id'], 'active', ['part_path' => json_encode(['mode' => 'r2', 'key' => $key, 'uploadId' => $uploadId])]);
+            out(['upload_id' => $s['id'], 'token' => $s['token'], 'mode' => 'r2',
+                 'part_size' => 67108864, 'expires_in' => UploadSession::TTL_SECONDS]);
+        } catch (Throwable $e) {
+            out(['error' => 'Cloud storage unavailable: ' . $e->getMessage()], 502);
+        }
+    }
+
     $s = $sessions->create((int)($_SESSION['user_id'] ?? $_SESSION['admin_id']), $kind, $filename, $mime, $size);
-    out(['upload_id' => $s['id'], 'token' => $s['token'], 'chunk_size' => UploadSession::CHUNK_SIZE, 'expires_in' => UploadSession::TTL_SECONDS]);
+    out(['upload_id' => $s['id'], 'token' => $s['token'], 'mode' => 'local', 'chunk_size' => UploadSession::CHUNK_SIZE, 'expires_in' => UploadSession::TTL_SECONDS]);
 }
 
 /* ------------------------------------------------ chunk (raw body) */
@@ -101,11 +117,37 @@ if ($action === 'chunk') {
     out(['received' => $received, 'done' => $received >= (int)$sess['size_bytes']]);
 }
 
+/* ------------------------------------------------ parturl (R2 presigned part PUT) */
+if ($action === 'parturl') {
+    $d = inJson();
+    $sess = $sessions->find((int)($d['upload_id'] ?? 0), (string)($d['token'] ?? ''));
+    if (!$sess) out(['error' => 'Invalid or expired upload session'], 403);
+    if ($sess['user_id'] != (int)($_SESSION['user_id'] ?? $_SESSION['admin_id'])) out(['error' => 'Session belongs to another user'], 403);
+    $meta = json_decode((string)$sess['part_path'], true);
+    if (!is_array($meta) || ($meta['mode'] ?? '') !== 'r2') out(['error' => 'Not an R2 upload session'], 400);
+    $pn = (int)($d['part'] ?? 0);
+    $total = (int)ceil((int)$sess['size_bytes'] / 67108864);
+    if ($pn < 1 || $pn > $total) out(['error' => 'Invalid part number'], 400);
+    try {
+        $s3 = S3Client::fromSettings((new SiteSetting())->getAllKeyed());
+        out(['url' => $s3->presignedUploadPartUrl($meta['key'], $meta['uploadId'], $pn)]);
+    } catch (Throwable $e) { out(['error' => 'Could not sign part URL: ' . $e->getMessage()], 502); }
+}
+
 /* ------------------------------------------------ status */
 if ($action === 'status') {
     $d = inJson();
     $sess = $sessions->find((int)($d['upload_id'] ?? 0), (string)($d['token'] ?? ''));
     if (!$sess) out(['error' => 'Invalid or expired upload session'], 403);
+    $meta = json_decode((string)$sess['part_path'], true);
+    if (is_array($meta) && ($meta['mode'] ?? '') === 'r2') {
+        try {
+            $s3 = S3Client::fromSettings((new SiteSetting())->getAllKeyed());
+            $parts = $s3->listParts($meta['key'], $meta['uploadId']);
+            $received = 0; foreach ($parts as $p) $received += $p['size'];
+            out(['received' => $received, 'size' => (int)$sess['size_bytes'], 'status' => $sess['status'], 'mode' => 'r2', 'parts' => $parts]);
+        } catch (Throwable $e) { out(['error' => 'Could not query R2 upload: ' . $e->getMessage()], 502); }
+    }
     out(['received' => (int)$sess['received_bytes'], 'size' => (int)$sess['size_bytes'], 'status' => $sess['status']]);
 }
 
@@ -120,6 +162,51 @@ if ($action === 'complete') {
     $sess = $sessions->find((int)($d['upload_id'] ?? 0), (string)($d['token'] ?? ''));
     if (!$sess) out(['error' => 'Invalid or expired upload session'], 403);
     if ($sess['user_id'] != (int)($_SESSION['user_id'] ?? $_SESSION['admin_id'])) out(['error' => 'Session belongs to another user'], 403);
+
+    // ---- R2 multipart finalize: parts were PUT straight to Cloudflare ----
+    $meta = json_decode((string)$sess['part_path'], true);
+    if (is_array($meta) && ($meta['mode'] ?? '') === 'r2') {
+        try {
+            $s3 = S3Client::fromSettings((new SiteSetting())->getAllKeyed());
+            $parts = [];
+            foreach ((array)($d['parts'] ?? []) as $pn => $etag) {
+                $pn = (int)$pn; if ($pn > 0 && $etag) $parts[$pn] = (string)$etag;
+            }
+            // Server-side truth: merge client etags with R2's own part list.
+            $serverParts = $s3->listParts($meta['key'], $meta['uploadId']);
+            $expected = (int)ceil((int)$sess['size_bytes'] / 67108864);
+            $totalBytes = 0;
+            foreach ($serverParts as $p) $totalBytes += (int)$p['size'];
+            if (count($serverParts) < $expected || $totalBytes !== (int)$sess['size_bytes']) {
+                out(['error' => 'Not all parts have reached cloud storage yet', 'parts' => count($serverParts), 'bytes' => $totalBytes], 409);
+            }
+            $finalParts = [];
+            foreach ($serverParts as $pn => $p) { $finalParts[$pn] = $parts[$pn] ?? $p['etag']; }
+            ksort($finalParts);
+            $s3->completeMultipartUpload($meta['key'], $meta['uploadId'], $finalParts);
+
+            $mime = (string)$sess['mime'];
+            if (strpos($mime, 'video/') !== 0) $mime = 'video/mp4';
+            $mediaId = (new MediaAsset())->create([
+                'uploaded_by' => (int)($_SESSION['user_id'] ?? $_SESSION['admin_id']),
+                'original_filename' => $sess['filename'],
+                'stored_filename' => basename($meta['key']),
+                'storage_path' => 'storage/' . $meta['key'],
+                'media_type' => 'video',
+                'mime_type' => $mime,
+                'file_size' => (int)$sess['size_bytes'],
+                'duration_seconds' => null,
+                'alt_text' => trim((string)preg_replace('/^\d+[-_\s]+/', '', pathinfo($sess['filename'], PATHINFO_FILENAME))) ?: 'Video',
+            ]);
+            if (!$mediaId) out(['error' => 'Upload completed but media registration failed'], 500);
+            $sessions->setStatus($sess['id'], 'complete', ['sha256' => null, 'media_id' => $mediaId]);
+            out(['media_id' => (int)$mediaId, 'size' => (int)$sess['size_bytes'], 'mime' => $mime, 'driver' => 'r2']);
+        } catch (Throwable $e) {
+            error_log('media-upload r2 complete: ' . $e->getMessage());
+            out(['error' => 'Cloud finalize failed: ' . $e->getMessage()], 500);
+        }
+    }
+
     if ((int)$sess['received_bytes'] !== (int)$sess['size_bytes']) {
         out(['error' => 'Upload incomplete', 'received' => (int)$sess['received_bytes'], 'size' => (int)$sess['size_bytes']], 409);
     }
@@ -212,7 +299,16 @@ if ($action === 'complete') {
 if ($action === 'abort') {
     $d = inJson();
     $sess = $sessions->find((int)($d['upload_id'] ?? 0), (string)($d['token'] ?? ''));
-    if ($sess) { $sessions->setStatus($sess['id'], 'aborted'); @unlink(UploadSession::partPath($sess['id'])); }
+    if ($sess) {
+        $meta = json_decode((string)$sess['part_path'], true);
+        if (is_array($meta) && ($meta['mode'] ?? '') === 'r2') {
+            try {
+                S3Client::fromSettings((new SiteSetting())->getAllKeyed())
+                    ->abortMultipartUpload($meta['key'], $meta['uploadId']);
+            } catch (Throwable $e) {}
+        }
+        $sessions->setStatus($sess['id'], 'aborted'); @unlink(UploadSession::partPath($sess['id']));
+    }
     out(['ok' => true]);
 }
 

@@ -174,4 +174,89 @@ class S3Client {
         [$code] = $this->signedRequest('DELETE', $key, []);
         return $code === 204 || $code === 200;
     }
+
+    /* ---------------- multipart upload (direct browser -> R2) ---------------- */
+
+    private function xmlList($xml, $tag) {
+        $out = [];
+        if (preg_match_all('/<' . $tag . '>(.*?)<\/' . $tag . '>/s', (string)$xml, $m)) {
+            foreach ($m[1] as $v) $out[] = trim(html_entity_decode($v));
+        }
+        return $out;
+    }
+
+    /** Start a multipart upload. Returns the UploadId. */
+    public function createMultipartUpload($key, $contentType = 'application/octet-stream') {
+        [$code, $body] = $this->signedRequest('POST', $key, ['uploads' => ''], '',
+            ['content-type' => $contentType], 60);
+        if ($code !== 200) throw new RuntimeException('R2 create multipart failed (HTTP ' . $code . ')');
+        $ids = $this->xmlList($body, 'UploadId');
+        if (!$ids) throw new RuntimeException('R2 did not return an UploadId.');
+        return $ids[0];
+    }
+
+    /** Presigned PUT URL for one part (partNumber 1..10000, <=5GB each). */
+    public function presignedUploadPartUrl($key, $uploadId, $partNumber, $ttl = 7200) {
+        [$amz, $dateStamp] = explode('|', $this->amzDate());
+        $path = $this->objectPath($key);
+        $host = parse_url($this->endpoint, PHP_URL_HOST);
+        $params = [
+            'X-Amz-Algorithm'     => 'AWS4-HMAC-SHA256',
+            'X-Amz-Credential'    => $this->accessKey . '/' . $dateStamp . '/auto/s3/aws4_request',
+            'X-Amz-Date'          => $amz,
+            'X-Amz-Expires'       => (string)max(60, (int)$ttl),
+            'X-Amz-SignedHeaders' => 'host',
+            'partNumber'          => (string)(int)$partNumber,
+            'uploadId'            => (string)$uploadId,
+        ];
+        ksort($params);
+        $canonQuery = $this->canonicalQuery($params);
+        $canonRequest = 'PUT' . "\n" . $path . "\n" . $canonQuery . "\n" . 'host:' . $host . "\n" . "\n" . 'host' . "\n" . 'UNSIGNED-PAYLOAD';
+        $scope = $dateStamp . '/auto/s3/aws4_request';
+        $stringToSign = 'AWS4-HMAC-SHA256' . "\n" . $amz . "\n" . $scope . "\n" . hash('sha256', $canonRequest);
+        $signature = hash_hmac('sha256', $stringToSign, $this->signingKey($dateStamp));
+        return $this->endpoint . $path . '?' . $canonQuery . '&X-Amz-Signature=' . $signature;
+    }
+
+    /** List uploaded parts: returns [partNumber => ['etag'=>..,'size'=>..]]. */
+    public function listParts($key, $uploadId) {
+        [$code, $body] = $this->signedRequest('GET', $key, ['uploadId' => (string)$uploadId], null, [], 60);
+        if ($code !== 200) return [];
+        $parts = [];
+        if (preg_match_all('/<Part>(.*?)<\/Part>/s', (string)$body, $blocks)) {
+            foreach ($blocks[1] as $b) {
+                preg_match('/<PartNumber>(\d+)<\/PartNumber>/', $b, $pn);
+                preg_match('/<ETag>([^<]+)<\/ETag>/', $b, $et);
+                preg_match('/<Size>(\d+)<\/Size>/', $b, $sz);
+                if (!empty($pn[1])) $parts[(int)$pn[1]] = [
+                    'etag' => isset($et[1]) ? trim($et[1], '"') : '',
+                    'size' => isset($sz[1]) ? (int)$sz[1] : 0,
+                ];
+            }
+        }
+        ksort($parts);
+        return $parts;
+    }
+
+    /** Finish the multipart upload. $parts = [partNumber => etag]. */
+    public function completeMultipartUpload($key, $uploadId, array $parts) {
+        ksort($parts);
+        $xml = '<?xml version="1.0" encoding="UTF-8"?><CompleteMultipartUpload>';
+        foreach ($parts as $pn => $etag) {
+            $xml .= '<Part><PartNumber>' . (int)$pn . '</PartNumber><ETag>"' . htmlspecialchars($etag, ENT_XML1) . '"</ETag></Part>';
+        }
+        $xml .= '</CompleteMultipartUpload>';
+        [$code, $body] = $this->signedRequest('POST', $key, ['uploadId' => (string)$uploadId], $xml,
+            ['content-type' => 'application/xml'], 120);
+        if ($code !== 200) {
+            throw new RuntimeException('R2 complete multipart failed (HTTP ' . $code . '): ' . substr((string)$body, 0, 300));
+        }
+        return true;
+    }
+
+    /** Abort an unfinished multipart upload (frees R2 storage). */
+    public function abortMultipartUpload($key, $uploadId) {
+        $this->signedRequest('DELETE', $key, ['uploadId' => (string)$uploadId], null, [], 60);
+        return true;
+    }
 }
