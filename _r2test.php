@@ -1,8 +1,8 @@
 <?php
 /**
  * TEMPORARY diagnostic — delete after use.
- * Verifies the R2 settings stored in the DB actually match what Cloudflare expects.
- * Admin-only. Paste output back for debugging.
+ * Runs a full multipart cycle against R2 from THIS server and prints raw results.
+ * Admin-only.
  */
 session_start();
 header('Content-Type: text/plain');
@@ -16,26 +16,40 @@ if (!isLoggedIn() || !isAdmin()) { http_response_code(403); echo "Admin access r
 $s = (new SiteSetting())->getAllKeyed();
 $mask = function ($v) {
     $v = (string)$v;
-    if ($v === '') return '(empty)';
-    return 'len=' . strlen($v) . '  first4=' . substr($v, 0, 4) . '  last4=' . substr($v, -4);
+    return $v === '' ? '(empty)' : 'len=' . strlen($v) . ' first4=' . substr($v, 0, 4) . ' last4=' . substr($v, -4);
 };
-
-echo "=== Stored R2 settings ===\n";
-echo "media_driver     : " . var_export($s['media_driver'] ?? null, true) . "\n";
-echo "r2_account_id    : " . $mask($s['r2_account_id'] ?? null) . "  [expected len=32, first4=9330, last4=7e39]\n";
-echo "r2_access_key    : " . $mask($s['r2_access_key'] ?? null) . "  [expected len=32, first4=0b91, last4=3376]\n";
-echo "r2_secret_key    : " . $mask($s['r2_secret_key'] ?? null) . "  [expected len=64, first4=d035, last4=6918]\n";
-echo "r2_bucket        : " . $mask($s['r2_bucket'] ?? null) . "  [expected len=12, first4=dakf, last4=media]\n";
-echo "\nServer clock    : " . date('c') . "  (GMT: " . gmdate('c') . ")\n";
-echo "Time skew       : " . (time() - gmmktime()) . " seconds\n";
+echo "r2_secret_key : " . $mask($s['r2_secret_key'] ?? null) . " (want len=64)\n";
+echo "server time   : " . date('c') . "\n\n";
 
 try {
     $s3 = S3Client::fromSettings($s);
     $key = 'uploads/_diag_' . time() . '.mp4';
-    $uploadId = $s3->createMultipartUpload($key, 'video/mp4');
-    echo "\ncreateMultipartUpload: OK (uploadId len=" . strlen($uploadId) . ")\n";
-    $s3->abortMultipartUpload($key, $uploadId);
-    echo "abortMultipartUpload: OK\n";
+    $uid = $s3->createMultipartUpload($key, 'video/mp4');
+    echo "createMultipartUpload: OK\n";
+    echo "uploadId length: " . strlen($uid) . "\n";
+
+    // PUT one small part via presigned URL (same path the browser uses)
+    $url = $s3->presignedUploadPartUrl($key, $uid, 1);
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_CUSTOMREQUEST => 'PUT',
+        CURLOPT_POSTFIELDS => 'DIAGPART',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HEADER => true,
+    ]);
+    $resp = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    echo "part PUT: HTTP $code\n";
+
+    usleep(1000000); // give R2 a moment
+    $parts = $s3->listParts($key, $uid);
+    echo "listParts count: " . count($parts) . "\n";
+    var_export($parts);
+    echo "\n";
+
+    $s3->abortMultipartUpload($key, $uid);
+    echo "abort: OK\n";
 } catch (Throwable $e) {
-    echo "\nFAILED: " . $e->getMessage() . "\n";
+    echo "FAILED: " . $e->getMessage() . "\n";
 }
