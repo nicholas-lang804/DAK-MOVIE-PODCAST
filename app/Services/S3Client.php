@@ -231,6 +231,11 @@ class S3Client {
     /** List uploaded parts: returns [partNumber => ['etag'=>..,'size'=>..]]. */
     public function listParts($key, $uploadId) {
         [$code, $body] = $this->signedRequest('GET', $key, ['uploadId' => (string)$uploadId], null, [], 60);
+        if ($code === 404) {
+            $c = '';
+            if (preg_match('/<Code>([^<]+)<\/Code>/', (string)$body, $m)) $c = $m[1];
+            throw new RuntimeException('R2 multipart upload not found (' . ($c ?: 'NoSuchUpload') . ') — it was aborted or expired');
+        }
         if ($code !== 200) return [];
         $parts = [];
         if (preg_match_all('/<Part>(.*?)<\/Part>/s', (string)$body, $blocks)) {

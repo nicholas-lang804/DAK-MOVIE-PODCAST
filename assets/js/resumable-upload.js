@@ -105,6 +105,7 @@
       if (job.mode === 'r2') { await uploadR2Parts(job); }
       else { await uploadLocalChunks(job); }
 
+      if (job.cancelled) return;
       job.statusText = 'Finalizing…'; updateRow(job);
       const done = await api('complete', job.mode === 'r2'
         ? { upload_id: job.uploadId, token: job.token, parts: job.parts }
@@ -144,6 +145,7 @@
   async function uploadLocalChunks(job) {
     const t0 = Date.now(); let lastBytes = job.received; let lastTime = t0;
     while (job.received < job.size) {
+      if (job.cancelled) return;
       const end = Math.min(job.received + CHUNK, job.size);
       const blob = job.file.slice(job.received, end);
       const r = await sendChunk(job, job.received, blob);
@@ -167,6 +169,7 @@
     const totalParts = Math.ceil(job.size / job.partSize);
     const t0 = Date.now(); let lastBytes = job.received; let lastTime = t0;
     for (let pn = 1; pn <= totalParts; pn++) {
+      if (job.cancelled) return;
       if (job.parts[pn]) continue;
       const start = (pn - 1) * job.partSize;
       const end = Math.min(start + job.partSize, job.size);
@@ -207,6 +210,7 @@
   function bindActions(job) {
     job.row.querySelector('.ru-retry')?.addEventListener('click', job.retryFn);
     job.row.querySelector('.ru-abort')?.addEventListener('click', async () => {
+      job.cancelled = true;
       try { await api('abort', { upload_id: job.uploadId, token: job.token }); } catch (e) {}
       clearPersist(job); job.row.remove();
     });
