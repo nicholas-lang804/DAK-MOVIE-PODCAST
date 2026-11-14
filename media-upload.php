@@ -176,9 +176,10 @@ if ($action === 'complete') {
             // R2's ListParts can lag a moment behind the final PUT — retry briefly.
             $expected = (int)ceil((int)$sess['size_bytes'] / 67108864);
             $serverParts = [];
+            $totalBytes = 0;
             for ($try = 0; $try < 6; $try++) {
                 $serverParts = $s3->listParts($meta['key'], $meta['uploadId']);
-                $totalBytes = 0;
+                $totalBytes = 0; // recompute per attempt
                 foreach ($serverParts as $p) $totalBytes += (int)$p['size'];
                 if (count($serverParts) >= $expected && $totalBytes === (int)$sess['size_bytes']) break;
                 if ($try < 5) sleep(2);
